@@ -1,6 +1,7 @@
 var path = require('path');
-var VueLoaderPlugin = require('vue-loader/lib/plugin')
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+var VueLoaderPlugin = require('vue-loader/lib/plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
 
@@ -8,8 +9,8 @@ let config = {
 	entry: './src/main.js',
 	output: {
 		path: path.resolve(__dirname, './dist'),
-		filename: 'build.js',
-		publicPath: 'dist/'
+		filename: 'assets/js/build.js',
+		publicPath: './'
 	},
 
 	devServer: {
@@ -39,8 +40,12 @@ let config = {
 	plugins: [
 	    new VueLoaderPlugin(),
 			new MiniCssExtractPlugin({
-      	filename: 'assets/style.css'
-	    })
+      	filename: 'assets/css/style.css'
+	    }),
+			new HtmlWebpackPlugin({
+				filename: 'index.html',
+				template: 'src/index.html'
+			})
  	]
 }
 
