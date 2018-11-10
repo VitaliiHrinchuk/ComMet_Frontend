@@ -14,7 +14,9 @@ let config = {
 	},
 
 	devServer: {
-		overlay:true
+		overlay:true,
+		contentBase: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
 	},
 	module:{
 		rules:[

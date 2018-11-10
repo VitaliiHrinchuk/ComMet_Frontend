@@ -70,18 +70,30 @@
         <div class="screenLoader"></div>
       </div>
 
+
     </div>
 
-    <div class="signUp" v-if="signUpEnd">
-      <h1>Verification</h1>
-      <p>We sent a verification code to your Email address ({{userMail}}). Please, enter the code to continue </p>
-      <div class="userData">
-        <input type="text" class="userData__input" v-model="userVerificationCode" v-bind:class="{errorInput : isErrors[0].verifErr}">
-        <span class="errorMsg" v-if="isErrors[0].verifErr">You entered wrong verification code</span>
-        <button class="signUp__submit verificationBtn" v-on:click="checkVerifCode()">Continue</button>
+      <div class="signUp" v-if="signUpEnd && !userConfirmed">
+        <h1>Verification</h1>
+        <p>We sent a verification code to your Email address ({{userMail}}). Please, enter the code to continue </p>
+        <div class="userData">
+          <input type="text" class="userData__input" v-model="userVerificationCode" v-bind:class="{errorInput : isErrors[0].verifErr}">
+          <span class="errorMsg" v-if="isErrors[0].verifErr">You entered wrong verification code</span>
+          <button  class="signUp__submit verificationBtn" v-on:click="checkVerifCode()">Continue</button>
+        </div>
       </div>
+
+      <div class="signUp" v-if="userConfirmed">
+        <div class="signUp__thx">
+          <h1>You were registered </h1>
+          <!-- <h2>Thank you, for your registration</h2> -->
+          <i class="fas fa-check"></i>
+        </div>
+      </div>
+
     </div>
-    </div>
+
+
 
   </div>
 </template>
@@ -103,8 +115,6 @@ export default {
       isErrors:[{
   			validateMail: false,
   			password: false,
-  			uniqLogin: false,
-  			uniqMail: false,
   			signUpErr: false,
   			verifErr: false
   		}],
@@ -123,6 +133,8 @@ export default {
   			loginLoader: false,
   			signUpLoader: false
   		},
+
+      userConfirmed: false,
 
 
 
@@ -233,7 +245,7 @@ export default {
   		};
 
 			this.$axios.post(`https://comeandmeet.herokuapp.com/accounts/users/`,param,axiosConfig).then((response)=>{
-				alert('you were registered');
+        this.userConfirmed = true;
 			},
 			(error)=>{
 				//error
@@ -265,4 +277,12 @@ export default {
 </script>
 
 <style lang="css">
+.signUp__thx{
+  color: #2DDAA5;
+  text-align: center;
+}
+.signUp__thx i {
+  margin-top: 25px;
+  font-size: 50px;
+}
 </style>
