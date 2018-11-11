@@ -362,7 +362,7 @@ main {
 	.socailSignBtn-facebook{
 		margin-bottom: 20px;
 	}
-	
+
 }
 
 @media screen and (max-width: 1368px){
@@ -413,7 +413,7 @@ main {
 
 @media screen and (max-width: 480px){
 	body{
-		font-size: 23px;
+		font-size: 17px;
 	}
 	.userData__day{
 		width: 28%;
