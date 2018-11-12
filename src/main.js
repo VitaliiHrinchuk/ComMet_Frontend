@@ -31,7 +31,7 @@ const routes = [
 
 const router = new VueRouter({
 	routes,
-	linkActiveClass: 'navigation__item-active',
+	linkExactActiveClass: 'navigation__item-active'
 });
 
 
