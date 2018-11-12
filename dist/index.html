@@ -14,8 +14,23 @@
 
 <link href="./assets/css/style.css" rel="stylesheet"></head>
 <body>
-  <div id="app" class="app">
 
+  <div id="app" class="app">
+    <header class="header shadow">
+      <img id="logo" class="logo" alt="logo" src="./logo.png?7b3d7b453412598136b8d3bc128bcb7e">
+      <div class="container">
+        <nav>
+          <ul class="navigation">
+            <li><router-link class="navigation__item" to="/">Main</router-link></li>
+            <li class="navigation__item ">Events</li>
+            <li class="navigation__item ">About</li>
+            <li class="navigation__item-login"><router-link class="navigation__item" to="/SignUp">SignUp/Login</router-link></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <router-view></router-view>
   </div>
 <script type="text/javascript" src="./assets/js/build.js"></script></body>
 </html>

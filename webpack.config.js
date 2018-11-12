@@ -28,7 +28,7 @@ let config = {
 			{
 		        test: /\.vue$/,
 				loader: 'vue-loader'
-		    },
+		  },
 		    {
 		        test: /\.css$/,
 		        use: [
@@ -36,7 +36,14 @@ let config = {
 				          MiniCssExtractPlugin.loader,
 				          'css-loader'
 				        ]
-		    }
+		    },
+				{
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
+      }
 		],
 	},
 	plugins: [
@@ -48,7 +55,12 @@ let config = {
 				filename: 'index.html',
 				template: 'src/index.html'
 			})
- 	]
+ 	],
+	resolve: {
+  alias: {
+    vue: 'vue/dist/vue.js'
+  }
+}
 }
 
 

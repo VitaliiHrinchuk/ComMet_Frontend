@@ -4,6 +4,7 @@ body {
 	background: #f3f7fa;
 	font-size: 18px;
 	letter-spacing: 0.025em;
+	font-family: "Roboto";
 }
 div {
 	box-sizing: border-box;
@@ -16,6 +17,60 @@ main {
 	padding-top: 50px;
 	margin-bottom: 50px;
 }
+
+
+/* header an navigation  */
+.header{
+  background: #fff;
+  height: 70px;
+  width: 100vw;
+}
+.shadow{
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+}
+.radius-5px{
+  border-radius: 5px;
+}
+.logo{
+  width: 70px;
+  position: absolute;
+}
+.navigation {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 70px;
+  margin: 0;
+}
+.navigation li {
+	list-style: none;
+	margin-right: 15px;
+}
+.navigation__item{
+	text-decoration: none;
+  font-weight: bold;
+  color: #9CAAAC;
+  cursor: pointer;
+  -webkit-transition: color .3s;
+  -o-transition: color .3s;
+  transition: color .3s;
+}
+.navigation__item:hover{
+  color: #1CA9F0;
+}
+.navigation__item-active{
+  color: #1CA9F0;
+}
+.navigation__item-login{
+  margin-left: auto;
+}
+
+
+
+
+
+
+/* SignUp */
 .loaderBg{
 	position: fixed;
 	width: 100%;
@@ -65,7 +120,7 @@ main {
 	padding: 10px 30px;
 	padding-bottom: 40px;
 	margin: 0 auto;
-	width: 46%;	
+	width: 46%;
 	border-radius: 5px;
 	background: #fff;
 	box-shadow: 3px 3px 10px rgba(0,0,0,.1);
@@ -261,7 +316,7 @@ main {
 	margin-top: 40px;
 	height: 50px;
 	font-size: 1.5em;
-	
+
 }
 
 @keyframes fadeout {
@@ -306,6 +361,7 @@ main {
 		margin-left: 0;
 	}
 }
+
 @media screen and (min-width: 1920px){
 	body{
 		font-size: 25px;
@@ -392,7 +448,7 @@ main {
 		width: 100%;
 	}
 	body{
-		font-size: 25px;
+		font-size: 22px;
 	}
 	.userData{
 		margin-bottom: 24px;
@@ -488,5 +544,36 @@ main {
 
 
 
+
+
+
+.slider-bg {
+  /* background-image: url('/assets/images/sliderbg.jpg'); */
+  background-size: cover;
+  background-position: center center;
+}
+.slider{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+
+  background-color: rgba(0,0,0,.5);
+  color: #fff;
+  height: 500px;
+  text-align: center;
+  font-size: .8em;
+}
+.slider__arrow{
+  font-size: 30px;
+  color: rgba(255,255,255,.3);
+  cursor: pointer;
+  -webkit-transition: color .3s;
+  -o-transition: color .3s;
+  transition: color .3s;
+}
+.slider__arrow:hover{
+  color: rgba(255,255,255,1);
+}
 
 
