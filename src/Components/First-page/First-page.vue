@@ -53,6 +53,10 @@ export default {
         this.currentSlide--;
       }
     }
+  },
+
+  created(){
+    setInterval(this.nextSlide,3000);
   }
 }
 </script>
