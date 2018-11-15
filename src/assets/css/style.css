@@ -318,7 +318,12 @@ main {
 	font-size: 1.5em;
 
 }
-
+.routerSlide-enter-active, .routerSlide-leave-active{
+	transition: all .9s ease;
+}
+.routerSlide-enter, .routerSlide-leave{
+	opacity: 0;
+}
 @keyframes fadeout {
 	from{
 		opacity: 0;
