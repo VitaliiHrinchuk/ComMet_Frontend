@@ -489,6 +489,77 @@ main {
 }
 
 
+.login{
+  padding: 10px;
+  background: #fff;
+  width: 273px;
+  margin: 20px auto;
+  text-align: center;
+}
+.login__linkBorder{
+  width: 2px;
+  margin: 0 6px;
+  height: 10px;
+  background: #1CA9F0;
+  display: inline-block;
+}
+
+
+.slider{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  background-color: rgba(0,0,0,.6);
+  color: #fff;
+  height: 500px;
+  text-align: center;
+  font-size: .8em;
+}
+.images{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+  z-index: -1;
+}
+.images__item{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+}
+.slider__arrow{
+  font-size: 30px;
+  color: rgba(255,255,255,.3);
+  cursor: pointer;
+  -webkit-transition: color .3s;
+  -o-transition: color .3s;
+  transition: color .3s;
+}
+.slider__arrow:hover{
+  color: rgba(255,255,255,1);
+}
+.slide-enter-active {
+  transition: all .4s ease;
+}
+.slide-leave-active {
+  transition: all .6s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-enter, .slide-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+
+
 
 
 
@@ -545,64 +616,5 @@ main {
 
 
 
-
-
-
-
-
-
-
-.slider{
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
-  background-color: rgba(0,0,0,.6);
-  color: #fff;
-  height: 500px;
-  text-align: center;
-  font-size: .8em;
-}
-.images{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 5px;
-  z-index: -1;
-}
-.images__item{
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center center;
-}
-.slider__arrow{
-  font-size: 30px;
-  color: rgba(255,255,255,.3);
-  cursor: pointer;
-  -webkit-transition: color .3s;
-  -o-transition: color .3s;
-  transition: color .3s;
-}
-.slider__arrow:hover{
-  color: rgba(255,255,255,1);
-}
-.slide-enter-active {
-  transition: all .4s ease;
-}
-.slide-leave-active {
-  transition: all .6s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-.slide-enter, .slide-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
-}
 
 
