@@ -98,10 +98,18 @@ main {
 	transform: translate(-50%,-50%);
 	height: 100px;
 	width: 100px;
-	border: 6px solid transparent;
+	border: 5px solid transparent;
 	border-top-color: #1ca9f0;
+	border-bottom-color: #1ca9f0;
 	border-radius: 50%;
-	animation: 2s infinite spin;
+	animation: 2s infinite spin ease;
+}
+.screenLoader-inner{
+	height: 70px;
+	width: 70px;
+	border: 3px solid transparent;
+	border-top-color: #1ca9f0;
+	border-bottom-color: #1ca9f0;
 }
 .done{
 	opacity: 0;
@@ -428,7 +436,7 @@ main {
 
 @media screen and (max-width: 1368px){
 	.signUp{
-		width: 50%;
+		width: 40%;
 	}
 	body{
 		font-size: 16px;
@@ -557,6 +565,11 @@ main {
   transform: translateX(10px);
   opacity: 0;
 }
+@media screen and (max-width:  768px){
+.slider{
+    font-size: .5em;
+}
+}
 
 
 
@@ -584,37 +597,37 @@ main {
 
 
 
+
+.goodInput{
+  border-color:  #2DDAA5;
+}
 .signUp__thx{
+  margin-top: 15px;
   color: #2DDAA5;
   text-align: center;
 }
 .signUp__thx i {
   margin-top: 25px;
+  margin-bottom: 20px;
   font-size: 50px;
+}
+.signUp__submit-login{
+  height: 47px;
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.signIn-btn{
+  width: 70%;
+  height: 45px;
+}
+.errorMsg-signIn{
+ font-size: 1em;
+ animation-name: shake;
+ animation-duration: .4s;
+}
+.errorInput-signIn{
+  border: 1px solid red;
+}
 
 
