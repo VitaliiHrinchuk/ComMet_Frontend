@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
+import router from '../routes.js';
 
 Vue.use(Vuex);
 Vue.use(axios);
@@ -15,9 +16,12 @@ const store = new Vuex.Store({
       loaders: {
   			mailLoader:false,
   			loginLoader: false,
-  			signUpLoader: false
+  			signUpLoader: false,
+        signInLoader: false
   		},
       verificationCode: '',
+      isAuthorized: false,
+      isWrongUserData: false
   },
   getters: {
     isUniqLogin(state){
@@ -36,20 +40,23 @@ const store = new Vuex.Store({
     },
     getSignUpState(state){
       return state.isSignUpEnd;
+    },
+    isWrongUserData(state){
+      return state.isWrongUserData;
+    },
+    getIsAuthorized(state){
+      return state.isAuthorized;
     }
   },
   mutations: {
-      setUniqState(state, {type, item}){
-         state[type] = item;
+      setState(state, {type, item}){
+        state[type] = item;
       },
       setLoader(state, { key, value}){
          state['loaders'][key] = value;
       },
-      setVerifCode(state, {value}){
-        state['verificationCode'] = value;
-      },
-      setSignUpState(state, {value}){
-        state['isSignUpEnd'] = value;
+      setIsAuthorized(state, {value}){
+        state['isAuthorized'] = value;
       }
   },
 
@@ -69,7 +76,7 @@ const store = new Vuex.Store({
                 result = true;
             }
 
-            commit('setUniqState', {type: 'isUniqLogin', item: result});
+            commit('setState', {type: 'isUniqLogin', item: result});
 
 					},
 					(error)=>{
@@ -94,7 +101,7 @@ const store = new Vuex.Store({
                 result = true;
             }
 
-            commit('setUniqState', {type: 'isUniqMail', item: result});
+            commit('setState', {type: 'isUniqMail', item: result});
 
 					},
 					(error)=>{
@@ -116,16 +123,50 @@ const store = new Vuex.Store({
 
             let verifCode = response.data.data["verification_code"];
             console.log(verifCode);
-            commit('setVerifCode', {value: verifCode});
+            commit('setState', {type: 'verificationCode', item: verifCode});
 
-            commit('setSignUpState', {value: true});
+            commit('setState', {type: 'isSignUpEnd', item: true});
+
 
         }, (error)=>{
           //error
-          alert(error);
+          // alert(error);
           commit('setLoader', {key: 'signUpLoader', value: false });
         })
 
+      },
+
+      userSignIn({commit}, payload){
+        let signInLink = `${API_ACCOUNTS_URL}login/`;
+
+        let axiosConfig = {
+    			  headers: {
+    			      'Content-Type': 'application/json',
+    			  }
+    		};
+
+        let params = JSON.stringify({
+  				"username": payload.username,
+          "password": payload.password
+  			});
+        console.log(params);
+        commit('setLoader', {key: 'signInLoader', value: true});
+        axios.post(signInLink,params,axiosConfig).then((response)=>{
+          console.log(response);
+          let data = response.data.data;
+          commit('setLoader', {key: 'signInLoader', value: false});
+          if(data.error == 'user not found'){
+            commit('setState', {type: 'isWrongUserData', item: true})
+          } else {
+            localStorage.setItem('token', data.token);
+            commit('setState', {type:'isAuthorized', item: true});
+            router.replace('/');
+          }
+        },
+        (error)=>{
+          //error
+          commit('setLoader', {key: 'signInLoader', value: false});
+        });
       }
   }
 });

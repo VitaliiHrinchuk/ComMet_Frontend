@@ -98,10 +98,18 @@ main {
 	transform: translate(-50%,-50%);
 	height: 100px;
 	width: 100px;
-	border: 6px solid transparent;
+	border: 5px solid transparent;
 	border-top-color: #1ca9f0;
+	border-bottom-color: #1ca9f0;
 	border-radius: 50%;
-	animation: 2s infinite spin;
+	animation: 2s infinite spin ease;
+}
+.screenLoader-inner{
+	height: 70px;
+	width: 70px;
+	border: 3px solid transparent;
+	border-top-color: #1ca9f0;
+	border-bottom-color: #1ca9f0;
 }
 .done{
 	opacity: 0;

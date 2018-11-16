@@ -1,9 +1,8 @@
 <template lang="html">
-  <main>
-    <div class="container">
+
       <!-- :style="{ 'backgroundImage': 'url(\'' + sliderImage + '\')' }" -->
       <div id="slider" class="radius-5px" >
-        <div class="slider  shadow radius-5px " >
+        <div class="slider  shadow" >
           <i class="slider__arrow fas fa-chevron-circle-left" v-on:click='prevSlide'></i>
           <h1 class="">{{sliderTitles[currentSlide-1]}}</h1>
           <div class="images">
@@ -14,8 +13,7 @@
           <i class="slider__arrow fas fa-chevron-circle-right" v-on:click='nextSlide'></i>
         </div>
       </div>
-    </div>
-  </main>
+
 </template>
 
 <script>
@@ -28,7 +26,7 @@ export default {
       sliderTitles: [
         'Travel and meet new friends with ComMet',
         'Create or search Events and enjoy them with others people',
-        'Use ComMet to meet people in real life instead Socials Networks'
+        'Use ComMet to meet people in real life instead of Socials Networks'
       ],
       imageList: [
         require(`../../assets/images/sliderbg_1.jpg`),
@@ -56,7 +54,8 @@ export default {
   },
 
   created(){
-    setInterval(this.nextSlide,3000);
+    setInterval(this.nextSlide,5000);
+    console.log(this.$store.getters.getIsAuthorized);
   }
 }
 </script>
@@ -117,5 +116,12 @@ export default {
     transform: translateX(10px);
     opacity: 0;
   }
+
+  @media screen and (max-width:  768px){
+    .slider{
+      font-size: .5em;
+    }
+  }
+
 
 </style>

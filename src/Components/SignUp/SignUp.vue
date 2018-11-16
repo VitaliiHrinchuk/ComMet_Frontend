@@ -26,7 +26,7 @@
       <div class="userData userData-login">
         <h2 class="userData__title">Create Login</h2>
         <aboutinput  title="Unique login" content="Login helps to identify you from other users">?</aboutinput>
-        <input class="userData__input"  type="text" name="userLogin" placeholder="Unique login..." v-model='userLogin'  v-on:change="checkUniqLogin()" v-bind:class="{errorInput :!loginIsUniq}">
+        <input class="userData__input"  type="text" name="userLogin" placeholder="Unique login..." v-model='userLogin'  v-on:change="checkUniqLogin()" v-bind:class="{errorInput :!loginIsUniq, goodInput :isGoodLogin}">
         <span class="loader" v-if="loginIsLoader"></span>
         <span class="errorMsg" v-if="!loginIsUniq">This login already exists</span>
 
@@ -34,7 +34,7 @@
 
       <div class="userData userData-email">
         <h2 class="userData__title">Your E-Mail Address</h2>
-        <input class="userData__input"  type="text" name="userEmail" placeholder="example@site.com"  v-bind:class="{errorInput : isErrors[0].validateMail || !mailIsUniq}" v-model="userMail" v-on:change="validateMail()" >
+        <input class="userData__input"  type="text" name="userEmail" placeholder="example@site.com"  v-bind:class="{errorInput : isErrors[0].validateMail || !mailIsUniq, goodInput: isGoodMail}" v-model="userMail" v-on:change="validateMail()" >
         <span class="loader" v-if="mailIsLoader"></span>
         <span class="errorMsg" v-if="isErrors[0].validateMail">incorrect E-mail address</span>
         <span class="errorMsg" v-if="!mailIsUniq && !isErrors[0].validateMail">This E-mail is alredy exists</span>
@@ -42,7 +42,7 @@
 
       <div class="userData userData-password">
         <h2 class="userData__title">Create Password</h2>
-        <input class="userData__input"  type="password" name="userPassword" placeholder="Minimum 6 symbols" v-bind:class="{errorInput : isErrors[0].password}" v-model="userPassword" v-on:change="checkPass()">
+        <input class="userData__input"  type="password" name="userPassword" placeholder="Minimum 6 symbols" v-bind:class="{errorInput : isErrors[0].password, goodInput: isGoodPass}" v-model="userPassword" v-on:change="checkPass()">
         <span class="errorMsg" v-if="isErrors[0].password">Password can`t be less then 6 symbols</span>
       </div>
 
@@ -67,7 +67,9 @@
       <span class="errorMsg" v-if="isErrors[0].signUpErr">Getting some trouble. Please, try singUp again</span>
 
       <div class="signUpLoaderBG" v-if="signUpIsLoader">
-        <div class="screenLoader"></div>
+        <div class="screenLoader">
+          <div class="screenLoader screenLoader-inner"></div>
+        </div>
       </div>
 
 
@@ -87,7 +89,9 @@
         <div class="signUp__thx">
           <h1>You were registered </h1>
           <!-- <h2>Thank you, for your registration</h2> -->
+          <router-link to='/'></router-link>
           <i class="fas fa-check"></i>
+          <button class="signUp__submit signUp__submit-login" type="button" name="button" v-on:click="toSignIn">Login</button>
         </div>
       </div>
 
@@ -119,20 +123,18 @@ export default {
   			verifErr: false
   		}],
 
+
   		errorClass: 'errorInput',
 
-  		disableSubmit: true,
+
+  		// disableSubmit: true,
   		days:[],
   		months:[],
   		years:[],
   		selectedDay: '1',
   		selectedMonth: 'Jan',
   		selectedYear:'2017',
-  		loaders: {
-  			mailLoader:false,
-  			loginLoader: false,
-  			signUpLoader: false
-  		},
+
 
       userConfirmed: false,
 
@@ -157,14 +159,16 @@ export default {
         return this.$store.getters.isLoader('signUpLoader');
       },
       disableSubmitCheck(){
+        if(this.userFirstName.length==0    ||
+           this.userLastName.length==0     ||
+           this.userLogin.length==0        ||
+           this.userPassword.length<6      ||
+           this.userMail.length==0         ||
+           this.loginIsLoader == true     ||
+           this.mailIsLoader == true    ){
+          return true;
+        }
   			for(let key in this.isErrors[0]){
-  				if(this.userFirstName.length==0    ||
-  				   this.userLastName.length==0 ||
-  				   this.userLogin.length==0   ||
-  				   this.userPassword.length<6 ||
-  				   this.userMail.length==0){
-  					return true;
-  				}
   				if(this.isErrors[0][key] == true){
   					return true;
   				}
@@ -175,6 +179,27 @@ export default {
   		},
       signUpEnd(){
         return this.$store.getters.getSignUpState;
+      },
+      isGoodLogin(){
+        if(this.loginIsUniq && this.userLogin.length>0){
+          return true;
+        } else {
+          return false;
+        }
+      },
+      isGoodMail(){
+        if(this.mailIsUniq && !this.isErrors[0].validateMail  && this.userMail.length){
+          return true;
+        } else {
+          return false;
+        }
+      },
+      isGoodPass(){
+        if(!this.isErrors[0].password && this.userPassword.length>0){
+          return true;
+        } else {
+          return false;
+        }
       }
 
   },
@@ -252,6 +277,9 @@ export default {
         alert(error);
 			});
 		},
+    toSignIn(){
+      this.$router.replace('signIn');
+    }
   },
   components:{
     aboutinput:popup
@@ -277,12 +305,21 @@ export default {
 </script>
 
 <style lang="css">
+.goodInput{
+  border-color:  #2DDAA5;
+}
 .signUp__thx{
+  margin-top: 15px;
   color: #2DDAA5;
   text-align: center;
 }
 .signUp__thx i {
   margin-top: 25px;
+  margin-bottom: 20px;
   font-size: 50px;
 }
+.signUp__submit-login{
+  height: 47px;
+}
+
 </style>
