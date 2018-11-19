@@ -7,11 +7,11 @@
         <span class="errorMsg errorMsg-signIn" v-if="isWrongUserData">Wrong Username or Password</span>
         <div class="userData userData-login">
           <h2 class="userData__title">Your Username</h2>
-          <input class="userData__input"  type="text" name="userLogin" placeholder="Your Username" v-model="userName" v-on:keyup.enter="signInUser">
+          <input class="input"  type="text" name="userLogin" placeholder="Your Username" v-model="userName" v-on:keyup.enter="signInUser">
         </div>
         <div class="userData userData-password">
           <h2 class="userData__title">Your Password</h2>
-          <input class="userData__input"  type="password" name="userPassword" placeholder="Password" v-model="userPass" v-on:keyup.enter="signInUser">
+          <input class="input"  type="password" name="userPassword" placeholder="Password" v-model="userPass" v-on:keyup.enter="signInUser">
         </div>
 
         <button class="signUp__submit signIn-btn" type="button" v-on:click="signInUser">Login</button>

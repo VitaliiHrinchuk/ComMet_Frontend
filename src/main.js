@@ -58,5 +58,8 @@ new Vue({
 		isUserAuthorized(){
 			return this.$store.getters.getIsAuthorized;
 		}
+	},
+	created(){
+		this.$store.dispatch('checkIsAuthorized');
 	}
 });

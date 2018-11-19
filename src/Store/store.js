@@ -55,9 +55,6 @@ const store = new Vuex.Store({
       setLoader(state, { key, value}){
          state['loaders'][key] = value;
       },
-      setIsAuthorized(state, {value}){
-        state['isAuthorized'] = value;
-      }
   },
 
   actions: {
@@ -162,10 +159,24 @@ const store = new Vuex.Store({
             commit('setState', {type:'isAuthorized', item: true});
             router.replace('/');
           }
+
+
         },
         (error)=>{
           //error
           commit('setLoader', {key: 'signInLoader', value: false});
+        });
+      },
+
+      checkIsAuthorized({commit}){
+        let token = localStorage.getItem('token');
+        let checkLink = `${API_ACCOUNTS_URL}user_state/${token}/`;
+
+        axios.get(checkLink).then((response)=>{
+          console.log(response);
+          commit('setState', {type:'isAuthorized', item: true});
+        }, (error)=>{
+          //error
         });
       }
   }

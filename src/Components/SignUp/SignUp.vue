@@ -14,19 +14,19 @@
 
       <div class="userData userData-name">
         <h2 class="userData__title">Your First Name</h2>
-        <input class="userData__input" type="text" name="userFirstName" v-model="userFirstName">
+        <input class="input" type="text" name="userFirstName" v-model="userFirstName">
 
       </div>
 
       <div class="userData userData-surname">
         <h2 class="userData__title">Your Last Name</h2>
-        <input class="userData__input"  type="text" name="userLastName" v-model='userLastName'>
+        <input class="input"  type="text" name="userLastName" v-model='userLastName'>
       </div>
 
       <div class="userData userData-login">
         <h2 class="userData__title">Create Login</h2>
         <aboutinput  title="Unique login" content="Login helps to identify you from other users">?</aboutinput>
-        <input class="userData__input"  type="text" name="userLogin" placeholder="Unique login..." v-model='userLogin'  v-on:change="checkUniqLogin()" v-bind:class="{errorInput :!loginIsUniq, goodInput :isGoodLogin}">
+        <input class="input"  type="text" name="userLogin" placeholder="Unique login..." v-model='userLogin'  v-on:change="checkUniqLogin()" v-bind:class="{errorInput :!loginIsUniq, goodInput :isGoodLogin}">
         <span class="loader" v-if="loginIsLoader"></span>
         <span class="errorMsg" v-if="!loginIsUniq">This login already exists</span>
 
@@ -34,7 +34,7 @@
 
       <div class="userData userData-email">
         <h2 class="userData__title">Your E-Mail Address</h2>
-        <input class="userData__input"  type="text" name="userEmail" placeholder="example@site.com"  v-bind:class="{errorInput : isErrors[0].validateMail || !mailIsUniq, goodInput: isGoodMail}" v-model="userMail" v-on:change="validateMail()" >
+        <input class="input"  type="text" name="userEmail" placeholder="example@site.com"  v-bind:class="{errorInput : isErrors[0].validateMail || !mailIsUniq, goodInput: isGoodMail}" v-model="userMail" v-on:change="validateMail()" >
         <span class="loader" v-if="mailIsLoader"></span>
         <span class="errorMsg" v-if="isErrors[0].validateMail">incorrect E-mail address</span>
         <span class="errorMsg" v-if="!mailIsUniq && !isErrors[0].validateMail">This E-mail is alredy exists</span>
@@ -42,7 +42,7 @@
 
       <div class="userData userData-password">
         <h2 class="userData__title">Create Password</h2>
-        <input class="userData__input"  type="password" name="userPassword" placeholder="Minimum 6 symbols" v-bind:class="{errorInput : isErrors[0].password, goodInput: isGoodPass}" v-model="userPassword" v-on:change="checkPass()">
+        <input class="input"  type="password" name="userPassword" placeholder="Minimum 6 symbols" v-bind:class="{errorInput : isErrors[0].password, goodInput: isGoodPass}" v-model="userPassword" v-on:change="checkPass()">
         <span class="errorMsg" v-if="isErrors[0].password">Password can`t be less then 6 symbols</span>
       </div>
 
@@ -79,7 +79,7 @@
         <h1>Verification</h1>
         <p>We sent a verification code to your Email address ({{userMail}}). Please, enter the code to continue </p>
         <div class="userData">
-          <input type="text" class="userData__input" v-model="userVerificationCode" v-bind:class="{errorInput : isErrors[0].verifErr}">
+          <input type="text" class="input" v-model="userVerificationCode" v-bind:class="{errorInput : isErrors[0].verifErr}">
           <span class="errorMsg" v-if="isErrors[0].verifErr">You entered wrong verification code</span>
           <button  class="signUp__submit verificationBtn" v-on:click="checkVerifCode()">Continue</button>
         </div>
@@ -181,14 +181,14 @@ export default {
         return this.$store.getters.getSignUpState;
       },
       isGoodLogin(){
-        if(this.loginIsUniq && this.userLogin.length>0){
+        if(this.loginIsUniq && this.userLogin.length>0 && !this.loginIsLoader){
           return true;
         } else {
           return false;
         }
       },
       isGoodMail(){
-        if(this.mailIsUniq && !this.isErrors[0].validateMail  && this.userMail.length){
+        if(this.mailIsUniq && !this.isErrors[0].validateMail  && this.userMail.length && !this.mailIsLoader){
           return true;
         } else {
           return false;

@@ -3,6 +3,7 @@ import App from './Components/SignUp/App.vue';
 import FirstPage from './Components/First-page/First-page.vue';
 import SignUp from './Components/SignUp/SignUp.vue';
 import SignIn from './Components/SignUp/SignIn.vue';
+import EventPage from './Components/EventsPage/EventsList.vue';
 
 
 import VueRouter from 'vue-router';
@@ -20,6 +21,7 @@ let routes = [
 		}
 	] },
 	{ path: '/', component: FirstPage},
+	{ path: '/Events', component: EventPage}
 
 
 ];
