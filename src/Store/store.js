@@ -7,6 +7,7 @@ Vue.use(Vuex);
 Vue.use(axios);
 
 const API_ACCOUNTS_URL = `https://comeandmeet.herokuapp.com/accounts/`;
+const API_EVENTS_URL = `https://comeandmeet.herokuapp.com/events/`;
 
 const store = new Vuex.Store({
   state: {
@@ -21,7 +22,9 @@ const store = new Vuex.Store({
   		},
       verificationCode: '',
       isAuthorized: false,
-      isWrongUserData: false
+      isWrongUserData: false,
+
+      eventsList: [],
   },
   getters: {
     isUniqLogin(state){
@@ -46,10 +49,16 @@ const store = new Vuex.Store({
     },
     getIsAuthorized(state){
       return state.isAuthorized;
+    },
+
+    getEventsList(state){
+      console.log('GETTER '+state.eventsList);
+      return state.eventsList;
     }
   },
   mutations: {
       setState(state, {type, item}){
+        console.log(item);
         state[type] = item;
       },
       setLoader(state, { key, value}){
@@ -172,13 +181,54 @@ const store = new Vuex.Store({
         let token = localStorage.getItem('token');
         let checkLink = `${API_ACCOUNTS_URL}user_state/${token}/`;
 
+
         axios.get(checkLink).then((response)=>{
           console.log(response);
-          commit('setState', {type:'isAuthorized', item: true});
+          if(response.data.data == 'token not found'){
+            commit('setState', {type:'isAuthorized', item: false});
+          } else {
+            commit('setState', {type:'isAuthorized', item: true});
+          }
+
         }, (error)=>{
           //error
         });
+      },
+
+      refreshEventsList({commit}){
+
+        let param = {
+          page: 1,
+          page_size: 6
+        }
+        // let axiosConfig = {
+        //   headers: {
+        //     Authorization: 'Token ' + '9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b'
+        //   }
+        // }
+        axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
+        // console.log(axiosConfig);
+        axios.get(API_EVENTS_URL,param).then((response)=>{
+          console.log(response);
+          let list = response.data.data;
+
+          let resultList = list.map((item)=>{
+            let resultItem = {};
+            resultItem.name = item.attributes.name;
+            resultItem.membersCount = item.attributes.members.length;
+            resultItem.tags = item.attributes.tags;
+            resultItem.authorUserName = item.attributes.author.username;
+            resultItem.authorFirstName = item.attributes.author.first_name;
+            resultItem.authorPhoto = item.attributes.author.avatar;
+            return resultItem;
+          });
+          console.log(resultList);
+          commit('setState', {type:'eventsList', item:resultList});
+        }, (error)=>{
+          console.log(error.response);
+        });
       }
+
   }
 });
 

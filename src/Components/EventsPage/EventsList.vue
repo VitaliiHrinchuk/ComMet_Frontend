@@ -14,32 +14,34 @@
       </div>
 
 
-
+      <!-- <div class="" v-for="event in eventsList">
+        {{event.name}}
+      </div> -->
 
 
       <div class="eventList">
         <h3 class="text-gray eventList__title">Events list</h3>
-        <div class="shortEvent shadow radius-5px bg-white">
-          <h3 class="shortEvent__title">lorem10lab ellorem10la bellore m10 label </h3>
+        <div class="shortEvent shadow radius-5px bg-white" v-for="event in eventsList">
+          <h3 class="shortEvent__title">{{event.name}}</h3>
           <div class="shortEvent__date">
             <span>15 November</span>
           </div>
-          <div class="shortEvent__tags">
-            <div class="tag">
-                tag1
+          <div class="shortEvent__tags" >
+            <div class="tag" v-for="tags in event.tags">
+                {{tags.name}}
             </div>
-            <div class="tag">
+            <!-- <div class="tag">
                 tag2
             </div>
             <div class="tag">
                 tag3
-            </div>
+            </div> -->
           </div>
           <div class="shortEvent__place">
             <span>15-th Wall Str.</span>
           </div>
           <div class="shortEvent__members">
-              <span class="shortEvent__bold text-gray">Members:</span> 20
+              <span class="shortEvent__bold text-gray">Members:</span> {{event.membersCount}}
           </div>
           <button class="shortEvent__btn" type="button" name="button">Event Page</button>
         </div>
@@ -79,6 +81,26 @@
 
 <script>
 export default {
+  data(){
+    return{
+      // eventsList: []
+    }
+  },
+  computed:{
+    eventsList(){
+      return this.$store.getters.getEventsList;
+    }
+  },
+  methods: {
+    pushEventsList(){
+      // this.eventsList.push(this.$store.getters.getEventsList)
+    }
+  },
+  created(){
+    this.$store.dispatch('refreshEventsList');
+    // this.pushEventsList();
+    // console.log(this.eventsList);
+  }
 }
 </script>
 
