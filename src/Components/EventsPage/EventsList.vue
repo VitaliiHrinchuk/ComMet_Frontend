@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="container temp">
+  <div class="container eventPageContainer">
     <div class="title text-gray" >
       <h1>Events</h1>
     </div>
@@ -46,6 +46,31 @@
           <button class="shortEvent__btn" type="button" name="button">Event Page</button>
         </div>
 
+        <div class="shortEvent shadow radius-5px bg-white">
+          <h3 class="shortEvent__title"></h3>
+          <div class="shortEvent__date">
+            <span>15 November</span>
+          </div>
+          <div class="shortEvent__tags" >
+            <div class="tag">
+                tag
+            </div>
+            <!-- <div class="tag">
+                tag2
+            </div>
+            <div class="tag">
+                tag3
+            </div> -->
+          </div>
+          <div class="shortEvent__place">
+            <span>15-th Wall Str.</span>
+          </div>
+          <div class="shortEvent__members">
+              <span class="shortEvent__bold text-gray">Members:</span>
+          </div>
+          <button class="shortEvent__btn" type="button" name="button">Event Page</button>
+        </div>
+
       </div>
 
 
@@ -60,8 +85,8 @@
           </ul>
         </div>
 
-        <div class="eventSearch-tags shadow radius-5px bg-white">
-          <h4 class="eventSearch__title text-gray">Included tags</h4>
+        <div class="eventSort-tags shadow radius-5px bg-white">
+          <h4 class="eventSort__title text-gray">Included tags</h4>
           <div class="tag tag-search">
               Music
           </div>
@@ -105,7 +130,7 @@ export default {
 </script>
 
 <style lang="css">
-.temp{
+.eventPageContainer{
   height: 6000px;
 }
 .title{
@@ -121,21 +146,26 @@ export default {
   margin-left: auto;
   margin-right: auto;
   color: #455A64;
+  order: 1;
 }
 .eventSearch__title{
   /* text-align: center; */
   margin: 0;
   padding: 0;
   margin-bottom: 10px;
+  margin-left: 15px;
 }
 .eventSearch__input{
   padding: 13px 13px;
 
 }
-.eventSearch-tags{
+.eventSort-tags{
   /* width: calc(30% - 30px); */
 
   padding: 15px 15px;
+}
+.eventSort__title{
+  margin-bottom: 10px;
 }
 /* .input-eventSearch{
   width: 98%;
@@ -177,6 +207,7 @@ export default {
   width: 30%;
   margin-top: 15px;
   padding-left: 30px;
+  order: 3;
 }
 .aside__title{
   margin-left: 15px;
@@ -198,6 +229,7 @@ export default {
 .eventList{
   margin-top: 15px;
   width: calc(70% - 30px);
+  order: 2;
 }
 .eventList__title{
   margin-left: 15px;
@@ -240,5 +272,95 @@ export default {
   margin-left: auto;
 }
 
+@media screen and (min-width: 2000px){
+  .eventSearch{
+    width: 1000px;
+  }
+  .eventList{
+    width: 1300px;
+  }
+  .aside{
+    width: 500px;
+  }
+}
+@media screen and (max-width: 1600px){
+
+
+}
+
+@media screen and (max-width: 1368px){
+
+}
+@media screen and (max-width: 1120px){
+
+}
+@media screen and (max-width: 960px){
+  .eventPageContainer{
+    font-size: .75em;
+  }
+  .eventSearch{
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 768px){
+  .eventPageContainer{
+    font-size: 1em;
+  }
+  .eventSearch{
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0;
+  }
+  .eventList{
+    width: 100%;
+    order: 3;
+    padding-left: 0;
+  }
+  .aside{
+    order: 2;
+    width: 100%;
+    padding-left: 0;
+  }
+
+}
+@media screen and (max-width: 560px){
+  .eventSearch{
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0;
+  }
+  .eventList{
+    width: 100%;
+    order: 3;
+    padding-left: 0;
+  }
+  .aside{
+    order: 2;
+    width: 100%;
+    padding-left: 0;
+  }
+}
+
+@media screen and (max-width: 480px){
+  .eventSearch{
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 0;
+  }
+  .eventList{
+    width: 100%;
+    order: 3;
+    padding-left: 0;
+  }
+  .aside{
+    order: 2;
+    width: 100%;
+    padding-left: 0;
+  }
+}
 
 </style>

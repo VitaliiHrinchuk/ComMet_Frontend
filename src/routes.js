@@ -4,6 +4,7 @@ import FirstPage from './Components/First-page/First-page.vue';
 import SignUp from './Components/SignUp/SignUp.vue';
 import SignIn from './Components/SignUp/SignIn.vue';
 import EventPage from './Components/EventsPage/EventsList.vue';
+import Event from './Components/EventsPage/Event.vue'
 
 
 import VueRouter from 'vue-router';
@@ -21,14 +22,16 @@ let routes = [
 		}
 	] },
 	{ path: '/', component: FirstPage},
-	{ path: '/Events', component: EventPage}
+	{ path: '/Events', component: EventPage},
+	{ path: '/Event/temp', component: Event}
 
 
 ];
 
 let router = new VueRouter({
 	routes,
-	linkExactActiveClass: 'navigation__item-active'
+	linkExactActiveClass: 'navigation__item-active',
+	linkActiveClass: 'navigation__item-active'
 });
 
 export default router;

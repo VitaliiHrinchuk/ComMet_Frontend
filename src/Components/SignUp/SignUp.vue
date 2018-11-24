@@ -2,6 +2,15 @@
   <div class="container">
     <div  id="signUpBlock" class="signUpBlock">
     <div id="signUp" class="signUp" v-if="!signUpEnd">
+
+      <!-- <div class="inputBlock">
+
+        <input type="text" name="" value="" class="inputBlock__input" required>
+        <h4 class="inputBlock__label">dsadsa</h4>
+        <div class="inputBlock__container errorInput">
+        </div>
+      </div> -->
+
       <h1 class="signUp__title">SignUp</h1>
       <div class="socialSignBtn socailSignBtn-google">
         <i class="fab fa-google socailSignBtn__icon"></i>
@@ -15,7 +24,6 @@
       <div class="userData userData-name">
         <h2 class="userData__title">Your First Name</h2>
         <input class="input" type="text" name="userFirstName" v-model="userFirstName">
-
       </div>
 
       <div class="userData userData-surname">
@@ -24,32 +32,57 @@
       </div>
 
       <div class="userData userData-login">
-        <h2 class="userData__title">Create Login</h2>
-        <aboutinput  title="Unique login" content="Login helps to identify you from other users">?</aboutinput>
-        <input class="input"  type="text" name="userLogin" placeholder="Unique login..." v-model='userLogin'  v-on:change="checkUniqLogin()" v-bind:class="{errorInput :!loginIsUniq, goodInput :isGoodLogin}">
-        <span class="loader" v-if="loginIsLoader"></span>
-        <span class="errorMsg" v-if="!loginIsUniq">This login already exists</span>
+        <h2 class="userData__title">Create Username</h2>
+        <aboutinput  title="Unique Username" content="Username helps to identify you from other users">?</aboutinput>
+        <input id="userLogin"
+               class="input"
+               type="text" name="userLogin"
+               placeholder="e.g. MaxPower15"
+               v-model='userLogin'
+               @focus="isFocus.login = true"
+               v-on:change="checkUniqueLogin()"
+               v-bind:class="{errorInput :!loginIsUniq, goodInput :isGoodLogin}">
+
+        <span class="loader loader-input" v-if="loginIsLoader"></span>
+        <span class="errorMsg" v-if="!loginIsUniq"><i class="fas fa-exclamation-circle"></i> This login already exists</span>
+        <span class="doneIcon" v-show="isGoodLogin"><i class="far fa-check-circle"></i></span>
+
 
       </div>
 
       <div class="userData userData-email">
         <h2 class="userData__title">Your E-Mail Address</h2>
-        <input class="input"  type="text" name="userEmail" placeholder="example@site.com"  v-bind:class="{errorInput : isErrors[0].validateMail || !mailIsUniq, goodInput: isGoodMail}" v-model="userMail" v-on:change="validateMail()" >
-        <span class="loader" v-if="mailIsLoader"></span>
-        <span class="errorMsg" v-if="isErrors[0].validateMail">incorrect E-mail address</span>
-        <span class="errorMsg" v-if="!mailIsUniq && !isErrors[0].validateMail">This E-mail is alredy exists</span>
+        <input class="input"
+               type="text"
+               name="userEmail"
+               placeholder="e.g. max@somemail.com"
+               @focus="isFocus.mail = true"
+               v-bind:class="{errorInput : isErrors[0].validateMail || !mailIsUniq, goodInput: isGoodMail}"
+               v-model="userMail" v-on:change="validateMail()" >
+        <span class="loader loader-input" v-if="mailIsLoader"></span>
+        <span class="errorMsg" v-if="isErrors[0].validateMail"><i class="fas fa-exclamation-circle"></i> incorrect E-mail address</span>
+        <span class="errorMsg" v-if="!mailIsUniq && !isErrors[0].validateMail"><i class="fas fa-exclamation-circle"></i> This E-mail is alredy exists</span>
+        <span class="doneIcon" v-show="isGoodMail"><i class="far fa-check-circle"></i></span>
       </div>
 
       <div class="userData userData-password">
         <h2 class="userData__title">Create Password</h2>
-        <input class="input"  type="password" name="userPassword" placeholder="Minimum 6 symbols" v-bind:class="{errorInput : isErrors[0].password, goodInput: isGoodPass}" v-model="userPassword" v-on:change="checkPass()">
-        <span class="errorMsg" v-if="isErrors[0].password">Password can`t be less then 6 symbols</span>
+        <input class="input"
+               type="password"
+               name="userPassword"
+               placeholder=""
+               @focus="isFocus.password = true"
+               v-bind:class="{errorInput : isErrors[0].password, goodInput: isGoodPass}"
+               v-model="userPassword" v-on:change="checkPass()">
+        <span class="errorMsg" v-if="isErrors[0].password"><i class="fas fa-exclamation-circle"></i> Password can`t be less then 6 symbols</span>
+        <span class="doneIcon" v-show="isGoodPass"><i class="far fa-check-circle"></i></span>
+
       </div>
 
       <div class="userData userData-bday">
-        <h2 class="userData__title userData__title-BDay">Date of Birth</h2>
 
-        <select class="userData__BDay userData__day" name="BDate_day"v-model="selectedDay">
+        <h2 class="userData__title userData__title-BDay">Date of Birth</h2>
+        <select class="userData__BDay userData__day" v-model="selectedDay">
           <option  v-for="day in days" v-bind:value="day">{{ day }}</option>
         </select>
         <select class="userData__BDay userData__month" name="BDate_month" v-model="selectedMonth">
@@ -63,8 +96,13 @@
 
 
 
-      <button class="signUp__submit" type="button"  v-bind:disabled="disableSubmitCheck" v-on:click="getVerificationCode()">Continue</button>
-      <span class="errorMsg" v-if="isErrors[0].signUpErr">Getting some trouble. Please, try singUp again</span>
+      <button class="signUp__submit"
+              type="button"
+              v-bind:disabled="disableSubmitCheck"
+              v-on:click="getVerificationCode()">
+
+              Continue</button>
+      <span class="errorMsg" v-if="isErrors[0].signUpErr"><i class="fas fa-exclamation-circle"></i> Getting some trouble. Please, try singUp again</span>
 
       <div class="signUpLoaderBG" v-if="signUpIsLoader">
         <div class="screenLoader">
@@ -79,8 +117,11 @@
         <h1>Verification</h1>
         <p>We sent a verification code to your Email address ({{userMail}}). Please, enter the code to continue </p>
         <div class="userData">
-          <input type="text" class="input" v-model="userVerificationCode" v-bind:class="{errorInput : isErrors[0].verifErr}">
-          <span class="errorMsg" v-if="isErrors[0].verifErr">You entered wrong verification code</span>
+          <input type="text"
+                 class="input"
+                 v-model="userVerificationCode"
+                 v-bind:class="{errorInput : isErrors[0].verifErr}">
+          <span class="errorMsg" v-if="isErrors[0].verifErr"><i class="fas fa-exclamation-circle"></i> You entered wrong verification code</span>
           <button  class="signUp__submit verificationBtn" v-on:click="checkVerifCode()">Continue</button>
         </div>
       </div>
@@ -88,7 +129,6 @@
       <div class="signUp" v-if="userConfirmed">
         <div class="signUp__thx">
           <h1>You were registered </h1>
-          <!-- <h2>Thank you, for your registration</h2> -->
           <router-link to='/'></router-link>
           <i class="fas fa-check"></i>
           <button class="signUp__submit signUp__submit-login" type="button" name="button" v-on:click="toSignIn">Login</button>
@@ -123,8 +163,12 @@ export default {
   			verifErr: false
   		}],
 
+      isFocus:{
+        login: false,
+        mail: false,
+        password: false
+      },
 
-  		errorClass: 'errorInput',
 
 
   		// disableSubmit: true,
@@ -164,7 +208,7 @@ export default {
            this.userLogin.length==0        ||
            this.userPassword.length<6      ||
            this.userMail.length==0         ||
-           this.loginIsLoader == true     ||
+           this.loginIsLoader == true      ||
            this.mailIsLoader == true    ){
           return true;
         }
@@ -181,21 +225,31 @@ export default {
         return this.$store.getters.getSignUpState;
       },
       isGoodLogin(){
-        if(this.loginIsUniq && this.userLogin.length>0 && !this.loginIsLoader){
+
+        if(!this.isFocus.login     &&
+           this.loginIsUniq        &&
+           this.userLogin.length>0 &&
+           !this.loginIsLoader){
           return true;
         } else {
           return false;
         }
       },
       isGoodMail(){
-        if(this.mailIsUniq && !this.isErrors[0].validateMail  && this.userMail.length && !this.mailIsLoader){
+        if(!this.isFocus.mail              &&
+           this.mailIsUniq                 &&
+           !this.isErrors[0].validateMail  &&
+           this.userMail.length            &&
+           !this.mailIsLoader){
           return true;
         } else {
           return false;
         }
       },
       isGoodPass(){
-        if(!this.isErrors[0].password && this.userPassword.length>0){
+        if(!this.isFocus.password       &&
+           !this.isErrors[0].password   &&
+           this.userPassword.length>6){
           return true;
         } else {
           return false;
@@ -204,8 +258,15 @@ export default {
 
   },
   methods: {
+
     checkUniqueLogin(){
-      this.$store.dispatch('checkUniqLogin', this.userLogin);
+      this.isFocus.login = false;
+      if(this.userLogin.length!=0){
+        this.$store.dispatch('checkUniqLogin', this.userLogin);
+      } else {
+
+      }
+
     },
     checkUniqueMail(){
       this.$store.dispatch('checkUniqMail', this.userMail);
@@ -224,28 +285,33 @@ export default {
       }
     },
     validateMail(){
-      let regExp = new RegExp();
-      regExp = /^\w+@\w+\.\w{2,4}$/i;
-      if(!regExp.test(this.userMail)){
+      this.isFocus.mail = false;
+      if(this.userMail.length!=0){
+        let regExp = new RegExp();
+        regExp = /^\w+@\w+\.\w{2,4}$/i;
+        if(!regExp.test(this.userMail)){
 
-        this.isErrors[0].validateMail = true;
+          this.isErrors[0].validateMail = true;
+        } else {
+          this.isErrors[0].validateMail = false;
+
+          this.checkUniqueMail(this.userMail);
+
+        }
       } else {
         this.isErrors[0].validateMail = false;
-
-        this.checkUniqueMail(this.userMail);
-
       }
+
     },
     checkPass: function(){
+      this.isFocus.password = false;
 			if(this.userPassword.length < 6){
 				this.isErrors[0].password = true;
 			} else {
 				this.isErrors[0].password = false;
 			}
 		},
-		checkUniqLogin: function(){
-			this.checkUniqueLogin(this.userLogin);
-		},
+
 
 		getDateOfBirth: function(){
 			let monthNum = this.months.indexOf(this.selectedMonth) +1;
@@ -299,14 +365,148 @@ export default {
 					this.years.push(startYear);
 					startYear--;
 				}
+        console.log(this);
 			}
 
 }
 </script>
 
 <style lang="css">
+.signUp{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 10px 30px;
+	padding-bottom: 40px;
+	margin: 0 auto;
+	width: 46%;
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: 3px 3px 10px rgba(0,0,0,.1);
+	font-family: "Roboto";
+
+	animation-name: fadeout;
+	animation-duration: 1s;
+}
+.signUp__title {
+	font-size: 2em;
+	padding-bottom: 30px;
+	padding-top: 30px;
+}
+.userData{
+	margin-bottom: 13px;
+	width: 100%;
+  height: 70px;
+  position: relative;
+}
+.userData__title{
+	font-size: .95em;
+	margin-bottom: 5px;
+	display: inline-block;
+  font-weight: normal;
+}
+.userData__title-BDay{
+	width: 100%;
+}
+.userData__input {
+	width: 100%;
+	height: 30px;
+	padding: 0 6px;
+	border: 1px solid rgba(0,0,0,.2);
+	border-radius: 3px;
+	background: #FAFAFA;
+	font-size: .9em;
+	font-family: "Roboto";
+}
+.userData__input:focus {
+	background: #fff;
+}
+.userData-bday{
+
+}
+.userData__BDay{
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.userData__day{
+	max-width: 17%;
+}
+.userData__month{
+	width: 23%;
+}
+.userData__year{
+	width: 17%;
+}
+.userData__aboutInput{
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	line-height: 13px;
+	color: #1ca9f0;
+	font-size: .6em;
+	border: 1px solid #1ca9f0;
+	border-radius: 50%;
+	width: 13px;
+	height: 13px;
+	cursor: pointer;
+}
+.tipBlock{
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	line-height: 20px;
+	color: black;
+	width: 300px;
+	text-align: left;
+	background: #E8E8E8;
+	padding: 5px 15px;
+	border: 1px solid rgba(0,0,0,.4);
+	border-radius: 5px;
+	font-size: 1.3em;
+	border-bottom-left-radius: 0;
+	-webkit-transition: all 1s;
+	-o-transition: all 1s;
+	transition: all 1s;
+}
+.userData__submit{
+	position: relative;
+}
+.signUp__submit{
+	width: 100%;
+	height: 60px;
+	background: #1ca9f0;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 5px 5px 5px rgba(0,0,0,.1);
+	font-family: "Roboto";
+	font-size: 1.5em;
+	color: #fff;
+	outline-color: gray;
+	cursor: pointer;
+	-webkit-transition: all .3s;
+	-o-transition: all .3s;
+	transition: all .3s;
+}
+
+.signUp__submit:hover{
+	background: #0C99E0;
+}
+.signUp__submit:disabled{
+	opacity: .3;
+}
+
 .goodInput{
   border-color:  #2DDAA5;
+}
+.doneIcon{
+	position: absolute;
+	right: 10px;
+	top: 32px;
+	color: #2DDAA5;
 }
 .signUp__thx{
   margin-top: 15px;
@@ -320,6 +520,137 @@ export default {
 }
 .signUp__submit-login{
   height: 47px;
+}
+.md-list-item-content{
+  min-height: 23px;
+}
+.selectContainer{
+  display: flex;
+
+}
+.userData__select{
+  width: calc(33% - 15px);
+  margin-right: 15px;
+}
+@media screen and (min-width: 1920px){
+	body{
+		font-size: 25px;
+	}
+	.signUp{
+		width: 30%;
+	}
+	.socailSignBtn__icon{
+		font-size: 1.4em;
+	}
+	.socailSignBtn__title{
+		font-size: 1.25em;
+	}
+	.userData__input{
+		height: 40px;
+	}
+	.userData__BDay{
+		height: 30px;
+		font-size: .8em;
+	}
+}
+@media screen and (max-width: 1920px){
+	body{
+		font-size: 22px;
+	}
+	.signUp{
+		width: 30%;
+	}
+	.socailSignBtn__icon{
+		font-size: 1.4em;
+	}
+	.socailSignBtn__title{
+		font-size: 1.25em;
+	}
+	.userData__input{
+		height: 40px;
+	}
+	.userData__BDay{
+		height: 30px;
+		font-size: .8em;
+	}
+}
+
+@media screen and (max-width: 1600px){
+	body{
+		font-size: 20px;
+	}
+	.signUp{
+		width: 35%;
+	}
+	.userData{
+		margin-bottom: 20px;
+	}
+	.socailSignBtn-facebook{
+		margin-bottom: 20px;
+	}
+
+}
+
+@media screen and (max-width: 1368px){
+	.signUp{
+		width: 40%;
+	}
+	body{
+		font-size: 16px;
+	}
+}
+@media screen and (max-width: 1120px){
+	.socailSignBtn__title{
+		font-size: 1em;
+	}
+}
+@media screen and (max-width: 960px){
+	.signUp{
+		width: 65%;
+	}
+	body{
+		font-size: 20px;
+	}
+}
+
+@media screen and (max-width: 768px){
+	.signUp{
+		width: 100%;
+	}
+	body{
+		font-size: 22px;
+	}
+	.userData{
+		margin-bottom: 24px;
+	}
+	.signUp__submit{
+		margin-top: 8px;
+	}
+	.socialSignBtn{
+		height: 60px;
+	}
+}
+@media screen and (max-width: 560px){
+	.socailSignBtn__title{
+		font-size: 1em;
+	}
+}
+
+
+@media screen and (max-width: 480px){
+	body{
+		font-size: 17px;
+	}
+	.userData__day{
+		width: 28%;
+
+	}
+	.userData__month{
+		width: 28%;
+	}
+	.userData__year{
+		width: 28%;
+	}
 }
 
 </style>

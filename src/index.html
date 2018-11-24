@@ -22,9 +22,10 @@
         <nav>
           <ul class="navigation">
             <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/">Profile</router-link></li>
-            <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/">Main</router-link></li>
-            <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
-            <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login">SignUp/Login</router-link></li>
+            <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>Main</router-link></li>
+            <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
+            <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
+            <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
           </ul>
         </nav>
       </div>

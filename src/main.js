@@ -4,9 +4,21 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 
 
+// vue material
+// import { MdField, MdProgress, MdMenu, MdList, MdButton } from 'vue-material/dist/components'
+// import 'vue-material/dist/vue-material.min.css'
+// import 'vue-material/dist/theme/default.css'
+//
+
+
+
+
 // importing files
+
+
 import './assets/css/style.css';
 import './assets/css/media-queries.css';
+
 
 
 import store from './Store/store.js';
@@ -24,6 +36,12 @@ import router from './routes.js';
 Vue.prototype.$axios = axios;
 Vue.use(Vuex);
 Vue.use(VueRouter);
+
+// Vue.use(MdField);
+// Vue.use(MdProgress);
+// Vue.use(MdMenu);
+// Vue.use(MdList);
+// Vue.use(MdButton);
 
 
 // const routes = [
@@ -57,6 +75,11 @@ new Vue({
 	computed: {
 		isUserAuthorized(){
 			return this.$store.getters.getIsAuthorized;
+		}
+	},
+	methods: {
+		logOutUser(){
+			this.$store.dispatch('logOutUser');
 		}
 	},
 	created(){

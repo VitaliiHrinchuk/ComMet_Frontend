@@ -21,13 +21,27 @@ let config = {
 	module:{
 		rules:[
 			{
+				 test: /\.scss$/,
+				 use: [
+					 'vue-style-loader',
+					 'css-loader',
+					 'sass-loader'
+				 ]
+			 },
+			{
 				test: /\.js$/,
 				loader: 'babel-loader',
 				// exclude: '/node_modules/'
 			},
 			{
 		        test: /\.vue$/,
-				loader: 'vue-loader'
+						loader: 'vue-loader',
+						options: {
+							loaders: {
+								scss: 'vue-style-loader!css-loader!sass-loader',
+								sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+							}
+						}
 		  },
 		    {
 		        test: /\.css$/,

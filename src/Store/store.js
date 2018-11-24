@@ -166,6 +166,7 @@ const store = new Vuex.Store({
           } else {
             localStorage.setItem('token', data.token);
             commit('setState', {type:'isAuthorized', item: true});
+            axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
             router.replace('/');
           }
 
@@ -176,7 +177,16 @@ const store = new Vuex.Store({
           commit('setLoader', {key: 'signInLoader', value: false});
         });
       },
+      logOutUser({commit}){
+        console.log('logout');
+        axios.get(`${API_ACCOUNTS_URL}logout/`).then((response)=>{
+          console.log(response);
+          commit('setState', {type:'isAuthorized', item: false});
+          localStorage.removeItem('token');
+        }, (error)=>{
 
+        });
+      },
       checkIsAuthorized({commit}){
         let token = localStorage.getItem('token');
         let checkLink = `${API_ACCOUNTS_URL}user_state/${token}/`;
@@ -188,6 +198,7 @@ const store = new Vuex.Store({
             commit('setState', {type:'isAuthorized', item: false});
           } else {
             commit('setState', {type:'isAuthorized', item: true});
+            axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
           }
 
         }, (error)=>{
@@ -206,7 +217,7 @@ const store = new Vuex.Store({
         //     Authorization: 'Token ' + '9944b09199c62bcf9418ad846dd0e4bbdfc6ee4b'
         //   }
         // }
-        axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
+
         // console.log(axiosConfig);
         axios.get(API_EVENTS_URL,param).then((response)=>{
           console.log(response);
