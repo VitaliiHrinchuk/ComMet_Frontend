@@ -189,17 +189,18 @@ export default {
 }
 .sortList__item{
   padding-left: 4px;
-  font-weight: bold;
+  font-weight: normal;
   margin-bottom: 6px;
   transition: all .3s;
 }
 .sortList__item:hover{
   color: #1CA9F0;
+  font-weight: bold;
   border-left: 2px solid #1CA9F0;
 }
 .sortList__item-active{
   color: #1CA9F0;
-
+  font-weight: bold;
   border-left: 2px solid #1CA9F0;
 }
 .aside{

@@ -18,13 +18,35 @@
     <div class="container eventContainer">
       <div class="eventBox eventBox-place">
           <h2 class="eventBox__title">Place</h2>
-          <p class="eventBox__text">Город Берлин, Улица Германская 3 lorem</p>
+          <div class="eventBox__content">
+            <p>Город Берлин, Улица Германская 3 lorem</p>
+          </div>
           <button class="eventBox__button" type="button" name="button">Open map</button>
       </div>
 
       <div class="eventBox eventBox-date">
           <h2 class="eventBox__title">Date</h2>
-          <p class="eventBox__text eventBox__text-date">November 26, 2018</p>
+          <div class="eventBox__content eventBox__content-date">
+            <p>November 26, 2018</p>
+          </div>
+      </div>
+
+      <div class="eventBox eventBox-author">
+          <h2 class="eventBox__title">Author</h2>
+          <div class="eventBox__content">
+            <div class="author">
+              <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
+              <h3 class="author__name">John Doe</h3>
+              <div class="userRate">
+                <i class="far fa-star userRate__star userRate__star-fill"></i>
+                <i class="far fa-star userRate__star userRate__star-fill"></i>
+                <i class="far fa-star userRate__star userRate__star-fill"></i>
+                <i class="far fa-star userRate__star "></i>
+                <i class="far fa-star userRate__star "></i>
+              </div>
+            </div>
+          </div>
+          <button class="eventBox__button" type="button" name="button">Profile</button>
       </div>
     </div>
   </div>
@@ -63,15 +85,19 @@ $primary-color: #1ca9f0;
       font-size: 1.1em;
       align-self: center;
       cursor: pointer;
+
+
     }
   }
   .eventContainer{
     padding-top: 30px;
     display: flex;
+    justify-content: center;
   }
   .eventBox{
     display: flex;
     flex-direction: column;
+
     margin-right: 30px;
     padding: 16px 16px;
     border-radius: 5px;
@@ -82,11 +108,14 @@ $primary-color: #1ca9f0;
       font-size: .8em;
       text-transform: uppercase;
     }
-    &__text{
+    &__content{
       padding: 3px 0;
       margin-top: auto;
       margin-bottom: auto;
-
+      p {
+        margin: 0;
+        padding: 0;
+      }
       &-date{
         text-align: center;
       }
@@ -102,6 +131,13 @@ $primary-color: #1ca9f0;
       height: 28px;
       width: 100px;
       align-self: flex-end;
+      outline: none;
+      &:focus{
+        background: rgba(28,169,240,.09);
+      }
+      &:active{
+        background: rgba(28,169,240,.04);
+      }
     }
     &-place{
       width: calc(30% - 30px);
@@ -109,5 +145,34 @@ $primary-color: #1ca9f0;
     &-date{
       width: calc(20% - 30px);
     }
+    &-author{
+      width:  calc(25% - 30px);
+    }
+  }
+  .author{
+    padding: 5px 0;
+    &__avatar{
+      float: left;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    &__name{
+      font-weight: 500;
+      margin-top: 5px;
+      font-size: .95em;
+    }
+
+  }
+  .userRate{
+    color: #2DDAA5;
+    &__star{
+      font-weight: normal;
+    }
+    &__star-fill{
+      font-weight: bold;
+    }
+
   }
 </style>
