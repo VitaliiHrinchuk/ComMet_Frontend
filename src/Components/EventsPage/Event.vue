@@ -3,13 +3,13 @@
     <div class="eventHeader" id="eventHeader">
       <div class="eventHeader__title">
         <h1 >Прогулка по Берлину</h1>
-        <div class="tag">
+        <div class="tag tag-red">
           #Music
         </div>
-        <div class="tag">
+        <div class="tag tag-green">
           #Talking
         </div>
-        <div class="tag">
+        <div class="tag tag-violet">
           #Walk
         </div>
       </div>
@@ -62,8 +62,12 @@
         <div class="eventBox eventBox-plan">
             <h2 class="eventBox__title">Plan</h2>
             <div class="eventBox__content">
+              <div class="arrowContainer">
+                <i class="arrowContainer__arrow arrowContainer__arrow-left fas fa-angle-left"></i>
+                <i class="arrowContainer__arrow arrowContainer__arrow-right fas fa-angle-right"></i>
+              </div>
               <div class="planContainer">
-                <i class="planContainer__arrow planContainer__arrow-left fas fa-angle-left"></i>
+
                 <div class="plan plan-green shadow">
                   <h3 class="plan__time">8:00</h3>
                   <p class="plan__desc">Meeting</p>
@@ -76,7 +80,7 @@
                   <h3 class="plan__time">12:00</h3>
                   <p class="plan__desc">Go to the cinema</p>
                 </div>
-                <i class="planContainer__arrow planContainer__arrow-right fas fa-angle-right"></i>
+
               </div>
             </div>
         </div>
@@ -124,11 +128,16 @@ export default {
       headerCoord: 0
     }
   },
+  computed:{
+    topCoordinate(){
+      return this.$el.getBoundingClientRect().top;
+    }
+  },
   methods:{
     stickyHeader(){
       let header = document.getElementById('eventHeader');
 
-      let sticky = this.headerCoord;
+      let sticky = 50;
       console.log(sticky);
 
       if(window.pageYOffset >= sticky){
@@ -139,21 +148,32 @@ export default {
     }
   },
   mounted(){
-    window.onscroll = this.stickyHeader;
-    this.headerCoord = document.getElementById('eventHeader').offsetTop;
+
+    this.$nextTick(()=>{
+      window.addEventListener('scroll', this.stickyHeader);
+    });
+
+  },
+
+  destroyed(){
+    window.removeEventListener('scroll',this.stickyHeader);
   }
 }
 </script>
 
 <style lang="scss">
 $primary-color: #1ca9f0;
+$green-color: #2DDAA5;
+$red-color: #FF00AE;
+$violet-color: #B34EE9;
+$blue-color: #3AE2CE;
   .sticky{
     position: fixed;
     top: 0;
     margin-top: 0;
   }
   .sticky + .eventContainer{
-    padding-top: 99px;
+    padding-top: 109px;
   }
   .bigButton{
     margin-left: auto;
@@ -200,8 +220,10 @@ $primary-color: #1ca9f0;
 
     background: #fff;
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     padding: 15px 15px;
+    z-index: 1;
     &__title{
 
       h1{
@@ -229,6 +251,7 @@ $primary-color: #1ca9f0;
   }
   .helpContainer{
     width: 55%;
+    order: 4;
   }
   .eventContainer{
 
@@ -256,7 +279,8 @@ $primary-color: #1ca9f0;
       padding: 5px 0;
       margin-top: auto;
       margin-bottom: auto;
-
+      overflow: hidden;
+      position: relative;
       &-date{
         text-align: center;
       }
@@ -271,25 +295,29 @@ $primary-color: #1ca9f0;
     }
     &-place{
       width: calc(35% - 30px);
-
+      order: 1;
     }
     &-date{
       width: calc(20% - 30px);
+      order: 2;
     }
     &-author{
       width:  calc(30% - 30px);
-
+      order: 3;
     }
     &-desc{
       // width: calc(60% - 30px);
       align-self: flex-start;
+
     }
     &-members{
       width:  calc(30% - 30px);
       align-self: flex-start;
+      order: 5;
     }
     &-plan{
       // width: calc(60% - 30px);
+      order: 6;
     }
   }
   .author{
@@ -317,25 +345,42 @@ $primary-color: #1ca9f0;
       padding: 10px 0;
     }
   }
-  .userRate{
-    color: #2DDAA5;
-    align-self: center;
-    &__star{
-      font-weight: normal;
-    }
-    &__star-fill{
-      font-weight: bold;
-    }
 
+  .arrowContainer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1;
+    &__arrow{
+      cursor: pointer;
+      font-size: 2em;
+      color: $primary-color;
+      &-left{
+        margin-right: auto;
+      }
+      &-right{
+        margin-left: auto;
+        right: 0;
+      }
+    }
   }
   .planContainer{
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    padding: 0 30px;
+    width: 1000px;
     align-items: center;
     overflow: hidden;
+    z-index: 999;
     &__arrow{
       font-size: 2em;
       color: $primary-color;
+      cursor: pointer;
       &-left{
         margin-right: auto;
       }
@@ -344,27 +389,28 @@ $primary-color: #1ca9f0;
       }
     }
   }
+
   .plan{
-    width: 130px;
+    min-width: 130px;
     margin-right: 15px;
     border-radius: 10px;
-
+    overflow: hidden;
     text-align: center;
     color: #fff;
     font-size: .9em;
-    padding: 10px 3px;
+    padding: 10px 10px;
     cursor: pointer;
     &-green{
-      background: #2DDAA5;
+      background: $green-color;
     }
     &-red{
-      background: #FF00AE;
+      background: $red-color;
     }
     &-violet{
-      background: #B34EE9;
+      background: $violet-color;
     }
     &-blue{
-      background: #3AE2CE;
+      background: $blue-color;
     }
     &__time{
       padding: 0;
@@ -374,5 +420,122 @@ $primary-color: #1ca9f0;
       padding: 0;
       margin: 0;
     }
+  }
+
+
+  @media screen and (max-width: 1920px){
+
+  }
+
+  @media screen and (max-width: 1600px){
+
+
+  }
+
+  @media screen and (max-width: 1368px){
+
+  }
+  @media screen and (max-width: 1120px){
+    .eventBox{
+      font-size: .9em;
+    }
+  }
+  @media screen and (max-width: 960px){
+    .eventHeader{
+      position: relative;
+    }
+    .sticky + .eventContainer{
+      padding-top: 0;
+    }
+    .userRate{
+      font-size: .9em;
+    }
+    .eventBox{
+      font-size: .9em;
+      &-place{
+        width: calc(40% - 30px);
+      }
+      &-date{
+        width: calc(30% - 30px);
+      }
+      &-author{
+        width: calc(30% - 30px);
+
+        .author{
+          justify-content: center;
+          align-items: center;
+          float: none;
+          text-align: center;
+          &__avatar{
+            margin-right: 0;
+          }
+        }
+      }
+      &-members{
+        width: calc(40% - 30px);
+      }
+      &-desc{
+        width: 100%;
+      }
+      &-plan{
+        width: 100%;
+      }
+    }
+    .helpContainer{
+      width: calc(60% - 30px);
+      margin-right: 30px;
+    }
+  }
+
+  @media screen and (max-width: 768px){
+    .eventHeader{
+      position: relative;
+      margin-top: 30px;
+    }
+    .sticky + .eventContainer{
+      padding-top: 0;
+    }
+    .bigButton{
+      width: 100%;
+      height: 35px;
+      margin-top: 30px;
+    }
+    .eventBox{
+
+      &-place{
+        width: 100%;
+        margin-right: 0;
+      }
+      &-date{
+        width: 100%;
+        margin-right: 0;
+      }
+      &-author{
+        width: 100%;
+        margin-right: 0;
+      }
+      &-members{
+        width: 100%;
+        margin-right: 0;
+      }
+      &-desc{
+        width: 100%;
+      }
+      &-plan{
+        width: 100%;
+      }
+    }
+    .helpContainer{
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+  @media screen and (max-width: 560px){
+
+  }
+
+
+  @media screen and (max-width: 480px){
+
   }
 </style>

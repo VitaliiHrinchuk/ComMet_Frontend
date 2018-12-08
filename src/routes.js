@@ -5,7 +5,7 @@ import SignUp from './Components/SignUp/SignUp.vue';
 import SignIn from './Components/SignUp/SignIn.vue';
 import EventPage from './Components/EventsPage/EventsList.vue';
 import Event from './Components/EventsPage/Event.vue'
-
+import Profile from './Components/Profile/Profile.vue'
 
 import VueRouter from 'vue-router';
 
@@ -21,6 +21,7 @@ let routes = [
 			component: SignIn
 		}
 	] },
+	{ path: '/profile', component: Profile},
 	{ path: '/', component: FirstPage},
 	{ path: '/Events', component: EventPage},
 	{ path: '/Event/temp', component: Event}

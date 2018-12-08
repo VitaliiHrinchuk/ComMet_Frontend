@@ -16,7 +16,7 @@ import VueRouter from 'vue-router';
 // importing files
 
 
-import './assets/css/style.css';
+import './assets/css/style.scss';
 import './assets/css/media-queries.css';
 
 
