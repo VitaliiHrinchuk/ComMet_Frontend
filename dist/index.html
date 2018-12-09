@@ -16,23 +16,30 @@
 <body>
 
   <div id="app" class="app">
-    <header class="header shadow">
+    <div class="loaderBg" v-if='isAppLoad'>
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner"></div>
+      </div>
+    </div>
+    <header class="header shadow"  v-if='!isAppLoad'>
       <img id="logo" class="logo" alt="logo" src="./logo.png?7b3d7b453412598136b8d3bc128bcb7e">
-      <div class="container">
+      <div class="container" >
         <nav>
           <ul class="navigation">
             <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/">Profile</router-link></li>
-            <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/">Main</router-link></li>
-            <li class="navigation__item ">Events</li>
-            <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login">SignUp/Login</router-link></li>
+            <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>Main</router-link></li>
+            <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
+            <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
+            <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
           </ul>
         </nav>
       </div>
     </header>
     <transition name="routerSlide">
-      <router-view></router-view>
+      <router-view  v-if='!isAppLoad'></router-view>
     </transition>
 
+    <div class="versionMsg">This project is under development. This is just a test version</div>
   </div>
 <script type="text/javascript" src="./assets/js/build.js"></script></body>
 </html>

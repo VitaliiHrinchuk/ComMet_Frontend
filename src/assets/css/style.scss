@@ -1,5 +1,13 @@
 
-
+.versionMsg{
+	position: fixed;
+	right: 5px;
+	bottom: 5px;
+	font-size: .7em;
+	color: gray;
+	background: transparent;
+	z-index: 9999;
+}
 body {
 	margin: 0;
 	padding: 0;
@@ -204,7 +212,7 @@ $blue-color: #3AE2CE;
 .header{
   background: #fff;
   height: 50px;
-  width: 100vw;
+  width: 100%;
 }
 
 .logo{
