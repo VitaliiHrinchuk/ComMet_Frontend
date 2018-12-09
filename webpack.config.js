@@ -23,9 +23,21 @@ let config = {
 			{
 				 test: /\.scss$/,
 				 use: [
-					 'vue-style-loader',
-					 'css-loader',
-					 'sass-loader'
+					 MiniCssExtractPlugin.loader,
+	        {
+	            loader: "css-loader",
+	            options: {
+	                minimize: {
+	                    safe: true
+	                }
+	            }
+	        },
+					 // 'vue-style-loader',
+					 // 'css-loader',
+					 {
+					 loader: "sass-loader",
+					 options: {}
+			 }
 				 ]
 			 },
 			{

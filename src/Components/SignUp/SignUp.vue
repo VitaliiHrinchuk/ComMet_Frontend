@@ -41,7 +41,7 @@
                v-model='userLogin'
                @focus="isFocus.login = true"
                v-on:change="checkUniqueLogin()"
-               v-bind:class="{errorInput :!loginIsUniq, goodInput :isGoodLogin}">
+               v-bind:class="{errorInput :!loginIsUniq, 'goodInput' :isGoodLogin}">
 
         <span class="loader loader-input" v-if="loginIsLoader"></span>
         <span class="errorMsg" v-if="!loginIsUniq"><i class="fas fa-exclamation-circle"></i> This login already exists</span>
@@ -263,6 +263,7 @@ export default {
       this.isFocus.login = false;
       if(this.userLogin.length!=0){
         this.$store.dispatch('checkUniqLogin', this.userLogin);
+        console.log(this.$store.getters);
       } else {
 
       }
@@ -273,9 +274,6 @@ export default {
     },
     getVerificationCode(){
       this.$store.dispatch('getVerificationCode',this.userMail);
-    },
-    postUser(){
-
     },
     checkVerifCode(){
       if(this.userVerificationCode == this.$store.getters.getLocalVerificationCode){
@@ -335,7 +333,7 @@ export default {
   			  }
   		};
 
-			this.$axios.post(`https://comeandmeet.herokuapp.com/accounts/users/`,param,axiosConfig).then((response)=>{
+			this.$axios.post(`https://comeandmeet.herokuapp.com/accounts/register/`,param,axiosConfig).then((response)=>{
         this.userConfirmed = true;
 			},
 			(error)=>{
@@ -344,6 +342,7 @@ export default {
 			});
 		},
     toSignIn(){
+      this.$store.commit('setState', {type: 'isSignUpEnd', item: false})
       this.$router.replace('signIn');
     }
   },
@@ -365,7 +364,8 @@ export default {
 					this.years.push(startYear);
 					startYear--;
 				}
-        console.log(this);
+        console.log(this.$store);
+
 			}
 
 }
@@ -500,7 +500,7 @@ export default {
 }
 
 .goodInput{
-  border-color:  #2DDAA5;
+  border-color: #2DDAA5;
 }
 .doneIcon{
 	position: absolute;

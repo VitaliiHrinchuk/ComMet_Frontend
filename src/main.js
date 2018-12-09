@@ -75,6 +75,9 @@ new Vue({
 	computed: {
 		isUserAuthorized(){
 			return this.$store.getters.getIsAuthorized;
+		},
+		isAppLoad(){
+			return this.$store.getters.getAppLoadState;
 		}
 	},
 	methods: {
@@ -82,7 +85,8 @@ new Vue({
 			this.$store.dispatch('logOutUser');
 		}
 	},
-	created(){
+	mounted(){
 		this.$store.dispatch('checkIsAuthorized');
+
 	}
 });

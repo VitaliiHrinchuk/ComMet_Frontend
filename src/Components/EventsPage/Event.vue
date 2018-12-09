@@ -1,8 +1,13 @@
 <template lang="html">
   <div class="">
-    <div class="eventHeader" id="eventHeader">
+    <div class="loaderBg" v-if="isScreenLoader">
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner"></div>
+      </div>
+    </div>
+    <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
-        <h1 >Прогулка по Берлину</h1>
+        <h1 >Прогулка по Берлину </h1>
         <div class="tag tag-red">
           #Music
         </div>
@@ -15,7 +20,7 @@
       </div>
       <button class="bigButton shadow" type="button" name="button">Join Event</button>
     </div>
-    <div class="container eventContainer">
+    <div class="container eventContainer" v-if="!isScreenLoader">
       <div class="eventBox eventBox-place">
           <h2 class="eventBox__title">Place</h2>
           <div class="eventBox__content">
@@ -123,6 +128,9 @@
 
 <script>
 export default {
+  props:{
+    id: {required: true}
+  },
   data(){
     return {
       headerCoord: 0
@@ -131,6 +139,12 @@ export default {
   computed:{
     topCoordinate(){
       return this.$el.getBoundingClientRect().top;
+    },
+    isScreenLoader(){
+      return  this.$store.getters.getLoaderState;
+    },
+    eventData(){
+      return this.$store.getters.getEventData;
     }
   },
   methods:{
@@ -157,6 +171,10 @@ export default {
 
   destroyed(){
     window.removeEventListener('scroll',this.stickyHeader);
+  },
+
+  created(){
+    this.$store.dispatch('getEventDataAPI',this.id);
   }
 }
 </script>

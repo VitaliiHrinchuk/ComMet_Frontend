@@ -6,52 +6,52 @@
     <table class="about__table userTable">
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">First Name: </td>
-        <td class="userTable__col">John</td>
+        <td class="userTable__col">{{userInfo.first_name}}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Username: </td>
-        <td class="userTable__col">@johny19</td>
+        <td class="userTable__col">@{{userInfo.username}}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">City: </td>
-        <td class="userTable__col">London</td>
+        <td class="userTable__col">*London*</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Birthday: </td>
-        <td class="userTable__col">11.11.1992</td>
+        <td class="userTable__col">{{userInfo.date_of_birth}}</td>
       </tr>
     </table>
 
     <table class="about__table userTable">
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Last Name: </td>
-        <td class="userTable__col">Doe</td>
+        <td class="userTable__col">{{userInfo.last_name}}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Email: </td>
-        <td class="userTable__col">john@milo.com</td>
+        <td class="userTable__col">{{userInfo.email}}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Country: </td>
-        <td class="userTable__col">UK</td>
+        <td class="userTable__col">*UK*</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Phone: </td>
-        <td class="userTable__col">+180890789</td>
+        <td class="userTable__col">{{userInfo.phone_number || "*uknown*"}}</td>
       </tr>
     </table>
 
     <h1 class="about__title about__title-lined">Favourite Tags</h1>
-    <div class="about__tags">
+    <div class="about__tags" v-for="tag in userInfo.tags">
       <div class="tag tag-red">
-        #Music
+        #{{tag}}
       </div>
-      <div class="tag tag-green">
+      <!-- <div class="tag tag-green">
         #Talking
       </div>
       <div class="tag tag-violet">
         #Walk
-      </div>
+      </div> -->
     </div>
   </div>
 
@@ -60,8 +60,7 @@
 <script>
 export default {
   props:{
-    name: {required: true},
-    selected: {default: false}
+    userInfo: {required: true}
   },
   data(){
     return{

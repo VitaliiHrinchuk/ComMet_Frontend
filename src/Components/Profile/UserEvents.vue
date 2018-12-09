@@ -1,13 +1,17 @@
 <template lang="html">
   <div class="userEvents">
-    <h2 class="userEvents__title">Created</h2>
-    <div class="profileEvent">
-      <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
-      <h3 class="profileEvent__title">Walking through Berlin</h3>
-      <h4 class="profileEvent__date">Date: 11.11.2017</h4>
-      <button class="profileEvent__btn" type="button" name="button">show</button>
+    <h2 class="userEvents__title">Visited</h2>
+    <div class="" v-for='event in userEvents.visited'>
+
+      <div class="profileEvent">
+        <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
+        <h3 class="profileEvent__title">{{event.name}}</h3>
+        <h4 class="profileEvent__date">Date: 11.11.2017</h4>
+        <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
+      </div>
     </div>
-    <div class="profileEvent">
+
+    <!-- <div class="profileEvent">
       <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
       <h3 class="profileEvent__title">Walking through Berlin</h3>
       <h4 class="profileEvent__date">Date: 11.11.2017</h4>
@@ -18,18 +22,25 @@
       <h3 class="profileEvent__title">Walking through Berlin</h3>
       <h4 class="profileEvent__date">Date: 11.11.2017</h4>
       <button class="profileEvent__btn" type="button" name="button">show</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 export default {
-  props:['name'],
+  props:{
+    userEvents: {required: true}
+  },
   data(){
     return{
 
     }
   },
+  methods: {
+    showEvent(id){
+      this.$router.push(`/Event/${id}`);
+    }
+  }
 }
 </script>
 

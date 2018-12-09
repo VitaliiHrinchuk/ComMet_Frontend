@@ -1,21 +1,27 @@
 <template lang="html">
-  <div class="container">
-    <div class="profile">
+  <div class="">
+    <div class="loaderBg" v-if="isScreenLoader">
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner"></div>
+      </div>
+    </div>
+
+    <div class="profile container" v-if="!isScreenLoader">
       <div class="mainInfo profile__block shadow radius-5px">
         <img class="mainInfo__avatar" src="../../assets/images/avatar__temp.jpg" alt="avatar">
-        <h2 class="mainInfo__realname">John Doe</h2>
-        <h3 class="mainInfo__username">@johny19</h3>
+        <h2 class="mainInfo__realname">{{userData.first_name}} {{userData.last_name}}</h2>
+        <h3 class="mainInfo__username">@{{userData.username}}</h3>
 
         <button class="mainInfo__subscribeBtn" type="button" name="button">Follow</button>
 
         <div class="mainInfo__follows">
           <div class="follows follows-left">
-            <h4 class="follows__count">35</h4>
+            <h4 class="follows__count">{{userData.friends.length}}</h4>
             <p class="follows__text">Followers</p>
           </div>
 
           <div class="follows follows-right">
-            <h4 class="follows__count">19</h4>
+            <h4 class="follows__count">{{userData.friends.length}}</h4>
             <p class="follows__text">Following</p>
           </div>
         </div>
@@ -42,8 +48,8 @@
         </ul>
 
         <div class="detailInfo__content">
-            <user-info   v-show="selectedTab == 1" name="info"></user-info>
-            <user-events v-show="selectedTab == 2" ></user-events>
+            <user-info   v-show="selectedTab == 1" v-bind:userInfo="userData"></user-info>
+            <user-events v-show="selectedTab == 2" v-bind:userEvents="{visited: userData.events_visited, created: userData.events_created}"></user-events>
             <user-photos v-show="selectedTab == 3" ></user-photos>
         </div>
       </div>
@@ -55,16 +61,31 @@
 import UserInformation from './UserInformation.vue';
 import UserEvents from './UserEvents.vue';
 import UserPhotos from './UserPhotos.vue';
+
+
 export default {
+  props:{
+    username: {required: true}
+  },
   data(){
     return{
-      selectedTab: '1'
+      selectedTab: '1',
+
     }
   },
+
   components: {
     'user-info': UserInformation,
     'user-events': UserEvents,
     'user-photos': UserPhotos
+  },
+  computed: {
+    userData(){
+      return this.$store.getters.getUserData;
+    },
+    isScreenLoader(){
+      return this.$store.getters.getLoaderState;
+    }
   },
   methods: {
     selectTab(id){
@@ -72,6 +93,14 @@ export default {
     }
   },
   created(){
+    this.$store.dispatch('getUserDataAPI', this.username);
+
+
+
+    // this.userData =
+    // setTimeout(()=>{
+    //   console.log(this.userData);
+    // },1000);
   }
 }
 </script>

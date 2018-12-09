@@ -16,9 +16,14 @@
 <body>
 
   <div id="app" class="app">
-    <header class="header shadow">
+    <div class="loaderBg" v-if='isAppLoad'>
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner"></div>
+      </div>
+    </div>
+    <header class="header shadow"  v-if='!isAppLoad'>
       <img id="logo" class="logo" alt="logo" src="<%=require('./assets/images/logo.png')%>">
-      <div class="container">
+      <div class="container" >
         <nav>
           <ul class="navigation">
             <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/">Profile</router-link></li>
@@ -31,7 +36,7 @@
       </div>
     </header>
     <transition name="routerSlide">
-      <router-view></router-view>
+      <router-view  v-if='!isAppLoad'></router-view>
     </transition>
   </div>
 </body>

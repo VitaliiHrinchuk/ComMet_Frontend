@@ -21,10 +21,10 @@ let routes = [
 			component: SignIn
 		}
 	] },
-	{ path: '/profile', component: Profile},
+	{ path: '/Profile/:username', component: Profile, props: true},
 	{ path: '/', component: FirstPage},
 	{ path: '/Events', component: EventPage},
-	{ path: '/Event/temp', component: Event}
+	{ path: '/Event/:id', component: Event, props: true}
 
 
 ];
