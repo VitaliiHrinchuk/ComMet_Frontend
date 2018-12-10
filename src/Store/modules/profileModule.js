@@ -5,15 +5,15 @@ const API_ACCOUNTS_URL = `https://comeandmeet.herokuapp.com/accounts/`;
 
 const state = {
   userData: {},
-  screenLoader: true,
+  profileLoader: true,
 }
 
 const getters = {
   getUserData(state){
     return state.userData;
   },
-  getLoaderState(state){
-    return state.screenLoader;
+  getProfileLoaderState(state){
+    return state.profileLoader;
   }
 }
 
@@ -22,15 +22,15 @@ const mutations = {
     console.log(item);
     state['userData'] = item;
   },
-  setLoader(state, value){
-    state['screenLoader'] = value;
+  setProfileLoader(state, value){
+    state['profileLoader'] = value;
   }
 }
 
 const actions = {
   getUserDataAPI({commit},username){
     let userDataUrl =`${API_ACCOUNTS_URL}user_detail/${username}`;
-    commit('setLoader', true);
+    commit('setProfileLoader', true);
     axios.get(userDataUrl).then((response)=>{
 
 
@@ -38,10 +38,10 @@ const actions = {
       let result = response.data.data;
 
       commit('setUserData',{item:result});
-      commit('setLoader', false);
+      commit('setProfileLoader', false);
     }, (error)=>{
       //error
-      commit('setLoader', false);
+      commit('setProfileLoader', false);
     });
   }
 }

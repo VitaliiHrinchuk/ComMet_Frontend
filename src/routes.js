@@ -7,6 +7,8 @@ import EventPage from './Components/EventsPage/EventsList.vue';
 import Event from './Components/EventsPage/Event.vue'
 import Profile from './Components/Profile/Profile.vue'
 
+import ErrorNotFound from './Components/ErrorsPage/NotFound.vue'
+
 import VueRouter from 'vue-router';
 
 
@@ -21,10 +23,14 @@ let routes = [
 			component: SignIn
 		}
 	] },
-	{ path: '/Profile/:username', component: Profile, props: true},
+	{ name:'user', path: '/Profile/:username', component: Profile, props: true},
 	{ path: '/', component: FirstPage},
 	{ path: '/Events', component: EventPage},
-	{ path: '/Event/:id', component: Event, props: true}
+	{ path: '/Event/:id', component: Event, props: true},
+
+
+	{ path: '/404', component: ErrorNotFound},
+	{ path: '*', redirect: '/404'}
 
 
 ];

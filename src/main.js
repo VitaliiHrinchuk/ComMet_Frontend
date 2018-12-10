@@ -78,6 +78,12 @@ new Vue({
 		},
 		isAppLoad(){
 			return this.$store.getters.getAppLoadState;
+		},
+		userCurrentLocation(){
+			return this.$store.getters.getUserCurrentLocation;
+		},
+		currentUser(){
+			return this.$store.getters.getCurrentUser;
 		}
 	},
 	methods: {
@@ -85,8 +91,12 @@ new Vue({
 			this.$store.dispatch('logOutUser');
 		}
 	},
+
 	mounted(){
 		this.$store.dispatch('checkIsAuthorized');
+		console.log(this.$router.options.routes);
+		// this.$store.dispatch('checkUserCurrentLocation');
+
 
 	}
 });

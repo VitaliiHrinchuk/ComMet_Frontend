@@ -1,6 +1,6 @@
 const API_ACCOUNTS_URL = `https://comeandmeet.herokuapp.com/accounts/`;
 
-
+// import Profile from '../../Components/Profile/Profile.vue'
 
 import axios from 'axios';
 import router from '../../routes.js';
@@ -52,7 +52,7 @@ const mutations = {
   setLoader(state, { key, value}){
      state['loaders'][key] = value;
   },
-  setState(state, {type, item}){
+  setSignState(state, {type, item}){
     console.log(item);
     state[type] = item;
   }
@@ -76,7 +76,7 @@ const actions = {
             result = true;
         }
 
-        commit('setState', {type: 'isUniqLogin', item: result});
+        commit('setSignState', {type: 'isUniqLogin', item: result});
 
       },
       (error)=>{
@@ -101,7 +101,7 @@ const actions = {
             result = true;
         }
 
-        commit('setState', {type: 'isUniqMail', item: result});
+        commit('setSignState', {type: 'isUniqMail', item: result});
 
       },
       (error)=>{
@@ -123,9 +123,9 @@ const actions = {
 
         let verifCode = response.data.data["verification_code"];
         console.log(verifCode);
-        commit('setState', {type: 'verificationCode', item: verifCode});
+        commit('setSignState', {type: 'verificationCode', item: verifCode});
 
-        commit('setState', {type: 'isSignUpEnd', item: true});
+        commit('setSignState', {type: 'isSignUpEnd', item: true});
 
 
     }, (error)=>{
@@ -156,14 +156,15 @@ const actions = {
       let data = response.data.data;
       commit('setLoader', {key: 'signInLoader', value: false});
       if(data.error == 'user not found'){
-        commit('setState', {type: 'isWrongUserData', item: true})
+        commit('setSignState', {type: 'isWrongUserData', item: true})
       } else {
         localStorage.setItem('token', data.token);
-        commit('setState', {type:'isAuthorized', item: true});
+        commit('setGlobalState', {type:'isAuthorized', item: true});
         axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
         router.replace('/');
       }
 
+      // router.addRoutes([{ name:'user', path: '/Profile/:username', component: Profile, props: true}]);
 
     },
     (error)=>{
@@ -171,16 +172,7 @@ const actions = {
       commit('setLoader', {key: 'signInLoader', value: false});
     });
   },
-  logOutUser({commit}){
-    console.log('logout');
-    axios.get(`${API_ACCOUNTS_URL}logout/`).then((response)=>{
-      console.log(response);
-      commit('setState', {type:'isAuthorized', item: false});
-      localStorage.removeItem('token');
-    }, (error)=>{
 
-    });
-  },
 }
 
 

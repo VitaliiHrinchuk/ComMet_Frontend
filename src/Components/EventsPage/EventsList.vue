@@ -24,7 +24,7 @@
         <div class="shortEvent shadow radius-5px bg-white" v-for="event in eventsList">
           <h3 class="shortEvent__title">{{event.name}}</h3>
           <div class="shortEvent__date">
-            <span>15 November</span>
+            <span>{{dateToString(event.date)}}</span>
           </div>
           <div class="shortEvent__tags" >
             <div class="tag" v-for="tags in event.tags">
@@ -114,11 +114,21 @@ export default {
   computed:{
     eventsList(){
       return this.$store.getters.getEventsList;
-    }
+    },
+
   },
   methods: {
     pushEventsList(){
       // this.eventsList.push(this.$store.getters.getEventsList)
+    },
+    dateToString(date){
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      let resultDate = new Date(date);
+
+      return resultDate.getDay() + ' ' +monthNames[resultDate.getMonth()];
     }
   },
   created(){

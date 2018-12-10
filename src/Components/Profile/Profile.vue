@@ -84,7 +84,7 @@ export default {
       return this.$store.getters.getUserData;
     },
     isScreenLoader(){
-      return this.$store.getters.getLoaderState;
+      return this.$store.getters.getProfileLoaderState;
     }
   },
   methods: {

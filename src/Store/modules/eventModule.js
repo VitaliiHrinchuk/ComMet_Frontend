@@ -8,7 +8,7 @@ const API_EVENTS_URL = `https://comeandmeet.herokuapp.com/events/`;
 const state = {
   eventsList: [],
   eventData: {},
-  screenLoader: true
+  eventScreenLoader: true
 }
 
 const getters = {
@@ -18,44 +18,42 @@ const getters = {
   getEventData(state){
     return state.eventData;
   },
-  getLoaderState(state){
-    return state.screenLoader;
+  getEventLoaderState(state){
+    return state.eventScreenLoader;
   }
 }
 
 const mutations = {
-  setState(state, {type, item}){
+  setEventsState(state, {type, item}){
     state[type] = item;
   },
-  setLoader(state, value){
-    state['screenLoader'] = value;
+  setEventLoader(state, value){
+    state['eventScreenLoader'] = value;
   }
 }
 
 const actions = {
   refreshEventsList({commit}){
 
-    let param = {
-      page: 1,
-      page_size: 6
-    }
 
-    axios.get(API_EVENTS_URL,param).then((response)=>{
+
+    axios.get(API_EVENTS_URL).then((response)=>{
       console.log(response);
       let list = response.data.data;
 
       let resultList = list.map((item)=>{
         let resultItem = {};
         resultItem.name = item.attributes.name;
-        resultItem.membersCount = item.attributes.members.length;
-        resultItem.tags = item.attributes.tags;
-        resultItem.authorUserName = item.attributes.author.username;
-        resultItem.authorFirstName = item.attributes.author.first_name;
-        resultItem.authorPhoto = item.attributes.author.avatar;
+        resultItem.membersCount = item.relationships.members.data.length;
+        resultItem.tags = item.relationships.tags.data;
+        resultItem.date = item.attributes.date_expire;
+        // resultItem.authorUserName = item.attributes.author.username;
+        // resultItem.authorFirstName = item.attributes.author.first_name;
+        // resultItem.authorPhoto = item.attributes.author.avatar;
         return resultItem;
       });
       console.log(resultList);
-      commit('setState', {type:'eventsList', item:resultList});
+      commit('setEventsState', {type:'eventsList', item:resultList});
     }, (error)=>{
       console.log(error.response);
     });
@@ -63,14 +61,14 @@ const actions = {
 
   getEventDataAPI({commit}, id){
     let eventUrl = `${API_EVENTS_URL}${id}/`;
-    commit('setLoader', true);
+    commit('setEventLoader', true);
     axios.get(eventUrl).then((response)=>{
-      commit('setState', {type: 'eventData', item:response.data.data});
-      commit('setLoader', false);
+      commit('setEventsState', {type: 'eventData', item:response.data.data});
+      commit('setEventLoader', false);
 
     }, (error)=>{
       //error
-      commit('setLoader', false);
+      commit('setEventLoader', false);
     })
   }
 }

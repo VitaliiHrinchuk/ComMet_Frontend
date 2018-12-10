@@ -8,7 +8,7 @@
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
         <h1 >Прогулка по Берлину </h1>
-        <div class="tag tag-red">
+        <!-- <div class="tag tag-red">
           #Music
         </div>
         <div class="tag tag-green">
@@ -16,6 +16,9 @@
         </div>
         <div class="tag tag-violet">
           #Walk
+        </div> -->
+        <div class="tag" v-for='tag in testTags' v-bind:class='randomTagColor()'>
+          {{tag}}
         </div>
       </div>
       <button class="bigButton shadow" type="button" name="button">Join Event</button>
@@ -133,7 +136,8 @@ export default {
   },
   data(){
     return {
-      headerCoord: 0
+      headerCoord: 0,
+      testTags: ['#music','#walking','#talking']
     }
   },
   computed:{
@@ -141,11 +145,12 @@ export default {
       return this.$el.getBoundingClientRect().top;
     },
     isScreenLoader(){
-      return  this.$store.getters.getLoaderState;
+      return  this.$store.getters.getEventLoaderState;
     },
     eventData(){
       return this.$store.getters.getEventData;
-    }
+    },
+
   },
   methods:{
     stickyHeader(){
@@ -158,6 +163,16 @@ export default {
         header.classList.add('sticky');
       } else {
         header.classList.remove('sticky');
+      }
+    },
+    randomTagColor(){
+      let rand = Math.floor(Math.random() * 100)%3;
+
+      switch (rand) {
+        case 0: return 'tag-red';
+        case 1: return 'tag-green';
+        case 2: return 'tag-violet';
+        default: return '';
       }
     }
   },
