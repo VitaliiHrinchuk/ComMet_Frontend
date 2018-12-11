@@ -12,9 +12,13 @@ body {
 	margin: 0;
 	padding: 0;
 	background: #f3f7fa;
+	background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 	font-size: 18px;
 	letter-spacing: 0.025em;
 	font-family: "Roboto";
+}
+html{
+	min-height: 100%;
 }
 div,aside,input {
 	box-sizing: border-box;
