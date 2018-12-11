@@ -149,7 +149,7 @@ const actions = {
       "username": payload.username,
       "password": payload.password
     });
-    console.log(params);
+    let username =  payload.username;
     commit('setLoader', {key: 'signInLoader', value: true});
     axios.post(signInLink,params,axiosConfig).then((response)=>{
       console.log(response);
@@ -161,6 +161,7 @@ const actions = {
         localStorage.setItem('token', data.token);
         commit('setGlobalState', {type:'isAuthorized', item: true});
         axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
+        commit('setGlobalState', {type:'currentUser', item: username});
         router.replace('/');
       }
 
