@@ -94,13 +94,10 @@ export default {
   },
   created(){
     this.$store.dispatch('getUserDataAPI', this.username);
-
-
-
-    // this.userData =
-    // setTimeout(()=>{
-    //   console.log(this.userData);
-    // },1000);
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.$store.dispatch('getUserDataAPI', to.params.username);
+    next();
   }
 }
 </script>

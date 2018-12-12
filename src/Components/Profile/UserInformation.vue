@@ -1,7 +1,8 @@
 <template lang="html">
   <div class="about">
-    <h1 class="about__title">About</h1>
 
+    <h1 class="about__title">About</h1>
+    <button class="about__btn shadow" type="button" name="button" v-if="userInfo.is_current"><i class="far fa-edit"></i> Edit</button>
 
     <table class="about__table userTable">
       <tr class="userTable__row">
@@ -87,6 +88,19 @@ export default {
 
     &__tags{
       font-size: .8em;
+    }
+    &__btn{
+      display: block;
+      margin-left: auto;
+      background-color: #1ca9f0;
+      border: none;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 15px;
+      // border: 1px solid gray;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: bold;
     }
 
   }

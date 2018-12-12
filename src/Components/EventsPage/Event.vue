@@ -5,9 +5,10 @@
         <div class="screenLoader screenLoader-inner"></div>
       </div>
     </div>
+
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
-        <h1 >Прогулка по Берлину </h1>
+        <h1 >{{eventGlobalInfo.name}} </h1>
         <!-- <div class="tag tag-red">
           #Music
         </div>
@@ -35,7 +36,7 @@
       <div class="eventBox eventBox-date">
           <h2 class="eventBox__title">Date</h2>
           <div class="eventBox__content eventBox__content-date">
-            <p>November 26, 2018</p>
+            <p>{{dateToString(eventGlobalInfo.date_expire)}}</p>
           </div>
       </div>
 
@@ -150,6 +151,9 @@ export default {
     eventData(){
       return this.$store.getters.getEventData;
     },
+    eventGlobalInfo(){
+      return this.eventData.attributes;
+    }
 
   },
   methods:{
@@ -157,7 +161,6 @@ export default {
       let header = document.getElementById('eventHeader');
 
       let sticky = 50;
-      console.log(sticky);
 
       if(window.pageYOffset >= sticky){
         header.classList.add('sticky');
@@ -174,6 +177,15 @@ export default {
         case 2: return 'tag-violet';
         default: return '';
       }
+    },
+    dateToString(date){
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      let resultDate = new Date(date);
+
+      return resultDate.getDay() + ' ' +monthNames[resultDate.getMonth()];
     }
   },
   mounted(){
@@ -190,6 +202,10 @@ export default {
 
   created(){
     this.$store.dispatch('getEventDataAPI',this.id);
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.$store.dispatch('getEventDataAPI',to.params.id);
+    next();
   }
 }
 </script>
@@ -208,47 +224,7 @@ $blue-color: #3AE2CE;
   .sticky + .eventContainer{
     padding-top: 109px;
   }
-  .bigButton{
-    margin-left: auto;
-    height: 45px;
-    width: 150px;
-    background: $primary-color;
-    border: none;
-    border-radius: 5px;
-    text-transform: uppercase;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1.1em;
-    align-self: center;
-    cursor: pointer;
-    letter-spacing: 0.07em;
-    &-members{
-      width: 60%;
-      margin-right: auto;
-      margin-top: 30px;
-      margin-bottom: 10px;
-    }
-  }
-  .textButton{
-    border:none;
-    padding: 0 10px;
-    margin: 0;
-    border-radius: 5px;
-    background: transparent;
-    text-transform: uppercase;
-    color: $primary-color;
-    font-weight: bold;
-    cursor: pointer;
-    height: 28px;
-    align-self: flex-end;
-    outline: none;
-    &:focus{
-      background: rgba(28,169,240,.09);
-    }
-    &:active{
-      background: rgba(28,169,240,.04);
-    }
-  }
+
   .eventHeader{
 
     background: #fff;

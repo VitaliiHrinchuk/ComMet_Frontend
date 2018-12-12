@@ -5,6 +5,7 @@ import SignUp from './Components/SignUp/SignUp.vue';
 import SignIn from './Components/SignUp/SignIn.vue';
 import EventPage from './Components/EventsPage/EventsList.vue';
 import Event from './Components/EventsPage/Event.vue'
+import CreateEvent from './Components/EventsPage/CreateEvent.vue'
 import Profile from './Components/Profile/Profile.vue'
 
 import ErrorNotFound from './Components/ErrorsPage/NotFound.vue'
@@ -26,7 +27,9 @@ let routes = [
 	{ name:'user', path: '/Profile/:username', component: Profile, props: true},
 	{ path: '/', component: FirstPage},
 	{ path: '/Events', component: EventPage},
+	{ path: '/Event/Create', component: CreateEvent},
 	{ path: '/Event/:id', component: Event, props: true},
+
 
 
 	{ path: '/404', component: ErrorNotFound},

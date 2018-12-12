@@ -43,7 +43,7 @@
           <div class="shortEvent__members">
               <span class="shortEvent__bold text-gray">Members:</span> {{event.membersCount}}
           </div>
-          <button class="shortEvent__btn" type="button" name="button">Event Page</button>
+          <button class="textButton shortEvent__btn " type="button" name="button" @click='showEvent(event.id)'>Event Page</button>
         </div>
 
         <div class="shortEvent shadow radius-5px bg-white">
@@ -129,6 +129,9 @@ export default {
       let resultDate = new Date(date);
 
       return resultDate.getDay() + ' ' +monthNames[resultDate.getMonth()];
+    },
+    showEvent(id){
+      this.$router.push(`/Event/${id}`);
     }
   },
   created(){

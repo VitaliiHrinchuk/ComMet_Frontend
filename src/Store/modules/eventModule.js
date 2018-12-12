@@ -43,6 +43,7 @@ const actions = {
 
       let resultList = list.map((item)=>{
         let resultItem = {};
+        resultItem.id = item.id;
         resultItem.name = item.attributes.name;
         resultItem.membersCount = item.relationships.members.data.length;
         resultItem.tags = item.relationships.tags.data;
@@ -65,7 +66,7 @@ const actions = {
     axios.get(eventUrl).then((response)=>{
       commit('setEventsState', {type: 'eventData', item:response.data.data});
       commit('setEventLoader', false);
-
+      console.log(response.data.data);
     }, (error)=>{
       //error
       commit('setEventLoader', false);

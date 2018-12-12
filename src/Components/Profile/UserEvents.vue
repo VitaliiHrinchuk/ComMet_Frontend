@@ -73,13 +73,14 @@ export default {
       	clear: both;
       }
       &__btn{
-        font-size: .6em;
+        font-size: .7em;
+        margin-top: 10px;
         border: none;
         background: #1ca9f0;
         color: #fff;
         font-weight: bold;
         border-radius: 5px;
-        padding: 5px 10px;
+        padding: 3px 7px;
         text-transform: uppercase;
 
       }
