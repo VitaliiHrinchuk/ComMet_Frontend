@@ -1,5 +1,12 @@
 <template lang="html">
   <div class="container eventPageContainer">
+
+    <div class="loaderBg" v-if="isScreenLoader">
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner"></div>
+      </div>
+    </div>
+
     <div class="title text-gray" >
       <h1>Events</h1>
     </div>
@@ -27,8 +34,8 @@
             <span>{{dateToString(event.date)}}</span>
           </div>
           <div class="shortEvent__tags" >
-            <div class="tag" v-for="tags in event.tags">
-                {{tags.name}}
+            <div class="tag" v-for="tag in event.tags">
+                {{tag}}
             </div>
             <!-- <div class="tag">
                 tag2
@@ -109,13 +116,16 @@ export default {
   data(){
     return{
       // eventsList: []
+
     }
   },
   computed:{
     eventsList(){
       return this.$store.getters.getEventsList;
     },
-
+    isScreenLoader(){
+      return this.$store.getters.getEventLoaderState;
+    }
   },
   methods: {
     pushEventsList(){

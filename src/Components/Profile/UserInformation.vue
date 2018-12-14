@@ -11,7 +11,7 @@
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Username: </td>
-        <td class="userTable__col">@{{userInfo.username}}</td>
+        <td class="userTable__col userTable__col-username">@{{userInfo.username}}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">City: </td>
@@ -72,6 +72,7 @@ export default {
 </script>
 
 <style lang="scss">
+$primary-color: #1ca9f0;
   .about{
 
     &__title{
@@ -92,7 +93,7 @@ export default {
     &__btn{
       display: block;
       margin-left: auto;
-      background-color: #1ca9f0;
+      background-color: $primary-color;
       border: none;
       color: #fff;
       padding: 3px 10px;
@@ -116,6 +117,10 @@ export default {
     &__col{
       &-title{
         width: 150px;
+      }
+      &-username{
+        color: $primary-color;
+
       }
     }
   }

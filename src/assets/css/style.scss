@@ -17,6 +17,10 @@ body {
 	letter-spacing: 0.025em;
 	font-family: "Roboto";
 }
+ul,li{
+	padding: 0;
+	margin: 0;
+}
 html{
 	min-height: 100%;
 }
@@ -227,7 +231,23 @@ $blue-color: #3AE2CE;
 }
 
 
+.searchDrop{
+	position: absolute;
+	background: #fff;
+	border: 1px solid rgba(0,0,0,.4);
+	border-radius: 5px;
+	padding: 15px 15px;
 
+	&__list{
+		list-style: none;
+		width: 100%;
+	}
+
+	&__item{
+		border-bottom: 1px solid rgba(0,0,0,.4);
+		padding-bottom: 5px;
+	}
+}
 
 
 @keyframes scale-image{

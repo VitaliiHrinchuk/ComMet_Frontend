@@ -12,7 +12,7 @@
         <h2 class="mainInfo__realname">{{userData.first_name}} {{userData.last_name}}</h2>
         <h3 class="mainInfo__username">@{{userData.username}}</h3>
 
-        <button class="mainInfo__subscribeBtn" type="button" name="button">Follow</button>
+        <button class="mainInfo__subscribeBtn" type="button" name="button" v-if='!userData.is_current'>Follow</button>
 
         <div class="mainInfo__follows">
           <div class="follows follows-left">

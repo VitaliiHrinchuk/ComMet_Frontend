@@ -33,9 +33,9 @@ const actions = {
     commit('setProfileLoader', true);
     axios.get(userDataUrl).then((response)=>{
 
-
+      console.log('setProfileLoader');
       console.log(response);
-      let result = response.data.data;
+      let result = response.data;
 
       commit('setUserData',{item:result});
       commit('setProfileLoader', false);

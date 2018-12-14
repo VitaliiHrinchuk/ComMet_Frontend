@@ -12,14 +12,14 @@
       </div> -->
 
       <h1 class="signUp__title">SignUp</h1>
-      <div class="socialSignBtn socailSignBtn-google">
+      <!-- <div class="socialSignBtn socailSignBtn-google">
         <i class="fab fa-google socailSignBtn__icon"></i>
         <h2 class="socailSignBtn__title">Continue with Google</h2>
       </div>
       <div class="socialSignBtn socailSignBtn-facebook">
         <i class="fab fa-facebook-square socailSignBtn__icon"></i>
         <h2 class="socailSignBtn__title">Continue with Facebook</h2>
-      </div>
+      </div> -->
 
       <div class="userData userData-name">
         <h2 class="userData__title">Your First Name</h2>
@@ -364,9 +364,10 @@ export default {
 					this.years.push(startYear);
 					startYear--;
 				}
-        console.log(this.$store);
 
-			}
+
+			},
+
 
 }
 </script>
@@ -395,6 +396,7 @@ export default {
 	font-size: 2em;
 	padding-bottom: 30px;
 	padding-top: 30px;
+  color: #1ca9f0;
 }
 .userData{
 	margin-bottom: 13px;

@@ -53,7 +53,6 @@ const mutations = {
      state['loaders'][key] = value;
   },
   setSignState(state, {type, item}){
-    console.log(item);
     state[type] = item;
   }
 }
@@ -65,12 +64,13 @@ const actions = {
       let checkLoginUrl = `${API_ACCOUNTS_URL}check_username/${login}`;
       commit('setLoader', {key: 'loginLoader', value: true});
       axios.get(checkLoginUrl).then((response)=>{
-
+        console.log('checkUniqLogin');
+        console.log(response);
         commit('setLoader', {key: 'loginLoader', value: false});
 
         let result;
 
-        if(response.data.data != "username is unique"){
+        if(response.data != "username is unique"){
             result = false;
         } else {
             result = true;
@@ -90,12 +90,13 @@ const actions = {
       let checkMailUrl = `${API_ACCOUNTS_URL}check_email/${email}`;
       commit('setLoader', {key: 'mailLoader', value: true});
       axios.get(checkMailUrl).then((response)=>{
-
+        console.log('checkUniqMail');
+        console.log(response);
         commit('setLoader', {key: 'mailLoader', value: false});
 
         let result;
 
-        if(response.data.data != "email is unique"){
+        if(response.data != "email is unique"){
             result = false;
         } else {
             result = true;
@@ -118,10 +119,11 @@ const actions = {
     commit('setLoader', {key: 'signUpLoader', value: true })
 
     axios.get(verifLink).then((response)=>{
-
+        console.log('getVerificationCode');
+        console.log(response);
         commit('setLoader', {key: 'signUpLoader', value: false });
 
-        let verifCode = response.data.data["verification_code"];
+        let verifCode = response.data["verification_code"];
         console.log(verifCode);
         commit('setSignState', {type: 'verificationCode', item: verifCode});
 
@@ -152,8 +154,9 @@ const actions = {
     let username =  payload.username;
     commit('setLoader', {key: 'signInLoader', value: true});
     axios.post(signInLink,params,axiosConfig).then((response)=>{
+      console.log('userSignIn');
       console.log(response);
-      let data = response.data.data;
+      let data = response.data;
       commit('setLoader', {key: 'signInLoader', value: false});
       if(data.error == 'user not found'){
         commit('setSignState', {type: 'isWrongUserData', item: true})

@@ -8,7 +8,7 @@
 
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
-        <h1 >{{eventGlobalInfo.name}} </h1>
+        <h1 >{{eventData.name}} </h1>
         <!-- <div class="tag tag-red">
           #Music
         </div>
@@ -36,7 +36,7 @@
       <div class="eventBox eventBox-date">
           <h2 class="eventBox__title">Date</h2>
           <div class="eventBox__content eventBox__content-date">
-            <p>{{dateToString(eventGlobalInfo.date_expire)}}</p>
+            <p>{{dateToString(eventData.date_expire)}}</p>
           </div>
       </div>
 
@@ -47,7 +47,7 @@
               <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
 
               <div class="userRate">
-                <h3 class="author__name">John Doe</h3>
+                <h3 class="author__name" @click='showUserProfile(eventData.author)'>{{eventData.author}}</h3>
                 <i class="far fa-star userRate__star userRate__star-fill"></i>
                 <i class="far fa-star userRate__star userRate__star-fill"></i>
                 <i class="far fa-star userRate__star userRate__star-fill"></i>
@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-          <button class="textButton" type="button" name="button">Profile</button>
+          <!-- <button class="textButton" type="button" name="button">Profile</button> -->
       </div>
       <div class="helpContainer">
         <div class="eventBox eventBox-desc">
@@ -99,11 +99,11 @@
       <div class="eventBox eventBox-members">
           <h2 class="eventBox__title">Members</h2>
           <div class="eventBox__content">
-            <div class="author author-list">
+            <div class="author author-list" v-for='member in eventData.members'>
               <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-              <h3 class="author__name">John Doe</h3>
+              <h3 class="author__name">{{member}}</h3>
             </div>
-            <div class="author author-list">
+            <!-- <div class="author author-list">
               <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
               <h3 class="author__name">John Doe</h3>
             </div>
@@ -114,7 +114,7 @@
             <div class="author">
               <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
               <h3 class="author__name">John Doe</h3>
-            </div>
+            </div> -->
           </div>
           <div class="eventBox__members">
             <span>12 members</span>
@@ -151,9 +151,7 @@ export default {
     eventData(){
       return this.$store.getters.getEventData;
     },
-    eventGlobalInfo(){
-      return this.eventData.attributes;
-    }
+
 
   },
   methods:{
@@ -186,6 +184,9 @@ export default {
       let resultDate = new Date(date);
 
       return resultDate.getDay() + ' ' +monthNames[resultDate.getMonth()];
+    },
+    showUserProfile(username){
+      this.$router.push(`/Profile/${username}`);
     }
   },
   mounted(){
@@ -348,6 +349,7 @@ $blue-color: #3AE2CE;
       margin-top: 5px;
       font-size: .95em;
       color: #000;
+      cursor: pointer;
     }
     &-list{
       border-bottom: 1px solid rgba(0,0,0,.1);

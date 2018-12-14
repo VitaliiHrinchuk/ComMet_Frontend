@@ -11,7 +11,12 @@
       <div class="creationData">
         <div class="creationData__country">Uzhgorod</div>
         <!-- <span class="input__title">Search city</span> -->
-        <input class="input" type="text" name="" value="" placeholder="Search city">
+        <input class="input" type="text" name="" value="" placeholder="Search city" v-model='place' @input="searchCity()">
+        <div class="searchDrop">
+          <ul class="searchDrop__list">
+            <li class="searchDrop__item"></li>
+          </ul>
+        </div>
       </div>
 
     </div>
@@ -21,7 +26,8 @@
       <i class="creationSection__icon creationSection__icon-orange far fa-calendar-alt"></i>
       <h4 class="creationSection__desc">When it will be?</h4>
 
-
+      <datepick v-model='selectedDate'></datepick>
+      <span v-if='wrongDate' class="errorMsg">You cannot pick a date earlier than today</span>
     </div>
 
     <div class="creationSection">
@@ -74,11 +80,61 @@
 </template>
 
 <script>
+import DatePick from 'vue-date-pick';
+import 'vue-date-pick/dist/vueDatePick.css';
+
 export default {
   data(){
     return {
-
+      date:'',
+      wrongDate: false,
+      place: ''
     }
+  },
+  components: {
+    "datepick":DatePick
+  },
+  computed:{
+    selectedDate: {
+      set(newDate){
+        if(Date.parse(newDate) < Date.now()){
+          this.wrongDate = true;
+          this.date = this.getCurrentDate();
+        } else {
+          this.wrongDate = false;
+          this.date = newDate;
+        }
+      },
+      get(){
+        return this.date;
+      }
+    }
+  },
+  methods: {
+    getCurrentDate(){
+      let currentDate = new Date();
+      return currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
+    },
+    searchCity(){
+
+      // let axiosConfig = {
+  		// 	  headers: {
+  		// 	      'Content-Type': 'application/json',
+  		// 	  }
+  		// };
+      //
+      //
+      // this.$axios.get('http://gd.geobytes.com/AutoCompleteCity?callback=func?&q='+this.place,axiosConfig).then((response)=>{
+      //   console.log(response);
+      //
+      //
+      // }, (error)=>{
+      //
+      // });
+    }
+  },
+  created(){
+    this.date = this.getCurrentDate();
   }
 }
 </script>

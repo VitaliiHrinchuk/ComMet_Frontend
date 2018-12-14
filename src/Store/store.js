@@ -12,6 +12,7 @@ Vue.use(Vuex);
 Vue.use(axios);
 
 const API_ACCOUNTS_URL = `https://comeandmeet.herokuapp.com/accounts/`;
+const API_EVENTS_URL = `https://comeandmeet.herokuapp.com/events/`;
 const MAP_API_TOKEN = '1e4a846d952064';
 
 const store = new Vuex.Store({
@@ -24,7 +25,9 @@ const store = new Vuex.Store({
       isAuthorized: false,
       currentUser: '',
       appLoading: true,
-      userCurrentLocation: 'Unknown'
+      userCurrentLocation: 'Unknown',
+
+      tagsList: []
   },
   getters: {
 
@@ -39,6 +42,10 @@ const store = new Vuex.Store({
     },
     getCurrentUser(state){
       return state.currentUser;
+    },
+
+    getTagsList(state){
+      return state.tagsList
     }
 
   },
@@ -62,12 +69,12 @@ const store = new Vuex.Store({
         axios.get(checkLink).then((response)=>{
           console.log('auth');
           console.log(response);
-          if(response.data.data == 'token not found'){
+          if(response.data == 'token not found'){
             commit('setGlobalState', {type:'isAuthorized', item: false});
           } else {
             commit('setGlobalState', {type:'isAuthorized', item: true});
             axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
-            commit('setGlobalState', {type:'currentUser', item: response.data.data});
+            commit('setGlobalState', {type:'currentUser', item: response.data});
           }
           commit('setAppLoad', false);
 
@@ -107,9 +114,19 @@ const store = new Vuex.Store({
         } else {
           /* геолокация НЕдоступна */
         }
+      },
 
+      getTagsListAPI({commit}){
 
+        axios.get(`${API_EVENTS_URL}tags`).then((response)=>{
+          console.log(response);
+          // commit('setGlobalState', {type:'tagsList', item:});
+        }, (error)=>{
+          //error
+        });
       }
+
+
 
 
 

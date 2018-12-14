@@ -35,19 +35,21 @@ const mutations = {
 const actions = {
   refreshEventsList({commit}){
 
-
-
+    commit('setEventLoader', true);
     axios.get(API_EVENTS_URL).then((response)=>{
+      console.log('refreshEventsList');
       console.log(response);
-      let list = response.data.data;
+
+      commit('setEventLoader', false);
+      let list = response.data.results;
 
       let resultList = list.map((item)=>{
         let resultItem = {};
         resultItem.id = item.id;
-        resultItem.name = item.attributes.name;
-        resultItem.membersCount = item.relationships.members.data.length;
-        resultItem.tags = item.relationships.tags.data;
-        resultItem.date = item.attributes.date_expire;
+        resultItem.name = item.name;
+        resultItem.membersCount = item.members.length;
+        resultItem.tags = item.tags;
+        resultItem.date = item.date_expire;
         // resultItem.authorUserName = item.attributes.author.username;
         // resultItem.authorFirstName = item.attributes.author.first_name;
         // resultItem.authorPhoto = item.attributes.author.avatar;
@@ -56,7 +58,16 @@ const actions = {
       console.log(resultList);
       commit('setEventsState', {type:'eventsList', item:resultList});
     }, (error)=>{
-      console.log(error.response);
+
+      commit('setEventLoader', false);
+      console.log(error.response.status);
+      switch (error.response.status) {
+        case 401: router.replace('/login/signIn');
+
+          break;
+        default:
+
+      }
     });
   },
 
@@ -64,9 +75,11 @@ const actions = {
     let eventUrl = `${API_EVENTS_URL}${id}/`;
     commit('setEventLoader', true);
     axios.get(eventUrl).then((response)=>{
-      commit('setEventsState', {type: 'eventData', item:response.data.data});
+      console.log('getEventDataAPI');
+      console.log(response.data);
+      commit('setEventsState', {type: 'eventData', item:response.data});
       commit('setEventLoader', false);
-      console.log(response.data.data);
+
     }, (error)=>{
       //error
       commit('setEventLoader', false);

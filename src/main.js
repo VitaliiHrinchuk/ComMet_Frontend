@@ -94,6 +94,7 @@ new Vue({
 
 	mounted(){
 		this.$store.dispatch('checkIsAuthorized');
+		// this.$store.dispatch('getTagsListAPI');
 		console.log(this.$router.options.routes);
 		// this.$store.dispatch('checkUserCurrentLocation');
 

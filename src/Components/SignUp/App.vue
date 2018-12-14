@@ -20,7 +20,12 @@ export default {
   methods: {
 
   },
-
+  mounted(){
+    if(this.$store.getters.getIsAuthorized == true){
+      console.log("no");
+      this.$router.replace('/Profile/bozmek');
+    }
+  }
 }
 </script>
 
