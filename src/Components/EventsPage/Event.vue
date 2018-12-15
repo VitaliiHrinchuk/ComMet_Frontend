@@ -99,9 +99,9 @@
       <div class="eventBox eventBox-members">
           <h2 class="eventBox__title">Members</h2>
           <div class="eventBox__content">
-            <div class="author author-list" v-for='member in eventData.members'>
+            <div class="author author-list" v-for='member in randomMembers'>
               <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-              <h3 class="author__name">{{member}}</h3>
+              <h3 class="author__name" @click='showUserProfile(member)'>{{member}}</h3>
             </div>
             <!-- <div class="author author-list">
               <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
@@ -117,7 +117,7 @@
             </div> -->
           </div>
           <div class="eventBox__members">
-            <span>12 members</span>
+            <span>{{eventData.members.length}} {{eventData.members.length == 1 ? 'Member' : 'Members'}}</span>
             <button class="textButton" type="button" name="button">More</button>
           </div>
           <button class="bigButton bigButton-members shadow" type="button" name="button">CHAT</button>
@@ -151,6 +151,13 @@ export default {
     eventData(){
       return this.$store.getters.getEventData;
     },
+    randomMembers(){
+      if(this.eventData.members.length > 6){
+        return this.eventData.members[Math.floor(Math.random()*this.eventData.members.length)];
+      } else {
+        return this.eventData.members;
+      }
+    }
 
 
   },

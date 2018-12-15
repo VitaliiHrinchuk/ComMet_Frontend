@@ -6,7 +6,7 @@
       </div>
     </div>
 
-    <div class="profile container" v-if="!isScreenLoader">
+    <div class="profile container" v-if="!isScreenLoader && editingProfile">
       <div class="mainInfo profile__block shadow radius-5px">
         <img class="mainInfo__avatar" src="../../assets/images/avatar__temp.jpg" alt="avatar">
         <h2 class="mainInfo__realname">{{userData.first_name}} {{userData.last_name}}</h2>
@@ -48,12 +48,15 @@
         </ul>
 
         <div class="detailInfo__content">
-            <user-info   v-show="selectedTab == 1" v-bind:userInfo="userData"></user-info>
+            <user-info   v-show="selectedTab == 1" v-bind:userInfo="userDetailInfo" @edit-profile='editingProfile = true'></user-info>
             <user-events v-show="selectedTab == 2" v-bind:userEvents="{visited: userData.events_visited, created: userData.events_created}"></user-events>
             <user-photos v-show="selectedTab == 3" ></user-photos>
         </div>
       </div>
+
     </div>
+    <edit-profile :userInfo='userDetailInfo' v-if='!editingProfile'></edit-profile>
+
   </div>
 </template>
 
@@ -61,6 +64,8 @@
 import UserInformation from './UserInformation.vue';
 import UserEvents from './UserEvents.vue';
 import UserPhotos from './UserPhotos.vue';
+import EditProfile from './EditProfile.vue';
+
 
 
 export default {
@@ -70,14 +75,15 @@ export default {
   data(){
     return{
       selectedTab: '1',
-
+      editingProfile:false
     }
   },
 
   components: {
     'user-info': UserInformation,
     'user-events': UserEvents,
-    'user-photos': UserPhotos
+    'user-photos': UserPhotos,
+    'edit-profile':EditProfile
   },
   computed: {
     userData(){
@@ -85,7 +91,21 @@ export default {
     },
     isScreenLoader(){
       return this.$store.getters.getProfileLoaderState;
+    },
+    userDetailInfo(){
+      return {
+        'avatar':       this.userData.avatar,
+        'date_of_birth':this.userData.date_of_birth,
+        'email':        this.userData.email,
+        'first_name':   this.userData.first_name,
+        'last_name':    this.userData.last_name,
+        'phone_number': this.userData.phone_number,
+        'username':     this.userData.username,
+        'is_current':   this.userData.is_current,
+        'tags':         this.userData.tags
+      }
     }
+
   },
   methods: {
     selectTab(id){

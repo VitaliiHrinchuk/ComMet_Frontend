@@ -48,6 +48,7 @@ main {
 	&__title{
 		font-weight: normal;
 		font-size: .9em;
+		text-transform: capitalize;
 	}
 }
 
@@ -84,6 +85,7 @@ $blue-color: #3AE2CE;
   background: $primary-color;
 	padding: 1px 12px;
 	margin-right: 5px;
+	margin-bottom: 10px;
 	border-radius: 5px;
 	/* box-shadow: 3px 3px 5px rgba(28,169,240,.3); */
 	box-shadow: 3px 3px 5px rgba(0,0,0,.1);
@@ -105,6 +107,12 @@ $blue-color: #3AE2CE;
 	}
 	&-blue{
 		background: $blue-color;
+	}
+	&__remove{
+		position: absolute;
+		right: -6px;
+		top: -6px;
+		color: red;		
 	}
 }
 .tag:hover{

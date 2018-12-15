@@ -26,7 +26,10 @@
       <i class="creationSection__icon creationSection__icon-orange far fa-calendar-alt"></i>
       <h4 class="creationSection__desc">When it will be?</h4>
 
-      <datepick v-model='selectedDate'></datepick>
+      <datepick
+      v-model='selectedDate'
+      :pickTime="true"
+      ></datepick>
       <span v-if='wrongDate' class="errorMsg">You cannot pick a date earlier than today</span>
     </div>
 
@@ -88,7 +91,8 @@ export default {
     return {
       date:'',
       wrongDate: false,
-      place: ''
+      place: '',
+
     }
   },
   components: {

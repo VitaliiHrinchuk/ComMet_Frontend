@@ -2,7 +2,7 @@
   <div class="about">
 
     <h1 class="about__title">About</h1>
-    <button class="about__btn shadow" type="button" name="button" v-if="userInfo.is_current"><i class="far fa-edit"></i> Edit</button>
+    <button class="about__btn shadow" type="button" name="button" v-if="userInfo.is_current"  @click="$emit('edit-profile')"><i class="far fa-edit"></i> Edit</button>
 
     <table class="about__table userTable">
       <tr class="userTable__row">

@@ -10,6 +10,7 @@ const state = {
 
 const getters = {
   getUserData(state){
+    console.log('from store');
     return state.userData;
   },
   getProfileLoaderState(state){

@@ -97,7 +97,11 @@ new Vue({
 		// this.$store.dispatch('getTagsListAPI');
 		console.log(this.$router.options.routes);
 		// this.$store.dispatch('checkUserCurrentLocation');
-
+		// this.$axios.get('https://master.apis.dev.openstreetmap.org/#map=16/48.5370/31.1680').then((response)=>{
+		// 	console.log(response);
+		// }, (error)=>{
+		//
+		// })
 
 	}
 });

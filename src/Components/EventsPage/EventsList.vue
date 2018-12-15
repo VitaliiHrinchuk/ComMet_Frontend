@@ -15,7 +15,7 @@
       <div class="eventSearch">
         <h3 class="eventSearch__title text-gray">Search</h3>
         <div class="eventSearch__input shadow radius-5px bg-white">
-          <input class="input input-eventSearch" type="text" name="" placeholder="Search by name">
+          <input class="input input-eventSearch" type="text" name="" placeholder="Search by name" v-model='searchName'>
         </div>
 
       </div>
@@ -28,7 +28,7 @@
 
       <div class="eventList">
         <h3 class="text-gray eventList__title">Events list</h3>
-        <div class="shortEvent shadow radius-5px bg-white" v-for="event in eventsList">
+        <div class="shortEvent shadow radius-5px bg-white" v-for="event in filteredEventList" >
           <h3 class="shortEvent__title">{{event.name}}</h3>
           <div class="shortEvent__date">
             <span>{{dateToString(event.date)}}</span>
@@ -94,14 +94,22 @@
 
         <div class="eventSort-tags shadow radius-5px bg-white">
           <h4 class="eventSort__title text-gray">Included tags</h4>
-          <div class="tag tag-search">
-              Music
+          <div class="tag tag-search" v-for='tag in filterTags'>
+              {{tag}}
           </div>
-          <div class="addTagBtn">
+          <div class="addTagBtn" @click = 'openList = true'>
             +
           </div>
         </div>
+        <div class="tagList radius-5px shadow" v-if='openList'>
+          <span class="tagList__close" @click='openList = false'><i class="fas fa-times"></i></span>
+          <h2 class="tagList__title">Tags</h2>
+          <div class="creationSection__checkTag" v-for='tag in tagList'>
+            <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
+            <label :for="tag.name">{{tag.name}}</label>
+          </div>
 
+        </div>
       </aside>
 
 
@@ -117,14 +125,49 @@ export default {
     return{
       // eventsList: []
 
+      searchName: '',
+      filterTags: [],
+      openList: false
     }
   },
   computed:{
     eventsList(){
       return this.$store.getters.getEventsList;
     },
+    filteredEventList(){
+      let filterName = this.searchName.toLowerCase();
+      if(this.filterTags.length>0){
+        console.log('changed');
+        let filteredArr = [];
+        this.eventsList.filter(item => {
+          console.log(item);
+
+            for(let i =0;i<this.filterTags.length;i++){
+
+              if(item.tags.indexOf(this.filterTags[i]) !==-1){
+                console.log(item);
+                filteredArr.push(item);
+                console.log('here' + ' '+this.filterTags[i]);
+                break;
+              }
+            }
+        });
+
+        return  filteredArr.filter(item => {
+          return item.name.indexOf(filterName) !== -1;
+        })
+      } else {
+        return this.eventsList.filter(item => {
+          return item.name.indexOf(filterName) !== -1;
+        })
+      }
+
+    },
     isScreenLoader(){
       return this.$store.getters.getEventLoaderState;
+    },
+    tagList(){
+      return this.$store.getters.getTagsList;
     }
   },
   methods: {
@@ -146,13 +189,14 @@ export default {
   },
   created(){
     this.$store.dispatch('refreshEventsList');
+    this.$store.dispatch('getTagsListAPI');
     // this.pushEventsList();
     // console.log(this.eventsList);
   }
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
 .eventPageContainer{
   height: 6000px;
 }
@@ -296,6 +340,28 @@ export default {
   margin-left: auto;
 }
 
+.tagList{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: #fff;
+  padding: 15px 15px;
+  height: 70%;
+  width: 40%;
+
+  &__title{
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  &__close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #1ca9f0;
+    cursor: pointer;
+  }
+}
 @media screen and (min-width: 2000px){
   .eventSearch{
     width: 1000px;

@@ -117,10 +117,10 @@ const store = new Vuex.Store({
       },
 
       getTagsListAPI({commit}){
-
+        console.log('tag');
         axios.get(`${API_EVENTS_URL}tags`).then((response)=>{
-          console.log(response);
-          // commit('setGlobalState', {type:'tagsList', item:});
+
+          commit('setGlobalState', {type:'tagsList', item:response.data.results});
         }, (error)=>{
           //error
         });
