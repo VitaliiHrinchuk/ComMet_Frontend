@@ -45,7 +45,7 @@
             </div> -->
           </div>
           <div class="shortEvent__place">
-            <span>15-th Wall Str.</span>
+            <span>{{event.city}}</span>
           </div>
           <div class="shortEvent__members">
               <span class="shortEvent__bold text-gray">Members:</span> {{event.membersCount}}

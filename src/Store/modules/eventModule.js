@@ -50,6 +50,7 @@ const actions = {
         resultItem.membersCount = item.members.length;
         resultItem.tags = item.tags;
         resultItem.date = item.date_expire;
+        resultItem.city = item.city;
         // resultItem.authorUserName = item.attributes.author.username;
         // resultItem.authorFirstName = item.attributes.author.first_name;
         // resultItem.authorPhoto = item.attributes.author.avatar;

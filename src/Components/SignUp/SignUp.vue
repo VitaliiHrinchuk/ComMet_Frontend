@@ -104,7 +104,7 @@
               Continue</button>
       <span class="errorMsg" v-if="isErrors[0].signUpErr"><i class="fas fa-exclamation-circle"></i> Getting some trouble. Please, try singUp again</span>
 
-      <div class="signUpLoaderBG" v-if="signUpIsLoader">
+      <div class="blockLoader" v-if="signUpIsLoader">
         <div class="screenLoader">
           <div class="screenLoader screenLoader-inner"></div>
         </div>

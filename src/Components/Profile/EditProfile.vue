@@ -1,10 +1,22 @@
 <template lang="html">
   <div class="container">
     <div class="profileEdit radius-5px shadow">
+
+      <div class="blockLoader" v-if='isLoader'>
+        <div class="screenLoader">
+          <div class="screenLoader screenLoader-inner"></div>
+        </div>
+      </div>
+
       <div class="profileEdit__header">
-        <img class="mainInfo__avatar" src="../../assets/images/avatar__temp.jpg" alt="avatar">
+        <button class="profileEdit__backBtn"  type="button" name="button" @click="$emit('close-edit')"><i class="fas fa-chevron-left"></i></button>
+        <div
+          class="profileEdit__img userPhotos__img"
+          :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
+        </div>
         <button type="button" name="button" class="profileEdit__btn"><i class="fas fa-camera"></i> Change</button>
       </div>
+
       <div class="profileEdit__input">
         <h3 class="input__title">First name:</h3>
         <input class="input" type="text" name="" value="" v-model='newUserFirstName'>
@@ -29,26 +41,33 @@
           ></datepick>
       </div>
       <div class="profileEdit__input">
-        <h3 class="input__title">Phone:</h3>
+        <h3 class="input__title">Phone (not working):</h3>
         <input class="input" type="text" name="" value="" v-model='newUserPhone'>
       </div>
       <div class="profileEdit__tags">
+
+        <div class="tagList radius-5px shadow" v-if='isOpenTagList'>
+          <span class="tagList__close" @click='isOpenTagList = false'><i class="fas fa-times"></i></span>
+          <h2 class="tagList__title">Tags</h2>
+          <div class="creationSection__checkTag" v-for='tag in tagList'>
+            <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='newUserTags'>
+            <label :for="tag.name">{{tag.name}}</label>
+          </div>
+
+        </div>
         <!-- <div class="tag tag-red">
           #{{tag}}
         </div> -->
-        <div class="tag tag-green">
-          #Talking
-          <span class="tag__remove" @click='removeTag()'><i class="far fa-times-circle"></i></span>
+        <h3>Tags</h3>
+        <div class="tag tag-green" v-for='tag in newUserTags'>
+          {{tag}}
+          <span class="tag__remove" @click='removeTag(tag)'><i class="far fa-times-circle"></i></span>
         </div>
-        <div class="tag tag-violet">
-          #Walk
+        <div class="addTagBtn" @click = 'openTagList()'>
+          Add Tag
         </div>
-        <div class="tag tag-green">
-          #Talking
-        </div>
-
       </div>
-      <button class="bigButton profileEdit__btn-big" type="button" name="button" >Save</button>
+      <button class="bigButton profileEdit__btn-big" type="button" name="button" @click='updateUserData()'>Save</button>
     </div>
   </div>
 </template>
@@ -72,16 +91,73 @@ export default {
       newUserCity: this.userInfo.city,
       newUserCountry: this.userInfo.country,
       newUserPhone: this.userInfo.phone_number,
-      newUserTags: this.userInfo.tags
+      newUserTags: [],
+      avatar: require('../../assets/images/avatar__temp.jpg'),
+
+      isUpdateEnd: false,
+      isUpdateTagsEnd: false,
+      isOpenTagList: false,
     }
+  },
+  computed:{
+    isLoader(){
+      if(this.isUpdateEnd || this.isUpdateTagsEnd){
+        return true;
+      } else {
+        return false;
+      }
+    },
+    tagList(){
+      return this.$store.getters.getTagsList;
+    },
   },
   methods:{
     removeTag(tag){
 
-      this.newUserTags.filter((item)=>{
+      this.newUserTags = this.newUserTags.filter((item)=>{
         return item !== tag;
       })
+    },
+    updateUserData(){
+
+      this.isUpdateEnd     = true;
+      this.isUpdateTagsEnd = true;
+
+      let updObj = {
+        'first_name':     this.newUserFirstName,
+        'last_name':      this.newUserLastName,
+        'date_of_birth':  this.newUserBirthday,
+        'city':           this.newUserCity,
+        'country':        this.newUserCountry,
+
+      };
+      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/`, updObj).then(response=>{
+        console.log(response);
+        this.isUpdateEnd = false;
+      }, error=>{
+        //error
+      });
+      console.log(this.newUserTags);
+      let newTagsArray = JSON.parse(JSON.stringify(this.newUserTags));
+      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
+        console.log(response);
+        this.isUpdateTagsEnd = false;
+
+      }, error=>{
+        //error
+      })
+    },
+    openTagList(){
+      this.$store.dispatch('getTagsListAPI');
+      this.isOpenTagList = true;
     }
+  },
+  created(){
+
+    for ( let tag in this.userInfo.tags){
+      this.newUserTags.push(this.userInfo.tags[tag].name);
+    }
+
   }
 }
 </script>
@@ -89,10 +165,12 @@ export default {
 <style lang="scss">
 $primary-color:#1ca9f0;
 .profileEdit{
+  position: relative;
   width: 100%;
   margin-top: 30px;
   background: #fff;
   overflow: hidden;
+  margin-bottom: 15px;
   &__header{
     padding: 15px 0;
     margin-bottom: 30px;
@@ -104,6 +182,24 @@ $primary-color:#1ca9f0;
 
   }
 
+  &__img{
+    border-radius: 50%;
+    cursor: auto;
+    margin-bottom: 0;
+    &:after {
+      background: none;
+    }
+  }
+  &__backBtn{
+    align-self: flex-start;
+    margin-left: 15px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    display: block;
+    font-size: 1.4em;
+    cursor: pointer;
+  }
   &__btn{
     color: #fff;
     border: none;
@@ -164,6 +260,10 @@ $primary-color:#1ca9f0;
     padding: 15px 15px;
     font-size: .9em;
     width: 50%;
+
+    .tag:hover .tag__remove{
+      display: block;
+    }
   }
 }
 </style>

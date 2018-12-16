@@ -1,15 +1,18 @@
 <template lang="html">
   <div class="userEvents">
     <h2 class="userEvents__title">Visited</h2>
+    <h2 class="userEvents__title userEvents__title-unactive">Created</h2>
+    <span class="note" v-if='userEvents.visited.length == 0'>User has not visited any event</span>
     <div class="" v-for='event in userEvents.visited'>
 
       <div class="profileEvent">
         <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
         <h3 class="profileEvent__title">{{event.name}}</h3>
-        <h4 class="profileEvent__date">Date: 11.11.2017</h4>
+        <h4 class="profileEvent__date">{{event.date_expire}}</h4>
         <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
       </div>
     </div>
+
 
     <!-- <div class="profileEvent">
       <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
@@ -53,10 +56,14 @@ export default {
       font-weight: normal;
       text-transform: uppercase;
       margin-bottom: 10px;
-
+      display: inline-block;
       &-lined{
         border-top: 1px solid #cecccc;
         padding-top: 15px;
+      }
+
+      &-unactive{
+        color: gray;
       }
     }
 
@@ -95,6 +102,8 @@ export default {
         font-size: .8em;
         font-weight: normal;
         margin-bottom: 5px;
+
+
       }
       &__date{
         font-weight: normal;

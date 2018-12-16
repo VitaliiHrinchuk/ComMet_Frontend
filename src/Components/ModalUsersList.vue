@@ -7,7 +7,7 @@
           <img class="user__avatar" src="../assets/images/temp-avatar.jpg" alt="">
           <div class="user__nameBlock">
             <h3 class="fullName" v-if='user.first_name  || user.last_name'  @click='showUserProfile(user.username)'>{{user.first_name}}  {{user.last_name}}</h3>
-            <h3 class="fullName" v-else @click='showUserProfile(user.username)'>{{user.username}}</h3>
+            <h3 class="fullName" v-else @click='showUserProfile(user)'>{{user}}</h3>
             <span class="username" v-if="user.first_name  || user.last_name">@{{user.username}}</span>
           </div>
 

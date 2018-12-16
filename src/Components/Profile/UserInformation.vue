@@ -37,8 +37,8 @@
         <td class="userTable__col">{{userInfo.country}}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Phone: </td>
-        <td class="userTable__col">{{userInfo.phone_number || "uknown"}}</td>
+        <td class="userTable__col userTable__col-title">Phone (not working): </td>
+        <td class="userTable__col">{{userInfo.phone_number || "uknown "}}</td>
       </tr>
     </table>
 

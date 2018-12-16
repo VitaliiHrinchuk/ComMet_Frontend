@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <div class="loaderBg" v-if="isScreenLoader">
+    <div class="loaderBg" v-if="isScreenLoader && !editingProfile">
       <div class="screenLoader">
         <div class="screenLoader screenLoader-inner"></div>
       </div>
@@ -83,7 +83,7 @@
       </div>
 
     </div>
-    <edit-profile :userInfo='userDetailInfo' v-if='editingProfile'></edit-profile>
+    <edit-profile :userInfo='userDetailInfo' v-if='editingProfile' @close-edit='closingEditing()'></edit-profile>
 
   </div>
 </template>
@@ -142,7 +142,7 @@ export default {
         'country':      this.userData.country,
         'phone_number': this.userData.phone_number,
         'username':     this.userData.username,
-        'tags':         this.userData.tags,
+        'tags':         this.userData.tags.filter(item=>item.name),
         'isCurrent':    this.isCurrent
       }
     }
@@ -164,6 +164,10 @@ export default {
         this.usersListTitle = 'Following';
         this.usersListNote = 'User is not following anyone';
       }
+    },
+    closingEditing(){
+      this.$store.dispatch('getUserDataAPI', this.userData.username);
+      this.editingProfile = false;
     }
   },
   created(){
@@ -172,6 +176,7 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     this.$store.dispatch('getUserDataAPI', to.params.username);
+    this.editingProfile = false;
     next();
   }
 }

@@ -6,6 +6,15 @@ author<template lang="html">
       </div>
     </div>
 
+    <users-list
+    v-if='usersListActive'
+    :usersData='eventData.members'
+    title='Event Members'
+    note='This event has no members yet'
+    @close-list= 'usersListActive = false'
+
+    ></users-list>
+
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
         <h1 >{{eventData.name}} </h1>
@@ -28,7 +37,7 @@ author<template lang="html">
       <div class="eventBox eventBox-place">
           <h2 class="eventBox__title">Place</h2>
           <div class="eventBox__content">
-            <p>Город Берлин, Улица Германская 3 lorem</p>
+            <p>{{eventData.country}},{{eventData.city}}</p>
           </div>
           <button class="textButton" type="button" name="button">Open map</button>
       </div>
@@ -62,13 +71,12 @@ author<template lang="html">
         <div class="eventBox eventBox-desc">
             <h2 class="eventBox__title">Description</h2>
             <div class="eventBox__content">
-              <p>  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus fugit repellat alias quo fugiat. Accusantium dolorum voluptas ipsa maiores maxime eos, recusandae voluptatum, doloribus quia temporibus. Maiores cum ducimus recusandae aspernatur unde explicabo labore quisquam voluptate error aliquid incidunt quas, fugit omnis quia neque asperiores, ut earum, quis tenetur sequi necessitatibus assumenda eius mollitia vero. Dolorem repudiandae illo, voluptate eveniet provident, nesciunt ratione, iste tempora quis nemo omnis cupiditate. Id similique maiores, eveniet consequuntur tempore, velit numquam rerum laudantium provident quidem ex illo. Deleniti quia repudiandae, quae hic recusandae facere nobis commodi voluptates temporibus rem pariatur aut, assumenda voluptate dolor!
-              </p>
+              <p>{{eventData.description}}</p>
             </div>
-            <button class="textButton" type="button" name="button">More</button>
+            <!-- <button class="textButton" type="button" name="button">More</button> -->
         </div>
 
-        <div class="eventBox eventBox-plan">
+        <!-- <div class="eventBox eventBox-plan">
             <h2 class="eventBox__title">Plan</h2>
             <div class="eventBox__content">
               <div class="arrowContainer">
@@ -92,7 +100,7 @@ author<template lang="html">
 
               </div>
             </div>
-        </div>
+        </div> -->
       </div>
 
 
@@ -107,7 +115,7 @@ author<template lang="html">
           </div>
           <div class="eventBox__members">
             <span>{{eventData.members.length}} {{eventData.members.length == 1 ? 'Member' : 'Members'}}</span>
-            <button class="textButton" type="button" name="button">More</button>
+            <button class="textButton" type="button" name="button" @click='openUsersList()'>More</button>
           </div>
           <button class="bigButton bigButton-members shadow" type="button" name="button">CHAT</button>
       </div>
@@ -120,14 +128,20 @@ author<template lang="html">
 </template>
 
 <script>
+
+import ModalUsersList from '../ModalUsersList.vue';
+
 export default {
   props:{
     id: {required: true}
   },
+  components:{
+    'users-list': ModalUsersList
+  },
   data(){
     return {
       headerCoord: 0,
-
+      usersListActive: false
     }
   },
   computed:{
@@ -183,6 +197,9 @@ export default {
     },
     showUserProfile(username){
       this.$router.push(`/Profile/${username}`);
+    },
+    openUsersList(){
+      this.usersListActive = true;
     }
   },
   mounted(){

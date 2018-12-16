@@ -109,18 +109,21 @@ $blue-color: #3AE2CE;
 		background: $blue-color;
 	}
 	&__remove{
+		display: none;
 		position: absolute;
 		right: -6px;
 		top: -6px;
 		color: red;
+		z-index: 4;
+	}
+	&:hover{
+		left: -2px;
+		top: -2px;
+		/* box-shadow: 3px 3px 10px rgba(28,169,240,.3); */
+		box-shadow: 3px 3px 5px rgba(0,0,0,.1);
 	}
 }
-.tag:hover{
-  left: -2px;
-	top: -2px;
-	/* box-shadow: 3px 3px 10px rgba(28,169,240,.3); */
-	box-shadow: 3px 3px 5px rgba(0,0,0,.1);
-}
+
 
 
 .text-gray{
@@ -414,7 +417,7 @@ $blue-color: #3AE2CE;
 	-o-transition: opacity .5s;
 	transition: opacity .5s;
 }
-.signUpLoaderBG{
+.blockLoader{
 	position: absolute;
 	border-radius: 5px;
 	top: 0;
@@ -424,6 +427,7 @@ $blue-color: #3AE2CE;
 	background: rgba(255,255,255,.5);
 	z-index: 4;
 }
+
 .screenLoader{
 	position: absolute;
 	top: 50%;
