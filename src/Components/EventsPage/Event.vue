@@ -1,4 +1,4 @@
-<template lang="html">
+author<template lang="html">
   <div class="">
     <div class="loaderBg" v-if="isScreenLoader">
       <div class="screenLoader">
@@ -18,7 +18,7 @@
         <div class="tag tag-violet">
           #Walk
         </div> -->
-        <div class="tag" v-for='tag in testTags' v-bind:class='randomTagColor()'>
+        <div class="tag" v-for='tag in eventData.tags' v-bind:class='randomTagColor()'>
           {{tag}}
         </div>
       </div>
@@ -43,11 +43,11 @@
       <div class="eventBox eventBox-author">
           <h2 class="eventBox__title">Author</h2>
           <div class="eventBox__content">
-            <div class="author">
-              <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
+            <div class="user">
+              <img class="user__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
 
               <div class="userRate">
-                <h3 class="author__name" @click='showUserProfile(eventData.author)'>{{eventData.author}}</h3>
+                <h3 class="fullName fullName-author" @click='showUserProfile(eventData.author)'>{{eventData.author}}</h3>
                 <i class="far fa-star userRate__star userRate__star-fill"></i>
                 <i class="far fa-star userRate__star userRate__star-fill"></i>
                 <i class="far fa-star userRate__star userRate__star-fill"></i>
@@ -99,22 +99,11 @@
       <div class="eventBox eventBox-members">
           <h2 class="eventBox__title">Members</h2>
           <div class="eventBox__content">
-            <div class="author author-list" v-for='member in randomMembers'>
-              <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-              <h3 class="author__name" @click='showUserProfile(member)'>{{member}}</h3>
+            <div class="user user-list" v-for='member in randomMembers'>
+              <img class="user__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
+              <h3 class="fullName" @click='showUserProfile(member)'>{{member}}</h3>
             </div>
-            <!-- <div class="author author-list">
-              <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-              <h3 class="author__name">John Doe</h3>
-            </div>
-            <div class="author author-list">
-              <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-              <h3 class="author__name">John Doe</h3>
-            </div>
-            <div class="author">
-              <img class="author__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-              <h3 class="author__name">John Doe</h3>
-            </div> -->
+
           </div>
           <div class="eventBox__members">
             <span>{{eventData.members.length}} {{eventData.members.length == 1 ? 'Member' : 'Members'}}</span>
@@ -138,7 +127,7 @@ export default {
   data(){
     return {
       headerCoord: 0,
-      testTags: ['#music','#walking','#talking']
+
     }
   },
   computed:{
@@ -337,32 +326,7 @@ $blue-color: #3AE2CE;
       order: 6;
     }
   }
-  .author{
-    padding: 5px 0;
-    clear: both;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    &__avatar{
 
-      float: left;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-    &__name{
-      font-weight: 500;
-      margin-top: 5px;
-      font-size: .95em;
-      color: #000;
-      cursor: pointer;
-    }
-    &-list{
-      border-bottom: 1px solid rgba(0,0,0,.1);
-      padding: 10px 0;
-    }
-  }
 
   .arrowContainer{
     position: absolute;
@@ -479,7 +443,7 @@ $blue-color: #3AE2CE;
       &-author{
         width: calc(30% - 30px);
 
-        .author{
+        .user{
           justify-content: center;
           align-items: center;
           float: none;
@@ -528,7 +492,7 @@ $blue-color: #3AE2CE;
         width: 100%;
         margin-right: 0;
       }
-      &-author{
+      &-user{
         width: 100%;
         margin-right: 0;
       }

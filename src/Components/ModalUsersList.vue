@@ -1,0 +1,41 @@
+<template lang="html">
+  <div class="modalWindow">
+    <div class="modalWindow__content radius-5px">
+      <h1 class="modalWindow__title">{{title}}</h1>
+        <span class="note" v-if='usersData.length == 0'>{{note}}</span>
+        <div class="user user-list" v-for='user in usersData'>
+          <img class="user__avatar" src="../assets/images/temp-avatar.jpg" alt="">
+          <div class="user__nameBlock">
+            <h3 class="fullName" v-if='user.first_name  || user.last_name'  @click='showUserProfile(user.username)'>{{user.first_name}}  {{user.last_name}}</h3>
+            <h3 class="fullName" v-else @click='showUserProfile(user.username)'>{{user.username}}</h3>
+            <span class="username" v-if="user.first_name  || user.last_name">@{{user.username}}</span>
+          </div>
+
+        </div>
+        <span class="modalWindow__close" @click="$emit('close-list')"><i class="fas fa-times"></i></span>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props:{
+    usersData: {required: true},
+    title: {reauired: true, default:'Title'},
+    note: {default: 'Empty yet'}
+  },
+  data(){
+    return  {
+
+    }
+  },
+  methods: {
+    showUserProfile(username){
+      this.$router.push(`/Profile/${username}`);
+    }
+  }
+}
+</script>
+
+<style lang="css">
+</style>

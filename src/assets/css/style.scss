@@ -112,7 +112,7 @@ $blue-color: #3AE2CE;
 		position: absolute;
 		right: -6px;
 		top: -6px;
-		color: red;		
+		color: red;
 	}
 }
 .tag:hover{
@@ -257,7 +257,96 @@ $blue-color: #3AE2CE;
 	}
 }
 
+.note{
+	text-transform: capitalize;
+	font-size: .9em;
+	color: #000;
+	font-style: italic;
+	text-align: center;
+	display: block;
+}
+.user{
+	padding: 5px 0;
+	clear: both;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 
+	&__avatar{
+
+		float: left;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+	&__nameBlock{
+
+		margin-top: 5px;
+
+		font-size: .9em;
+
+
+	}
+
+	&-list{
+		border-bottom: 1px solid rgba(0,0,0,.1);
+		padding: 10px 0;
+	}
+}
+.fullName{
+	font-weight: 500;
+	color: #000;
+	cursor: pointer;
+	font-size: .95em;
+
+	&-author{
+		font-size: 1.2em;
+	}
+}
+.username{
+	color: gray;
+	display: block;
+	width: 80%;
+	font-size: .8em;
+}
+.modalWindow{
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,.7);
+	width: 100%;
+	height: 100%;
+	display: block;
+	z-index: 5;
+
+	&__content{
+		position: absolute;
+		top: 20%;
+		left: 50%;
+		transform: translate(-50%,-20%);
+		width: 30%;
+		background: #fff;
+		padding: 10px 10px 0 10px;
+		overflow-y: auto;
+		max-height: 80%;
+		min-height: 20%;
+	}
+	&__title{
+    font-size: 1.1em;
+
+    text-align: center;
+    color: $primary-color;
+  }
+	&__close{
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		color: $primary-color;
+		font-size: 1.3em;
+		cursor: pointer;
+	}
+}
 @keyframes scale-image{
 	from{
 		transform: translate(-50%,-50%) scale(0) ;

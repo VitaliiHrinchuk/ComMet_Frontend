@@ -6,31 +6,59 @@
       </div>
     </div>
 
-    <div class="profile container" v-if="!isScreenLoader && editingProfile">
+    <!-- <div class="modalWindow">
+      <div class="modalWindow__content radius-5px">
+        <h1 class="modalWindow__title">Followers</h1>
+          <span class="note" v-if='userData.followers.length == 0'>User has not followers yet</span>
+          <div class="user user-list" v-for='user in userData.followers'>
+            <img class="user__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
+            <div class="user__nameBlock">
+              <h3 class="fullName" @click='showUserProfile(user.username)'>{{user.first_name}}  {{user.last_name}}</h3>
+              <span class="username">@{{user.username}}</span>
+            </div>
+
+          </div>
+      </div>
+    </div> -->
+    <users-list
+    v-if='usersListActive'
+    :usersData='usersList'
+    :title='usersListTitle'
+    :note='usersListNote'
+    @close-list= 'usersListActive = false'
+
+    ></users-list>
+    <div class="profile container" v-if="!isScreenLoader && !editingProfile">
       <div class="mainInfo profile__block shadow radius-5px">
-        <img class="mainInfo__avatar" src="../../assets/images/avatar__temp.jpg" alt="avatar">
+        <div class="mainInfo__avatar">
+          <div
+            class="userPhotos__img"
+            :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
+            <i class="fas fa-search-plus"></i>
+
+          </div>
+        </div>
         <h2 class="mainInfo__realname">{{userData.first_name}} {{userData.last_name}}</h2>
         <h3 class="mainInfo__username">@{{userData.username}}</h3>
 
-        <button class="mainInfo__subscribeBtn" type="button" name="button" v-if='!userData.is_current'>Follow</button>
+        <button class="mainInfo__subscribeBtn" type="button" name="button" v-if='!isCurrent'>Follow</button>
 
         <div class="mainInfo__follows">
-          <div class="follows follows-left">
-            <h4 class="follows__count">{{userData.friends.length}}</h4>
+          <div class="follows follows-left" @click="openUsersList('followers')">
+            <h4 class="follows__count">{{userData.followers.length}}</h4>
             <p class="follows__text">Followers</p>
           </div>
 
-          <div class="follows follows-right">
-            <h4 class="follows__count">{{userData.friends.length}}</h4>
+          <div class="follows follows-right" @click="openUsersList('following')">
+            <h4 class="follows__count">{{userData.following.length}}</h4>
             <p class="follows__text">Following</p>
           </div>
         </div>
 
         <div class="userRate">
           <h3 class="userRate__header userRate__header-profile">Rating</h3>
-          <i class="far fa-star userRate__star userRate__star-fill"></i>
-          <i class="far fa-star userRate__star userRate__star-fill"></i>
-          <i class="far fa-star userRate__star userRate__star-fill"></i>
+          <i v-for='rate in Math.floor(userData.user_rate.rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
+          <span class="note" v-if='Math.floor(userData.user_rate.rate)*1 == 0'>Unrated yet </span>
         </div>
       </div>
       <div class="detailInfo shadow radius-5px">
@@ -55,7 +83,7 @@
       </div>
 
     </div>
-    <edit-profile :userInfo='userDetailInfo' v-if='!editingProfile'></edit-profile>
+    <edit-profile :userInfo='userDetailInfo' v-if='editingProfile'></edit-profile>
 
   </div>
 </template>
@@ -65,6 +93,7 @@ import UserInformation from './UserInformation.vue';
 import UserEvents from './UserEvents.vue';
 import UserPhotos from './UserPhotos.vue';
 import EditProfile from './EditProfile.vue';
+import ModalUsersList from '../ModalUsersList.vue';
 
 
 
@@ -75,7 +104,13 @@ export default {
   data(){
     return{
       selectedTab: '1',
-      editingProfile:false
+      editingProfile:false,
+      avatar: require('../../assets/images/avatar__temp.jpg'),
+      usersListActive: false,
+      usersList: {},
+      usersListTitle: '',
+      usersListNote: ''
+      // isCurrent: (this.$store.getters.getCurrentUser === this.userData.username ? true : false),
     }
   },
 
@@ -83,11 +118,15 @@ export default {
     'user-info': UserInformation,
     'user-events': UserEvents,
     'user-photos': UserPhotos,
-    'edit-profile':EditProfile
+    'edit-profile':EditProfile,
+    'users-list': ModalUsersList
   },
   computed: {
     userData(){
       return this.$store.getters.getUserData;
+    },
+    isCurrent(){
+      return (this.$store.getters.getCurrentUser === this.userData.username ? true : false);
     },
     isScreenLoader(){
       return this.$store.getters.getProfileLoaderState;
@@ -99,10 +138,12 @@ export default {
         'email':        this.userData.email,
         'first_name':   this.userData.first_name,
         'last_name':    this.userData.last_name,
+        'city':         this.userData.city,
+        'country':      this.userData.country,
         'phone_number': this.userData.phone_number,
         'username':     this.userData.username,
-        'is_current':   this.userData.is_current,
-        'tags':         this.userData.tags
+        'tags':         this.userData.tags,
+        'isCurrent':    this.isCurrent
       }
     }
 
@@ -110,10 +151,24 @@ export default {
   methods: {
     selectTab(id){
       this.selectedTab = id;
+    },
+    openUsersList(type){
+      if(type === 'followers'){
+        this.usersListActive = true;
+        this.usersList = this.userData.followers;
+        this.usersListTitle = 'Followers';
+        this.usersListNote = 'User has not followers yet';
+      } else if(type === 'following') {
+        this.usersListActive = true;
+        this.usersList = this.userData.following;
+        this.usersListTitle = 'Following';
+        this.usersListNote = 'User is not following anyone';
+      }
     }
   },
   created(){
     this.$store.dispatch('getUserDataAPI', this.username);
+    console.log(this.isCurrent);
   },
   beforeRouteUpdate (to, from, next) {
     this.$store.dispatch('getUserDataAPI', to.params.username);
@@ -153,6 +208,7 @@ $blue-color: #3AE2CE;
       width: 110px;
       height: 110px;
       border-radius: 50%;
+      overflow: hidden;
     }
     &__realname{
       font-size: 1.1em;
@@ -234,6 +290,7 @@ $blue-color: #3AE2CE;
       }
     }
   }
+
 
 
 @media screen and (max-width: 1920px){

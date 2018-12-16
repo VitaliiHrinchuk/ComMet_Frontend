@@ -2,7 +2,7 @@
   <div class="about">
 
     <h1 class="about__title">About</h1>
-    <button class="about__btn shadow" type="button" name="button" v-if="userInfo.is_current"  @click="$emit('edit-profile')"><i class="far fa-edit"></i> Edit</button>
+    <button class="about__btn shadow" type="button" name="button" v-if="userInfo.isCurrent"  @click="$emit('edit-profile')"><i class="far fa-edit"></i> Edit</button>
 
     <table class="about__table userTable">
       <tr class="userTable__row">
@@ -15,7 +15,7 @@
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">City: </td>
-        <td class="userTable__col">*London*</td>
+        <td class="userTable__col">{{userInfo.city}}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Birthday: </td>
@@ -30,22 +30,23 @@
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Email: </td>
-        <td class="userTable__col">{{userInfo.email}}</td>
+        <td class="userTable__col">{{userInfo.email }}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Country: </td>
-        <td class="userTable__col">*UK*</td>
+        <td class="userTable__col">{{userInfo.country}}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Phone: </td>
-        <td class="userTable__col">{{userInfo.phone_number || "*uknown*"}}</td>
+        <td class="userTable__col">{{userInfo.phone_number || "uknown"}}</td>
       </tr>
     </table>
 
     <h1 class="about__title about__title-lined">Favourite Tags</h1>
-    <div class="about__tags" v-for="tag in userInfo.tags">
-      <div class="tag tag-red">
-        #{{tag}}
+    <span class="note" v-if='userInfo.tags.length == 0'>user has no favourite tags yet</span>
+    <div class="about__tags" >
+      <div class="tag tag-red" v-for="tag in userInfo.tags">
+        {{tag.name}}
       </div>
       <!-- <div class="tag tag-green">
         #Talking
@@ -67,7 +68,7 @@ export default {
     return{
 
     }
-  },
+  }
 }
 </script>
 

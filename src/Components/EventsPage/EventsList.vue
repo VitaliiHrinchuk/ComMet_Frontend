@@ -53,7 +53,7 @@
           <button class="textButton shortEvent__btn " type="button" name="button" @click='showEvent(event.id)'>Event Page</button>
         </div>
 
-        <div class="shortEvent shadow radius-5px bg-white">
+        <!-- <div class="shortEvent shadow radius-5px bg-white">
           <h3 class="shortEvent__title"></h3>
           <div class="shortEvent__date">
             <span>15 November</span>
@@ -61,14 +61,14 @@
           <div class="shortEvent__tags" >
             <div class="tag">
                 tag
-            </div>
+            </div> -->
             <!-- <div class="tag">
                 tag2
             </div>
             <div class="tag">
                 tag3
             </div> -->
-          </div>
+          <!-- </div>
           <div class="shortEvent__place">
             <span>15-th Wall Str.</span>
           </div>
@@ -76,7 +76,7 @@
               <span class="shortEvent__bold text-gray">Members:</span>
           </div>
           <button class="shortEvent__btn" type="button" name="button">Event Page</button>
-        </div>
+        </div> -->
 
       </div>
 
@@ -136,6 +136,7 @@ export default {
     },
     filteredEventList(){
       let filterName = this.searchName.toLowerCase();
+      console.log(filterName);
       if(this.filterTags.length>0){
         console.log('changed');
         let filteredArr = [];
@@ -154,11 +155,15 @@ export default {
         });
 
         return  filteredArr.filter(item => {
-          return item.name.indexOf(filterName) !== -1;
+          if(item.name.toLowerCase().indexOf(filterName) != -1){
+            return item;
+          }
         })
       } else {
         return this.eventsList.filter(item => {
-          return item.name.indexOf(filterName) !== -1;
+          if(item.name.toLowerCase().indexOf(filterName) != -1){
+            return item;
+          }
         })
       }
 

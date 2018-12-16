@@ -14,12 +14,12 @@
         <input class="input" type="text" name="" value="" v-model='newUserLastName'>
       </div>
       <div class="profileEdit__input">
-        <h3 class="input__title">City (not working):</h3>
-        <input class="input" type="text" name="" value="">
+        <h3 class="input__title">City:</h3>
+        <input class="input" type="text" name="" value="" v-model='newUserCity'>
       </div>
       <div class="profileEdit__input">
-        <h3 class="input__title">Country (not working):</h3>
-        <input class="input" type="text" name="" value="">
+        <h3 class="input__title">Country:</h3>
+        <input class="input" type="text" name="" value="" v-model='newUserCountry'>
       </div>
       <div class="profileEdit__input">
         <h3 class="input__title">Birthday:</h3>
@@ -69,6 +69,8 @@ export default {
       newUserBirthday: this.userInfo.date_of_birth,
       newUserFirstName: this.userInfo.first_name,
       newUserLastName: this.userInfo.last_name,
+      newUserCity: this.userInfo.city,
+      newUserCountry: this.userInfo.country,
       newUserPhone: this.userInfo.phone_number,
       newUserTags: this.userInfo.tags
     }
