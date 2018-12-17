@@ -350,6 +350,29 @@ $blue-color: #3AE2CE;
 		cursor: pointer;
 	}
 }
+
+.tagList{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: #fff;
+  padding: 15px 15px;
+  height: 70%;
+  width: 40%;
+
+  &__title{
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  &__close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #1ca9f0;
+    cursor: pointer;
+  }
+}
 @keyframes scale-image{
 	from{
 		transform: translate(-50%,-50%) scale(0) ;

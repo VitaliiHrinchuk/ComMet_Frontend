@@ -101,15 +101,18 @@
             +
           </div>
         </div>
-        <div class="tagList radius-5px shadow" v-if='openList'>
-          <span class="tagList__close" @click='openList = false'><i class="fas fa-times"></i></span>
-          <h2 class="tagList__title">Tags</h2>
-          <div class="creationSection__checkTag" v-for='tag in tagList'>
-            <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
-            <label :for="tag.name">{{tag.name}}</label>
-          </div>
+        <div class="modalWindow" v-if='openList'>
+          <div class="tagList radius-5px shadow" >
+            <span class="tagList__close" @click='openList = false'><i class="fas fa-times"></i></span>
+            <h2 class="tagList__title">Tags</h2>
+            <div class="creationSection__checkTag" v-for='tag in tagList'>
+              <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
+              <label :for="tag.name">{{tag.name}}</label>
+            </div>
 
+          </div>
         </div>
+
       </aside>
 
 
@@ -345,28 +348,7 @@ export default {
   margin-left: auto;
 }
 
-.tagList{
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  background: #fff;
-  padding: 15px 15px;
-  height: 70%;
-  width: 40%;
 
-  &__title{
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  &__close{
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    color: #1ca9f0;
-    cursor: pointer;
-  }
-}
 @media screen and (min-width: 2000px){
   .eventSearch{
     width: 1000px;

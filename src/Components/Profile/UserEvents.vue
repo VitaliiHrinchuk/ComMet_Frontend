@@ -1,9 +1,19 @@
 <template lang="html">
   <div class="userEvents">
-    <h2 class="userEvents__title">Visited</h2>
-    <h2 class="userEvents__title userEvents__title-unactive">Created</h2>
-    <span class="note" v-if='userEvents.visited.length == 0'>User has not visited any event</span>
-    <div class="" v-for='event in userEvents.visited'>
+    <h2 class="userEvents__title"
+        @click='changeType(0)'
+        :class='{"userEvents__title-unactive": selectedType == 1}'
+        >Visited</h2>
+    <h2
+        class="userEvents__title"
+        @click='changeType(1)'
+        :class='{ "userEvents__title-unactive": selectedType == 0}'
+    >Created</h2>
+    <span
+        class="note"
+        v-if='userEvents.visited.length == 0 && selectedType == 0'
+        >User has not visited any event</span>
+    <div class="" v-for='event in userEvents.visited' v-if='selectedType == 0'>
 
       <div class="profileEvent">
         <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
@@ -13,6 +23,20 @@
       </div>
     </div>
 
+
+    <span
+        class="note"
+        v-if='userEvents.created.length == 0  && selectedType == 1'
+        >User has not created events</span>
+    <div class="" v-for='event in userEvents.created' v-if='selectedType == 1'>
+
+      <div class="profileEvent">
+        <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
+        <h3 class="profileEvent__title">{{event.name}}</h3>
+        <h4 class="profileEvent__date">{{event.date_expire}}</h4>
+        <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
+      </div>
+    </div>
 
     <!-- <div class="profileEvent">
       <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
@@ -36,12 +60,15 @@ export default {
   },
   data(){
     return{
-
+      selectedType: 0
     }
   },
   methods: {
     showEvent(id){
       this.$router.push(`/Event/${id}`);
+    },
+    changeType(type){
+      this.selectedType = type;
     }
   }
 }
@@ -50,13 +77,14 @@ export default {
 <style lang="scss">
   .userEvents{
 
-
     &__title{
       font-size: 1em;
       font-weight: normal;
       text-transform: uppercase;
       margin-bottom: 10px;
       display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
       &-lined{
         border-top: 1px solid #cecccc;
         padding-top: 15px;
@@ -64,6 +92,7 @@ export default {
 
       &-unactive{
         color: gray;
+        opacity: .7;
       }
     }
 

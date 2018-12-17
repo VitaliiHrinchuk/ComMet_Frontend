@@ -41,7 +41,13 @@
         <h2 class="mainInfo__realname">{{userData.first_name}} {{userData.last_name}}</h2>
         <h3 class="mainInfo__username">@{{userData.username}}</h3>
 
-        <button class="mainInfo__subscribeBtn" type="button" name="button" v-if='!isCurrent'>Follow</button>
+        <button
+            class="mainInfo__subscribeBtn"
+            type="button"
+            name="button"
+            v-if='!isCurrent'
+            @click='subscribe()'
+            >Follow</button>
 
         <div class="mainInfo__follows">
           <div class="follows follows-left" @click="openUsersList('followers')">
@@ -168,6 +174,18 @@ export default {
     closingEditing(){
       this.$store.dispatch('getUserDataAPI', this.userData.username);
       this.editingProfile = false;
+    },
+    subscribe(){
+      let currentUser = this.$store.getters.getCurrentUser;
+      let followingUser = {
+        'follower_username': currentUser
+      };
+      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userData.username}/add_following/`, currentUser).then(response=>{
+        console.log(response);
+      }, error=>{
+        //error
+        console.log(error.response);
+      });
     }
   },
   created(){
@@ -195,6 +213,7 @@ $blue-color: #3AE2CE;
   flex-wrap: wrap;
   padding-top: 30px;
   padding-bottom: 30px;
+  max-height: 700px;
   &__block{
     background: #fff;
     padding: 30px 15px;
@@ -267,7 +286,7 @@ $blue-color: #3AE2CE;
   .detailInfo{
     background: #fff;
     width: 70%;
-
+    overflow: auto;
     &__content{
       padding: 15px 35px;
     }
@@ -365,7 +384,13 @@ $blue-color: #3AE2CE;
     &__subscribeBtn{
       width: 70%;
     }
-
+    &__avatar{
+      .userPhotos__img{
+          margin-right: 0;
+          width: 100%;
+          height: 100%;
+      }
+    }
   }
   .userTable{
     margin-right: 0;

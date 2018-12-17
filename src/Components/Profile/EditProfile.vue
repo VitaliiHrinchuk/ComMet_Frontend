@@ -35,9 +35,11 @@
       </div>
       <div class="profileEdit__input">
         <h3 class="input__title">Birthday:</h3>
-        <datepick class="profileEdit__datePick"
+        <datepick
+          class="profileEdit__datePick"
           v-model='newUserBirthday'
           :selectableYearRange='100'
+          :mobileBreakpointWidth='800'
           ></datepick>
       </div>
       <div class="profileEdit__input">
@@ -45,16 +47,18 @@
         <input class="input" type="text" name="" value="" v-model='newUserPhone'>
       </div>
       <div class="profileEdit__tags">
+        <div class="modalWindow"  v-if='isOpenTagList'>
+          <div class="tagList radius-5px shadow">
+            <span class="tagList__close" @click='isOpenTagList = false'><i class="fas fa-times"></i></span>
+            <h2 class="tagList__title">Tags</h2>
+            <div class="creationSection__checkTag" v-for='tag in tagList'>
+              <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='newUserTags'>
+              <label :for="tag.name">{{tag.name}}</label>
+            </div>
 
-        <div class="tagList radius-5px shadow" v-if='isOpenTagList'>
-          <span class="tagList__close" @click='isOpenTagList = false'><i class="fas fa-times"></i></span>
-          <h2 class="tagList__title">Tags</h2>
-          <div class="creationSection__checkTag" v-for='tag in tagList'>
-            <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='newUserTags'>
-            <label :for="tag.name">{{tag.name}}</label>
           </div>
-
         </div>
+
         <!-- <div class="tag tag-red">
           #{{tag}}
         </div> -->
@@ -265,5 +269,51 @@ $primary-color:#1ca9f0;
       display: block;
     }
   }
+}
+
+
+
+
+@media screen and (max-width: 1368px){
+
+}
+@media screen and (max-width: 1120px){
+
+}
+@media screen and (max-width: 960px){
+  .profileEdit{
+    font-size: .8em;
+    &__input{
+      width: 60%;
+      padding-right: 20px;
+      .input{
+        width: 180px;
+      }
+      .vdpComponent.vdpWithInput > input{
+        width: 180px;
+      }
+    }
+
+    &__tags{
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px){
+  .profileEdit{
+    &__input{
+      width: 100%;
+
+    }
+  }
+}
+@media screen and (max-width: 560px){
+
+}
+
+
+@media screen and (max-width: 480px){
+
 }
 </style>
