@@ -1,4 +1,4 @@
-author<template lang="html">
+<template lang="html">
   <div class="">
     <div class="loaderBg" v-if="isScreenLoader">
       <div class="screenLoader">
@@ -56,12 +56,9 @@ author<template lang="html">
               <img class="user__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
 
               <div class="userRate">
-                <h3 class="fullName fullName-author" @click='showUserProfile(eventData.author)'>{{eventData.author}}</h3>
-                <i class="far fa-star userRate__star userRate__star-fill"></i>
-                <i class="far fa-star userRate__star userRate__star-fill"></i>
-                <i class="far fa-star userRate__star userRate__star-fill"></i>
-                <i class="far fa-star userRate__star "></i>
-                <i class="far fa-star userRate__star "></i>
+                <h3 class="fullName fullName-author" @click='showUserProfile(eventData.author.username)'>{{eventData.author.first_name}} {{eventData.author.last_name}}</h3>
+                <i v-for='rate in Math.floor(eventData.author.user_rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
+                <span class="note" v-if='Math.floor(eventData.author.user_rate)*1 == 0'>Unrated yet </span>
               </div>
             </div>
           </div>
@@ -449,6 +446,9 @@ $blue-color: #3AE2CE;
     .userRate{
       font-size: .9em;
     }
+    .bigButton{
+      font-size: .9em;
+    }
     .eventBox{
       font-size: .9em;
       &-place{
@@ -463,11 +463,13 @@ $blue-color: #3AE2CE;
         .user{
           justify-content: center;
           align-items: center;
-          float: none;
+          flex-direction: column;
           text-align: center;
           &__avatar{
             margin-right: 0;
+            float: none;
           }
+
         }
       }
       &-members{
@@ -509,7 +511,7 @@ $blue-color: #3AE2CE;
         width: 100%;
         margin-right: 0;
       }
-      &-user{
+      &-author{
         width: 100%;
         margin-right: 0;
       }

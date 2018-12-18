@@ -6,27 +6,20 @@
       </div>
     </div>
 
-    <!-- <div class="modalWindow">
-      <div class="modalWindow__content radius-5px">
-        <h1 class="modalWindow__title">Followers</h1>
-          <span class="note" v-if='userData.followers.length == 0'>User has not followers yet</span>
-          <div class="user user-list" v-for='user in userData.followers'>
-            <img class="user__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-            <div class="user__nameBlock">
-              <h3 class="fullName" @click='showUserProfile(user.username)'>{{user.first_name}}  {{user.last_name}}</h3>
-              <span class="username">@{{user.username}}</span>
-            </div>
-
-          </div>
-      </div>
-    </div> -->
+    <modal
+      v-if='isModalQuestion'
+      :question='modalQuestion'
+      @decline='isModalQuestion = false'
+      @accept='unsubcribe()'
+      @close-list='isModalQuestion = false'
+    ></modal>
     <users-list
-    v-if='usersListActive'
-    :usersData='usersList'
-    :title='usersListTitle'
-    :note='usersListNote'
-    @close-list= 'usersListActive = false'
-
+      v-if='usersListActive'
+      :usersData='usersList'
+      :title='usersListTitle'
+      :note='usersListNote'
+      :isLoader='isLocalLoader'
+      @close-list= 'usersListActive = false'
     ></users-list>
     <div class="profile container" v-if="!isScreenLoader && !editingProfile">
       <div class="mainInfo profile__block shadow radius-5px">
@@ -45,26 +38,38 @@
             class="mainInfo__subscribeBtn"
             type="button"
             name="button"
-            v-if='!isCurrent'
+            v-if='!isCurrent && !isCurrentUserFollower'
             @click='subscribe()'
+            :disabled='isSubscribeLoader'
+            :class="{'disabledBtn':isSubscribeLoader}"
             >Follow</button>
-
+        <div
+            class="mainInfo__subscribedUser"
+            v-if='isCurrentUserFollower'
+            >subscribed
+          <button
+            @click='isModalQuestion = true'
+            class="mainInfo__unsubscribeBtn"
+            type="button"
+            name="button"
+            ><i class="fas fa-times"></i></button>
+        </div>
         <div class="mainInfo__follows">
-          <div class="follows follows-left" @click="openUsersList('followers')">
-            <h4 class="follows__count">{{userData.followers.length}}</h4>
+          <div class="follows follows-left" @click="getUserFollowers()">
+            <h4 class="follows__count">{{userData.followers}}</h4>
             <p class="follows__text">Followers</p>
           </div>
 
-          <div class="follows follows-right" @click="openUsersList('following')">
-            <h4 class="follows__count">{{userData.following.length}}</h4>
+          <div class="follows follows-right" @click="getUserFollowing()">
+            <h4 class="follows__count">{{userData.following}}</h4>
             <p class="follows__text">Following</p>
           </div>
         </div>
 
         <div class="userRate">
           <h3 class="userRate__header userRate__header-profile">Rating</h3>
-          <i v-for='rate in Math.floor(userData.user_rate.rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
-          <span class="note" v-if='Math.floor(userData.user_rate.rate)*1 == 0'>Unrated yet </span>
+          <i v-for='rate in Math.floor(userData.user_rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
+          <span class="note" v-if='Math.floor(userData.user_rate)*1 == 0'>Unrated yet </span>
         </div>
       </div>
       <div class="detailInfo shadow radius-5px">
@@ -100,7 +105,7 @@ import UserEvents from './UserEvents.vue';
 import UserPhotos from './UserPhotos.vue';
 import EditProfile from './EditProfile.vue';
 import ModalUsersList from '../ModalUsersList.vue';
-
+import ModalQuestion from '../ModalQuestion.vue';
 
 
 export default {
@@ -115,8 +120,12 @@ export default {
       usersListActive: false,
       usersList: {},
       usersListTitle: '',
-      usersListNote: ''
-      // isCurrent: (this.$store.getters.getCurrentUser === this.userData.username ? true : false),
+      usersListNote: '',
+      isLocalLoader: false,
+      isSubscribeLoader: false,
+      isModalQuestion: false,
+      isCurrentUserFollower: false
+
     }
   },
 
@@ -125,7 +134,8 @@ export default {
     'user-events': UserEvents,
     'user-photos': UserPhotos,
     'edit-profile':EditProfile,
-    'users-list': ModalUsersList
+    'users-list': ModalUsersList,
+    'modal': ModalQuestion
   },
   computed: {
     userData(){
@@ -151,6 +161,9 @@ export default {
         'tags':         this.userData.tags.filter(item=>item.name),
         'isCurrent':    this.isCurrent
       }
+    },
+    modalQuestion(){
+      return `You sure you sure that you want unsubcribe ${this.userData.username}?`;
     }
 
   },
@@ -161,12 +174,10 @@ export default {
     openUsersList(type){
       if(type === 'followers'){
         this.usersListActive = true;
-        this.usersList = this.userData.followers;
         this.usersListTitle = 'Followers';
         this.usersListNote = 'User has not followers yet';
       } else if(type === 'following') {
         this.usersListActive = true;
-        this.usersList = this.userData.following;
         this.usersListTitle = 'Following';
         this.usersListNote = 'User is not following anyone';
       }
@@ -175,13 +186,58 @@ export default {
       this.$store.dispatch('getUserDataAPI', this.userData.username);
       this.editingProfile = false;
     },
+    getUserFollowers(){
+      this.isLocalLoader = true;
+      this.openUsersList('followers');
+      this.$axios.get(`https://comeandmeet.herokuapp.com/accounts/users/${this.userData.username}/get_followers/`).then(response=>{
+        console.log(response);
+        this.usersList = response.data;
+
+        this.isLocalLoader = false;
+      }, error=>{
+        this.isLocalLoader = false;
+      });
+    },
+    getUserFollowing(){
+      this.isLocalLoader = true;
+      this.openUsersList('following');
+      this.$axios.get(`https://comeandmeet.herokuapp.com/accounts/users/${this.userData.username}/get_following/`).then(response=>{
+        console.log(response);
+        this.usersList = response.data;
+
+        this.isLocalLoader = false;
+      }, error=>{
+        this.isLocalLoader = false;
+      });
+    },
     subscribe(){
+      this.isSubscribeLoader = true;
       let currentUser = this.$store.getters.getCurrentUser;
       let followingUser = {
-        'follower_username': currentUser
+        'following_username': this.userData.username
       };
-      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userData.username}/add_following/`, currentUser).then(response=>{
+      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${currentUser}/add_following/`, followingUser).then(response=>{
         console.log(response);
+        this.isSubscribeLoader = false;
+        if(response.data.status == 'ok'){
+          this.isCurrentUserFollower = true;
+        }
+      }, error=>{
+        //error
+        this.isSubscribeLoader = false;
+      });
+    },
+    unsubcribe(){
+
+      this.isModalQuestion = false;
+
+      let currentUser = this.$store.getters.getCurrentUser;
+      let followingUser = {
+        'following_username': this.userData.username
+      };
+      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${currentUser}/remove_following/`, followingUser).then(response=>{
+        console.log(response);
+
       }, error=>{
         //error
         console.log(error.response);
@@ -246,6 +302,7 @@ $blue-color: #3AE2CE;
       margin-bottom: 15px;
     }
     &__subscribeBtn{
+      position: relative;
       background: #00ffa9;
       border: none;
       color: #fff;
@@ -256,6 +313,32 @@ $blue-color: #3AE2CE;
       height: 23px;
       cursor: pointer;
       margin-bottom: 10px;
+    }
+    &__subscribedUser{
+      position: relative;
+      background: transparent;
+      border-radius: 15px;
+      border: 1px solid $primary-color;
+      text-align: center;
+      text-transform: uppercase;
+      color: $primary-color;
+      font-size: .8em;
+      padding: 2px 10px;
+      width: 100%;
+      cursor: default;
+      margin-bottom: 10px;
+    }
+    &__unsubscribeBtn{
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      color: $primary-color;
+      cursor: pointer;
+      overflow: hidden;
+      border: none;
+      border-left: 1px solid $primary-color;
+      background: transparent
     }
     &__follows{
       display: flex;
@@ -357,6 +440,9 @@ $blue-color: #3AE2CE;
     &__subscribeBtn{
       width: 70%;
     }
+    &__subscribedUser{
+      width: 70%;
+    }
   }
   .detailInfo{
     flex-basis: 100%;
@@ -366,24 +452,17 @@ $blue-color: #3AE2CE;
 @media screen and (max-width: 768px){
   .mainInfo{
     flex-basis: 80%;
-    margin-right: 0;
-    margin-bottom: 30px;
 
-    &__subscribeBtn{
-      width: 70%;
-    }
+
+
   }
 
 }
 @media screen and (max-width: 560px){
   .mainInfo{
     flex-basis: 100%;
-    margin-right: 0;
-    margin-bottom: 30px;
 
-    &__subscribeBtn{
-      width: 70%;
-    }
+
     &__avatar{
       .userPhotos__img{
           margin-right: 0;

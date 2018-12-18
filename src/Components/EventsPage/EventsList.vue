@@ -1,125 +1,131 @@
 <template lang="html">
-  <div class="container eventPageContainer">
+  <div class="">
 
     <div class="loaderBg" v-if="isScreenLoader">
       <div class="screenLoader">
         <div class="screenLoader screenLoader-inner"></div>
       </div>
     </div>
+    
+    <div class="container eventPageContainer">
 
-    <div class="title text-gray" >
-      <h1>Events</h1>
-    </div>
 
-    <div class="flexbox ">
-      <div class="eventSearch">
-        <h3 class="eventSearch__title text-gray">Search</h3>
-        <div class="eventSearch__input shadow radius-5px bg-white">
-          <input class="input input-eventSearch" type="text" name="" placeholder="Search by name" v-model='searchName'>
-        </div>
 
+      <div class="title text-gray" >
+        <h1>Events</h1>
       </div>
 
+      <div class="flexbox ">
+        <div class="eventSearch">
+          <h3 class="eventSearch__title text-gray">Search</h3>
+          <div class="eventSearch__input shadow radius-5px bg-white">
+            <input class="input input-eventSearch" type="text" name="" placeholder="Search by name" v-model='searchName'>
+          </div>
 
-      <!-- <div class="" v-for="event in eventsList">
-        {{event.name}}
-      </div> -->
-
-
-      <div class="eventList">
-        <h3 class="text-gray eventList__title">Events list</h3>
-        <div class="shortEvent shadow radius-5px bg-white" v-for="event in filteredEventList" >
-          <h3 class="shortEvent__title">{{event.name}}</h3>
-          <div class="shortEvent__date">
-            <span>{{dateToString(event.date)}}</span>
-          </div>
-          <div class="shortEvent__tags" >
-            <div class="tag" v-for="tag in event.tags">
-                {{tag}}
-            </div>
-            <!-- <div class="tag">
-                tag2
-            </div>
-            <div class="tag">
-                tag3
-            </div> -->
-          </div>
-          <div class="shortEvent__place">
-            <span>{{event.city}}</span>
-          </div>
-          <div class="shortEvent__members">
-              <span class="shortEvent__bold text-gray">Members:</span> {{event.membersCount}}
-          </div>
-          <button class="textButton shortEvent__btn " type="button" name="button" @click='showEvent(event.id)'>Event Page</button>
         </div>
 
-        <!-- <div class="shortEvent shadow radius-5px bg-white">
-          <h3 class="shortEvent__title"></h3>
-          <div class="shortEvent__date">
-            <span>15 November</span>
-          </div>
-          <div class="shortEvent__tags" >
-            <div class="tag">
-                tag
-            </div> -->
-            <!-- <div class="tag">
-                tag2
-            </div>
-            <div class="tag">
-                tag3
-            </div> -->
-          <!-- </div>
-          <div class="shortEvent__place">
-            <span>15-th Wall Str.</span>
-          </div>
-          <div class="shortEvent__members">
-              <span class="shortEvent__bold text-gray">Members:</span>
-          </div>
-          <button class="shortEvent__btn" type="button" name="button">Event Page</button>
+
+        <!-- <div class="" v-for="event in eventsList">
+          {{event.name}}
         </div> -->
 
+
+        <div class="eventList">
+          <h3 class="text-gray eventList__title">Events list</h3>
+          <div class="shortEvent shadow radius-5px bg-white" v-for="event in filteredEventList" >
+            <h3 class="shortEvent__title">{{event.name}}</h3>
+            <div class="shortEvent__date">
+              <span>{{dateToString(event.date)}}</span>
+            </div>
+            <div class="shortEvent__tags" >
+              <div class="tag" v-for="tag in event.tags">
+                  {{tag}}
+              </div>
+              <!-- <div class="tag">
+                  tag2
+              </div>
+              <div class="tag">
+                  tag3
+              </div> -->
+            </div>
+            <div class="shortEvent__place">
+              <span>{{event.city}}</span>
+            </div>
+            <div class="shortEvent__members">
+                <span class="shortEvent__bold text-gray">Members:</span> {{event.membersCount}}
+            </div>
+            <button class="textButton shortEvent__btn " type="button" name="button" @click='showEvent(event.id)'>Event Page</button>
+          </div>
+
+          <!-- <div class="shortEvent shadow radius-5px bg-white">
+            <h3 class="shortEvent__title"></h3>
+            <div class="shortEvent__date">
+              <span>15 November</span>
+            </div>
+            <div class="shortEvent__tags" >
+              <div class="tag">
+                  tag
+              </div> -->
+              <!-- <div class="tag">
+                  tag2
+              </div>
+              <div class="tag">
+                  tag3
+              </div> -->
+            <!-- </div>
+            <div class="shortEvent__place">
+              <span>15-th Wall Str.</span>
+            </div>
+            <div class="shortEvent__members">
+                <span class="shortEvent__bold text-gray">Members:</span>
+            </div>
+            <button class="shortEvent__btn" type="button" name="button">Event Page</button>
+          </div> -->
+
+        </div>
+
+
+        <aside class="aside flexbox">
+          <h3 class="text-gray aside__title">Sort</h3>
+          <div class="eventSort shadow radius-5px bg-white">
+            <ul class="sortList text-gray">
+              <li class="sortList__item sortList__item-active">All events</li>
+              <li class="sortList__item">My events</li>
+              <li class="sortList__item">Recommended events</li>
+              <li class="sortList__item">Nearest events</li>
+            </ul>
+          </div>
+
+          <div class="eventSort-tags shadow radius-5px bg-white">
+            <h4 class="eventSort__title text-gray">Included tags</h4>
+            <div class="tag tag-search" v-for='tag in filterTags'>
+                {{tag}}
+            </div>
+            <div class="addTagBtn" @click = 'openList = true'>
+              +
+            </div>
+          </div>
+          <div class="modalWindow" v-if='openList'>
+            <div class="tagList radius-5px shadow" >
+              <span class="tagList__close" @click='openList = false'><i class="fas fa-times"></i></span>
+              <h2 class="tagList__title">Tags</h2>
+              <div class="creationSection__checkTag" v-for='tag in tagList'>
+                <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
+                <label :for="tag.name">{{tag.name}}</label>
+              </div>
+
+            </div>
+          </div>
+
+        </aside>
+
+
       </div>
 
 
-      <aside class="aside flexbox">
-        <h3 class="text-gray aside__title">Sort</h3>
-        <div class="eventSort shadow radius-5px bg-white">
-          <ul class="sortList text-gray">
-            <li class="sortList__item sortList__item-active">All events</li>
-            <li class="sortList__item">My events</li>
-            <li class="sortList__item">Recommended events</li>
-            <li class="sortList__item">Nearest events</li>
-          </ul>
-        </div>
-
-        <div class="eventSort-tags shadow radius-5px bg-white">
-          <h4 class="eventSort__title text-gray">Included tags</h4>
-          <div class="tag tag-search" v-for='tag in filterTags'>
-              {{tag}}
-          </div>
-          <div class="addTagBtn" @click = 'openList = true'>
-            +
-          </div>
-        </div>
-        <div class="modalWindow" v-if='openList'>
-          <div class="tagList radius-5px shadow" >
-            <span class="tagList__close" @click='openList = false'><i class="fas fa-times"></i></span>
-            <h2 class="tagList__title">Tags</h2>
-            <div class="creationSection__checkTag" v-for='tag in tagList'>
-              <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
-              <label :for="tag.name">{{tag.name}}</label>
-            </div>
-
-          </div>
-        </div>
-
-      </aside>
-
-
     </div>
-
-
   </div>
+
 </template>
 
 <script>

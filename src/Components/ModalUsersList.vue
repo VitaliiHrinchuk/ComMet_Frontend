@@ -1,6 +1,14 @@
 <template lang="html">
   <div class="modalWindow">
+
     <div class="modalWindow__content radius-5px">
+
+      <div class="blockLoader" v-if='isLoader'>
+        <div class="screenLoader">
+          <div class="screenLoader screenLoader-inner"></div>
+        </div>
+      </div>
+
       <h1 class="modalWindow__title">{{title}}</h1>
         <span class="note" v-if='usersData.length == 0'>{{note}}</span>
         <div class="user user-list" v-for='user in usersData'>
@@ -22,7 +30,8 @@ export default {
   props:{
     usersData: {required: true},
     title: {reauired: true, default:'Title'},
-    note: {default: 'Empty yet'}
+    note: {default: 'Empty yet'},
+    isLoader: {default: false}
   },
   data(){
     return  {
@@ -31,6 +40,7 @@ export default {
   },
   methods: {
     showUserProfile(username){
+      this.$emit('close-list');
       this.$router.push(`/Profile/${username}`);
     }
   }
