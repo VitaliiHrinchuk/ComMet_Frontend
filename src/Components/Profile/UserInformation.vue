@@ -116,6 +116,7 @@ $primary-color: #1ca9f0;
     }
 
     &__col{
+
       &-title{
         width: 150px;
       }
