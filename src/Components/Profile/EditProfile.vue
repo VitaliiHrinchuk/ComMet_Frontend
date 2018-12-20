@@ -62,7 +62,7 @@
         <!-- <div class="tag tag-red">
           #{{tag}}
         </div> -->
-        <h3>Tags</h3>
+        <h3 class="profileEdit__title">Your Favourite Tags</h3>
         <div class="tag tag-green" v-for='tag in newUserTags'>
           {{tag}}
           <span class="tag__remove" @click='removeTag(tag)'><i class="far fa-times-circle"></i></span>
@@ -185,7 +185,11 @@ $primary-color:#1ca9f0;
     flex-direction: column;
 
   }
-
+  &__title{
+    font-weight: normal;
+    margin: 10px 0;
+    margin-left: 5px;
+  }
   &__img{
     border-radius: 50%;
     cursor: auto;

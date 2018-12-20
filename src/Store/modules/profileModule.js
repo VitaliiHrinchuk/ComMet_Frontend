@@ -6,6 +6,7 @@ const API_ACCOUNTS_URL = `https://comeandmeet.herokuapp.com/accounts/`;
 const state = {
   userData: {},
   profileLoader: true,
+  isCurrentIsFollower: false
 }
 
 const getters = {
@@ -15,6 +16,9 @@ const getters = {
   },
   getProfileLoaderState(state){
     return state.profileLoader;
+  },
+  getIsFollowerState(state){
+    return state.isCurrentIsFollower;
   }
 }
 
@@ -25,21 +29,39 @@ const mutations = {
   },
   setProfileLoader(state, value){
     state['profileLoader'] = value;
+  },
+  setIsFollowerState(state, value){
+    state['isCurrentIsFollower'] = value;
   }
 }
 
 const actions = {
-  getUserDataAPI({commit},username){
+  getUserDataAPI({state, commit, rootState},username){
     let userDataUrl =`${API_ACCOUNTS_URL}users/${username}`;
     commit('setProfileLoader', true);
     axios.get(userDataUrl).then((response)=>{
 
+      axios.get(`${userDataUrl}/is_follower/`, {params: {'follower_username': rootState.currentUser}}).then(response=>{
+        console.log('isFollower');
+        console.log(response);
+
+        if(response.data == 'follower'){
+          commit('setIsFollowerState', true);
+        } else if(response.data == 'not follower'){
+          commit('setIsFollowerState', false);
+        }
+
+        commit('setProfileLoader', false);
+      }, error=>{
+        //error
+        commit('setProfileLoader', false);
+      });
+
       console.log('setProfileLoader');
       console.log(response);
       let result = response.data;
-
       commit('setUserData',{item:result});
-      commit('setProfileLoader', false);
+
     }, (error)=>{
       //error
       commit('setProfileLoader', false);

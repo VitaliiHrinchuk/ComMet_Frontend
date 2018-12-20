@@ -22,22 +22,32 @@
       </div>
     </div>
     <header class="header"  v-if='!isAppLoad'>
-      <img id="logo" class="logo" alt="logo" src="<%=require('./assets/images/logo.png')%>">
-      <div class="container" >
-        <nav>
-          <ul class="navigation" >
-            <li  v-if="isUserAuthorized"><router-link class="navigation__item"  :to="{path: '/Profile/'+currentUser}">My Profile </router-link></li>
-            <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>Main</router-link></li>
-            <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
-            <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
-            <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
-          </ul>
+
+      <div class="container-nav" >
+
+        <nav class="nav" >
+          <div class="nav__brand">
+            <img id="logo" class="logo" alt="logo" src="<%=require('./assets/images/logo.png')%>">
+          </div>
+          <div class="nav__list">
+            <ul id='navigation' class="navigation" @click='closeMenu'>
+              <li  v-if="isUserAuthorized"><router-link class="navigation__item"  :to="{path: '/Profile/'+currentUser}">My Profile </router-link></li>
+              <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>Main</router-link></li>
+              <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
+              <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
+              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
+            </ul>
+          </div>
+
+          <span class="nav__toggler" @click='openMenu()'><i class="fas fa-ellipsis-v"></i></span>
         </nav>
       </div>
     </header>
-    <transition name="routerSlide">
-      <router-view  v-if='!isAppLoad'></router-view>
-    </transition>
+    <main class="main">
+      <transition name="routerSlide">
+        <router-view  v-if='!isAppLoad'></router-view>
+      </transition>
+    </main>
 
     <div class="versionMsg">This project is under development. This is just a test version</div>
   </div>

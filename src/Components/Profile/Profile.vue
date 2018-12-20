@@ -124,7 +124,7 @@ export default {
       isLocalLoader: false,
       isSubscribeLoader: false,
       isModalQuestion: false,
-      isCurrentUserFollower: false
+
 
     }
   },
@@ -143,6 +143,9 @@ export default {
     },
     isCurrent(){
       return (this.$store.getters.getCurrentUser === this.userData.username ? true : false);
+    },
+    isCurrentUserFollower(){
+      return this.$store.getters.getIsFollowerState;
     },
     isScreenLoader(){
       return this.$store.getters.getProfileLoaderState;
@@ -220,7 +223,7 @@ export default {
         console.log(response);
         this.isSubscribeLoader = false;
         if(response.data.status == 'ok'){
-          this.isCurrentUserFollower = true;
+          this.$store.commit('setIsFollowerState', true);
         }
       }, error=>{
         //error
@@ -237,7 +240,9 @@ export default {
       };
       this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${currentUser}/remove_following/`, followingUser).then(response=>{
         console.log(response);
-
+        if(response.data.status == 'ok'){
+          this.$store.commit('setIsFollowerState', false);
+        }
       }, error=>{
         //error
         console.log(error.response);

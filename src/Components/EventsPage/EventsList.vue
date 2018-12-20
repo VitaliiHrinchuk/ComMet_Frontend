@@ -1,13 +1,12 @@
 <template lang="html">
   <div class="">
-
     <div class="loaderBg" v-if="isScreenLoader">
       <div class="screenLoader">
         <div class="screenLoader screenLoader-inner"></div>
       </div>
     </div>
-    
-    <div class="container eventPageContainer">
+
+    <div class="container eventPageContainer" >
 
 
 
@@ -30,7 +29,11 @@
         </div> -->
 
 
-        <div class="eventList">
+        <div id="eventList" class="eventList">
+            <!-- <div class="screenLoader screenLoader-list" v-if="!isEventListLoader">
+              <div class="screenLoader screenLoader-inner"></div>
+            </div> -->
+            <span class="loader loader-list" v-if="isEventListLoader"></span>
           <h3 class="text-gray eventList__title">Events list</h3>
           <div class="shortEvent shadow radius-5px bg-white" v-for="event in filteredEventList" >
             <h3 class="shortEvent__title">{{event.name}}</h3>
@@ -49,38 +52,13 @@
               </div> -->
             </div>
             <div class="shortEvent__place">
-              <span>{{event.city}}</span>
+              <span class="shortEvent__bold text-gray">Place: </span>{{event.city}}
             </div>
             <div class="shortEvent__members">
                 <span class="shortEvent__bold text-gray">Members:</span> {{event.membersCount}}
             </div>
             <button class="textButton shortEvent__btn " type="button" name="button" @click='showEvent(event.id)'>Event Page</button>
           </div>
-
-          <!-- <div class="shortEvent shadow radius-5px bg-white">
-            <h3 class="shortEvent__title"></h3>
-            <div class="shortEvent__date">
-              <span>15 November</span>
-            </div>
-            <div class="shortEvent__tags" >
-              <div class="tag">
-                  tag
-              </div> -->
-              <!-- <div class="tag">
-                  tag2
-              </div>
-              <div class="tag">
-                  tag3
-              </div> -->
-            <!-- </div>
-            <div class="shortEvent__place">
-              <span>15-th Wall Str.</span>
-            </div>
-            <div class="shortEvent__members">
-                <span class="shortEvent__bold text-gray">Members:</span>
-            </div>
-            <button class="shortEvent__btn" type="button" name="button">Event Page</button>
-          </div> -->
 
         </div>
 
@@ -180,13 +158,28 @@ export default {
     isScreenLoader(){
       return this.$store.getters.getEventLoaderState;
     },
+    isEventListLoader(){
+      return this.$store.getters.getEventListLoaderState;
+    },
     tagList(){
       return this.$store.getters.getTagsList;
     }
   },
   methods: {
-    pushEventsList(){
-      // this.eventsList.push(this.$store.getters.getEventsList)
+    loadEvents(){
+      this.$store.dispatch('refreshEventsList');
+    },
+    onScroll(event){
+      var scrollTop =window.pageYOffset || document.documentElement.scrollTop;
+      let contentHeight = document.documentElement.offsetHeight;
+      let listHeight = document.querySelector('#eventList').offsetHeight;
+
+
+      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+
+      if(bottomOfWindow && !this.isEventListLoader){
+        this.loadEvents();
+      }
     },
     dateToString(date){
       const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -202,21 +195,27 @@ export default {
     }
   },
   created(){
-    this.$store.dispatch('refreshEventsList');
+    this.loadEvents();
     this.$store.dispatch('getTagsListAPI');
-    // this.pushEventsList();
-    // console.log(this.eventsList);
-  }
+    this.$store.commit('setEventLoader', true);
+    document.addEventListener('scroll', this.onScroll);
+
+  },
+  destroyed(){
+    document.removeEventListener('scroll',this.onScroll);
+    this.$store.commit('clearEventList');
+    this.$store.commit('updateEventsUrl', 'https://comeandmeet.herokuapp.com/events/?limit=3&offset=0');
+  },
 }
 </script>
 
 <style lang="scss">
 .eventPageContainer{
-  height: 6000px;
+
 }
 .title{
   margin: 0 auto;
-  margin-top: 10px;
+  padding-top: 10px;
   margin-bottom: 15px;
   text-align: center;
   width: 300px;
@@ -228,34 +227,30 @@ export default {
   margin-right: auto;
   color: #455A64;
   order: 1;
-}
-.eventSearch__title{
-  /* text-align: center; */
-  margin: 0;
-  padding: 0;
-  margin-bottom: 10px;
-  margin-left: 15px;
-}
-.eventSearch__input{
-  padding: 13px 13px;
+
+  &__title{
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
+    margin-left: 15px;
+  }
+
+  &__input{
+    padding: 13px 13px;
+  }
 
 }
-.eventSort-tags{
-  /* width: calc(30% - 30px); */
 
-  padding: 15px 15px;
-}
-.eventSort__title{
-  margin-bottom: 10px;
-}
-/* .input-eventSearch{
-  width: 98%;
-  margin-bottom: 4px;
-} */
 .eventSort{
-  /* width: calc(20% - 30px); */
-  /* margin-left: 30px; */
+
   margin-bottom: 15px;
+
+  &-tags{
+    padding: 15px 15px;
+  }
+  &__title{
+    margin-bottom: 10px;
+  }
 }
 .sortList{
   display: flex;
@@ -267,34 +262,38 @@ export default {
 
   padding: 10px 10px;
   cursor: pointer;
+
+  &__item{
+    padding-left: 4px;
+    font-weight: normal;
+    margin-bottom: 6px;
+    transition: all .3s;
+    &:hover{
+      color: #1CA9F0;
+      font-weight: bold;
+      border-left: 2px solid #1CA9F0;
+    }
+    &-active{
+      color: #1CA9F0;
+      font-weight: bold;
+      border-left: 2px solid #1CA9F0;
+    }
+  }
 }
-.sortList__item{
-  padding-left: 4px;
-  font-weight: normal;
-  margin-bottom: 6px;
-  transition: all .3s;
-}
-.sortList__item:hover{
-  color: #1CA9F0;
-  font-weight: bold;
-  border-left: 2px solid #1CA9F0;
-}
-.sortList__item-active{
-  color: #1CA9F0;
-  font-weight: bold;
-  border-left: 2px solid #1CA9F0;
-}
+
 .aside{
   flex-direction: column;
   width: 30%;
   margin-top: 15px;
   padding-left: 30px;
   order: 3;
+
+  &__title{
+    margin-left: 15px;
+    padding: 5px 0;
+  }
 }
-.aside__title{
-  margin-left: 15px;
-  padding: 5px 0;
-}
+
 .flexbox {
   display: flex;
   flex-wrap: wrap;
@@ -312,46 +311,50 @@ export default {
   margin-top: 15px;
   width: calc(70% - 30px);
   order: 2;
+  position: relative;
+
+  &__title{
+    margin-left: 15px;
+  }
 }
-.eventList__title{
-  margin-left: 15px;
-}
+
 .shortEvent{
   margin-top: 10px;
   padding: 15px 15px;
   width: 100%;
   display:flex;
   flex-wrap: wrap;
-}
-.shortEvent__title{
-  font-weight: normal;
-}
-.shortEvent__tags{
-  width: 90%;
-  margin: 15px 0 30px 0;
-}
-.shortEvent__date{
-  font-size: .9em;
-  margin-left:auto;
-}
-.shortEvent__place{
-  width: 100%;
-  margin-bottom: 10px;
-}
-.shortEvent__members{
-  width: 100%;
-}
-.shortEvent__bold{
-  font-weight: bold;
-}
-.shortEvent__btn{
-  background: none;
-  border: none;
-  font-weight: bold;
-  text-transform: uppercase;
-  cursor: pointer;
-  color: #1ca9f0;
-  margin-left: auto;
+
+  &__title{
+    font-weight: normal;
+  }
+  &__tags{
+    width: 90%;
+    margin: 15px 0 10px 0;
+  }
+  &__date{
+    font-size: .9em;
+    margin-left:auto;
+  }
+  &__place{
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  &__members{
+    width: 100%;
+  }
+  &__bold{
+    font-weight: bold;
+  }
+  &__btn{
+    background: none;
+    border: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #1ca9f0;
+    margin-left: auto;
+  }
 }
 
 
@@ -409,41 +412,11 @@ export default {
 
 }
 @media screen and (max-width: 560px){
-  .eventSearch{
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding: 0 0;
-  }
-  .eventList{
-    width: 100%;
-    order: 3;
-    padding-left: 0;
-  }
-  .aside{
-    order: 2;
-    width: 100%;
-    padding-left: 0;
-  }
+
 }
 
 @media screen and (max-width: 480px){
-  .eventSearch{
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding: 0 0;
-  }
-  .eventList{
-    width: 100%;
-    order: 3;
-    padding-left: 0;
-  }
-  .aside{
-    order: 2;
-    width: 100%;
-    padding-left: 0;
-  }
+
 }
 
 </style>

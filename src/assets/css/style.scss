@@ -23,8 +23,10 @@ ul,li{
 }
 html{
 	min-height: 100%;
+	padding: 0;
+	margin: 0;
 }
-div,aside,input,textarea {
+div,aside,input,textarea,ul {
 	box-sizing: border-box;
 }
 h1,h2,h3,h4,h5,h6, p {
@@ -34,6 +36,7 @@ h1,h2,h3,h4,h5,h6, p {
 main {
 	padding-top: 50px;
 	margin-bottom: 50px;
+
 }
 
 .input{
@@ -133,8 +136,8 @@ $red: #FF0044;
 
 .bigButton{
 	margin-left: auto;
-	height: 45px;
 	width: 150px;
+	padding: 10px 0;
 	background: $primary-color;
 	border: none;
 	border-radius: 5px;
@@ -153,6 +156,9 @@ $red: #FF0044;
 	}
 	&-center{
 		margin-left: 0;
+	}
+	&-header{
+		padding: 5px 0;
 	}
 }
 .textButton{
@@ -418,14 +424,40 @@ $red: #FF0044;
   background: #fff;
   height: 50px;
   width: 100%;
+	position: fixed;
+	margin: 0;
+	padding: 0;
+	z-index: 5;
 }
-
+.main{
+	padding-top: 50px;
+}
 .logo{
-  width: 50px;
-  position: absolute;
+	display: inline-block;
+	width: 70px;
+}
+.nav{
+	display: flex;
+	align-items: center;
+	&__brand{
+
+	}
+	&__list{
+
+	}
+	&__toggler{
+		margin-left: auto;
+		line-height: 50px;
+		color: $primary-color;
+		font-size: 1.5em;
+		cursor: pointer;
+		display: none;
+		padding: 0 10px;
+	}
 }
 .navigation {
   display: flex;
+
   justify-content: flex-start;
   align-items: center;
   height: 50px;
@@ -433,6 +465,9 @@ $red: #FF0044;
 	li{
 		list-style: none;
 		margin-right: 15px;
+	}
+	&-toggle{
+		display: flex;
 	}
 	&__item{
 		text-decoration: none;
@@ -455,6 +490,7 @@ $red: #FF0044;
 		}
 	}
 }
+
 
 
 
@@ -504,6 +540,10 @@ $red: #FF0044;
 		border-top-color: #1ca9f0;
 		border-bottom-color: #1ca9f0;
 	}
+	&-list{
+		top: calc(100% - 100px);
+
+	}
 }
 
 .done{
@@ -512,6 +552,10 @@ $red: #FF0044;
 }
 .container{
 	padding: 0 5%;
+
+	&-nav{
+		padding: 0 2%;
+	}
 }
 
 .socailSignBtn-google {
@@ -599,6 +643,10 @@ $red: #FF0044;
 		right: 10px;
 		top: 26px;
 	}
+	&-list{
+		top: 100%;
+		left: 50%;
+	}
 	&-button{
 		margin-top: 0;
 		top:0;
@@ -663,6 +711,7 @@ $red: #FF0044;
 }
 
 
+
 //
 // @media screen and (max-width: 1920px){
 //
@@ -700,6 +749,39 @@ $red: #FF0044;
 		&__question{
 			font-size: .8em;
 		}
+	}
+	.navigation{
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: space-around;
+		position: fixed;
+		top: 50px;
+		left:0;
+		width: 100%;
+		height: auto;
+		background: #fff;
+		padding: 0 10px;
+		padding-bottom: 15px;
+		display: none;
+		&-toggle{
+			display: flex;
+		}
+		li{
+			padding: 5px 0;
+		}
+		&__item{
+
+			&-login{
+				margin-left: 0;
+			}
+		}
+	}
+	.nav{
+
+		&__toggler{
+			display: block;
+		}
+
 	}
 }
 // @media screen and (max-width: 560px){

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class=" tempClass">
     <div class="loaderBg" v-if="isScreenLoader">
       <div class="screenLoader">
         <div class="screenLoader screenLoader-inner"></div>
@@ -14,7 +14,11 @@
     @close-list= 'usersListActive = false'
 
     ></users-list>
-
+    <div id="sticky" class="sticky">
+      <h1 class="sticky__title">{{eventData.name}}  </h1>
+      <button class="bigButton bigButton-header shadow" type="button" name="button">Join Event</button>
+      <span class="sticky__date">{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</span>
+    </div>
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
         <h1 >{{eventData.name}} </h1>
@@ -45,7 +49,7 @@
       <div class="eventBox eventBox-date">
           <h2 class="eventBox__title">Date</h2>
           <div class="eventBox__content eventBox__content-date">
-            <p>{{dateToString(eventData.date_expire)}}</p>
+            <p>{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</p>
           </div>
       </div>
 
@@ -69,6 +73,7 @@
             <h2 class="eventBox__title">Description</h2>
             <div class="eventBox__content">
               <p>{{eventData.description}}</p>
+              <span class="note" v-if='eventData.description == ""'> This event has not description</span>
             </div>
             <!-- <button class="textButton" type="button" name="button">More</button> -->
         </div>
@@ -163,14 +168,16 @@ export default {
   },
   methods:{
     stickyHeader(){
+      let stickyBlock = document.getElementById('sticky');
       let header = document.getElementById('eventHeader');
 
-      let sticky = 50;
+
+      let sticky = 50 + header.offsetHeight;
 
       if(window.pageYOffset >= sticky){
-        header.classList.add('sticky');
+        stickyBlock.classList.add('sticky-on');
       } else {
-        header.classList.remove('sticky');
+        stickyBlock.classList.remove('sticky-on');
       }
     },
     randomTagColor(){
@@ -228,12 +235,37 @@ $red-color: #FF00AE;
 $violet-color: #B34EE9;
 $blue-color: #3AE2CE;
   .sticky{
+    display: none;
     position: fixed;
-    top: 0;
+    flex-wrap: wrap;
+    top: 50px;
     margin-top: 0;
+    width: 100%;
+    background: #fff;
+    z-index: 4;
+    padding: 10px 10px;
+    animation-name: sticky-out;
+    animation-duration: .4s;
+    &__title{
+      font-weight: normal;
+
+      font-size: 1.5em;
+    }
+    &__date{
+      font-size: .8em;
+      flex-basis: 100%;
+      color: rgba(0,0,0,.6);
+    }
+    &-on{
+      display: flex;
+    }
   }
-  .sticky + .eventContainer{
-    padding-top: 109px;
+  @keyframes sticky-out{
+      from{
+        top: 0;
+      } to {
+        top: 50px
+      }
   }
 
   .eventHeader{
@@ -440,9 +472,7 @@ $blue-color: #3AE2CE;
     .eventHeader{
       position: relative;
     }
-    .sticky + .eventContainer{
-      padding-top: 0;
-    }
+
     .userRate{
       font-size: .9em;
     }
@@ -493,8 +523,10 @@ $blue-color: #3AE2CE;
       position: relative;
       margin-top: 30px;
     }
-    .sticky + .eventContainer{
-      padding-top: 0;
+    .sticky{
+      &-on{
+        display: none;
+      }
     }
     .bigButton{
       width: 100%;
