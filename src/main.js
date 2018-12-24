@@ -4,6 +4,8 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 
 
+// import 'leaflet/dist/leaflet.css'
+
 
 // importing files
 
@@ -25,11 +27,11 @@ Vue.use(VueRouter);
 
 
 
-
 new Vue({
 	el: '#app',
 	store,
 	router,
+
 	computed: {
 		isUserAuthorized(){
 			return this.$store.getters.getIsAuthorized;
@@ -45,6 +47,9 @@ new Vue({
 		}
 	},
 	methods: {
+		// changeMarker(event){
+		// 	this.marker = L.latLng(event.latlng.lat, event.latlng.lng);
+		// },
 		logOutUser(){
 			this.$store.dispatch('logOutUser');
 		},

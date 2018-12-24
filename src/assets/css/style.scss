@@ -340,7 +340,12 @@ $red: #FF0044;
 		padding: 10px 10px 0 10px;
 		max-height: 80%;
 		min-height: 250px;
-
+		&-map{
+			padding: 0;
+			width: 800px;
+			top: 50%;
+			transform: translate(-50%,-50%);
+		}
 		&-question{
 			min-height: 150px;
 		}
@@ -359,7 +364,16 @@ $red: #FF0044;
 		font-size: 1.3em;
 		cursor: pointer;
 		z-index: 6;
+
+		&-maxzindex{
+			z-index: 9999;
+			font-size: 1.6em;
+		}
 	}
+}
+#map{
+	width: 100%;
+	height: 400px;
 }
 .modalQuestion{
 	text-align: center;
@@ -732,6 +746,13 @@ $red: #FF0044;
 	.tag{
 		font-size: .8em;
 	}
+	.modalWindow{
+		&__content{
+			&-map{
+				width: 70%;
+			}
+		}
+	}
 }
 
 @media screen and (max-width: 768px){
@@ -743,6 +764,10 @@ $red: #FF0044;
 	.modalWindow{
 		&__content{
 			width: 80%;
+
+			&-map{
+				width: 70%;
+			}
 		}
 	}
 	.modalQuestion{

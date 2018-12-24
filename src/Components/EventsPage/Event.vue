@@ -43,7 +43,24 @@
           <div class="eventBox__content">
             <p>{{eventData.country}},{{eventData.city}}</p>
           </div>
-          <button class="textButton" type="button" name="button">Open map</button>
+          <button
+            class="textButton"
+            type="button"
+            name="button"
+            @click='openMap'
+            >Open map</button>
+      </div>
+
+      <div class="modalWindow" v-if='isMapOpen'>
+        <div class="modalWindow__content modalWindow__content-map">
+          <div id="map" class="map">
+            <l-map :zoom="zoom" :center="center">
+              <l-tile-layer :url="url" :attribution="attribution" ></l-tile-layer>
+              <l-marker :lat-lng="marker" ></l-marker>
+            </l-map>
+          </div>
+          <span class="modalWindow__close modalWindow__close-maxzindex" @click='isMapOpen = false'><i class="fas fa-times"></i></span>
+        </div>
       </div>
 
       <div class="eventBox eventBox-date">
@@ -132,18 +149,30 @@
 <script>
 
 import ModalUsersList from '../ModalUsersList.vue';
+import { L, LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 
 export default {
   props:{
     id: {required: true}
   },
   components:{
-    'users-list': ModalUsersList
+    'users-list': ModalUsersList,
+     LMap,
+     LTileLayer,
+     LMarker
   },
   data(){
     return {
       headerCoord: 0,
-      usersListActive: false
+      usersListActive: false,
+      zoom:8,
+      center: L.latLng(48.6208, 22.287883),
+      url:'https://{s}-tiles.locationiq.org/v2/obk-en/r/{z}/{x}/{y}.png?key=1e4a846d952064',
+  		// url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      attribution:'',
+      marker: L.latLng(48.6208, 22.287883),
+
+      isMapOpen: false
     }
   },
   computed:{
@@ -197,13 +226,16 @@ export default {
 
       let resultDate = new Date(date);
 
-      return resultDate.getDay() + ' ' +monthNames[resultDate.getMonth()];
+      return monthNames[resultDate.getMonth()] + ' ' +resultDate.getDate() ;
     },
     showUserProfile(username){
       this.$router.push(`/Profile/${username}`);
     },
     openUsersList(){
       this.usersListActive = true;
+    },
+    openMap(){
+      this.isMapOpen = true;
     }
   },
   mounted(){
