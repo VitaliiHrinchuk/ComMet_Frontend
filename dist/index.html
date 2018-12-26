@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&amp;subset=cyrillic-ext" rel="stylesheet">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
 	<meta name="viewport" content="width=device-width">
-
+  <link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css">
 <link href="./assets/css/style.css" rel="stylesheet"></head>
 <body>
 
@@ -34,6 +34,7 @@
               <li  v-if="isUserAuthorized"><router-link class="navigation__item"  :to="{path: '/Profile/'+currentUser}">My Profile </router-link></li>
               <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>Main</router-link></li>
               <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
+              <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Event/Create">Create Event</router-link></li>
               <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
               <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
             </ul>
@@ -49,7 +50,7 @@
       </transition>
     </main>
 
-    <div class="versionMsg">This project is under development. This is just a test version</div>
+    <!-- <div class="versionMsg">This project is under development. This is just a test version</div> -->
   </div>
 <script type="text/javascript" src="./assets/js/build.js"></script></body>
 </html>
