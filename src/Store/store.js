@@ -90,6 +90,7 @@ const store = new Vuex.Store({
           commit('setGlobalState', {type:'isAuthorized', item: false});
           localStorage.removeItem('token');
           axios.defaults.headers.common['Authorization'] = '';
+          router.replace('/');
         }, (error)=>{
 
         });
@@ -112,7 +113,7 @@ const store = new Vuex.Store({
             });
           });
         } else {
-          /* геолокация НЕдоступна */
+      
         }
       },
 

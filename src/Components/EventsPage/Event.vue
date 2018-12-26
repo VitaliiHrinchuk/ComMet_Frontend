@@ -35,7 +35,7 @@
           {{tag}}
         </div>
       </div>
-      <button class="bigButton shadow" type="button" name="button">Join Event</button>
+      <button class="eventHeader__btn bigButton shadow" type="button" name="button">Join Event</button>
     </div>
     <div class="container eventContainer" v-if="!isScreenLoader">
       <div class="eventBox eventBox-place">
@@ -554,6 +554,12 @@ $blue-color: #3AE2CE;
     .eventHeader{
       position: relative;
       margin-top: 30px;
+
+      &__btn{
+        width: 100%;
+        margin-top: 10px;
+        padding: 5px 0;
+      }
     }
     .sticky{
       &-on{
@@ -561,9 +567,9 @@ $blue-color: #3AE2CE;
       }
     }
     .bigButton{
-      width: 100%;
-      height: 35px;
-      margin-top: 30px;
+      // width: 100%;
+      // height: 35px;
+      // margin-top: 30px;
     }
     .eventBox{
 

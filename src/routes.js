@@ -28,7 +28,7 @@ let routes = [
 	{ path: '/', component: FirstPage},
 	{ path: '/Events', component: EventPage},
 	{ path: '/Event/Create', component: CreateEvent},
-	{ path: '/Event/:id', component: Event, props: true},
+	{ name:'eventPage', path: '/Event/:id', component: Event, props: true},
 
 
 

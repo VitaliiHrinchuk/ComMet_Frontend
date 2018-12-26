@@ -12,7 +12,7 @@ import VueRouter from 'vue-router';
 
 import './assets/css/style.scss';
 import './assets/css/media-queries.css';
-
+import 'vue-date-pick/dist/vueDatePick.css';
 
 
 import store from './Store/store.js';

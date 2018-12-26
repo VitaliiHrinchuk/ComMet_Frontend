@@ -10,9 +10,13 @@
 
       <div class="profileEdit__header">
         <button class="profileEdit__backBtn"  type="button" name="button" @click="$emit('close-edit')"><i class="fas fa-chevron-left"></i></button>
-        <div
-          class="profileEdit__img userPhotos__img"
-          :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
+        <div class="mainInfo__avatar">
+          <div
+            class="userPhotos__img"
+            :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
+            <i class="fas fa-search-plus"></i>
+
+          </div>
         </div>
         <button type="button" name="button" class="profileEdit__btn"><i class="fas fa-camera"></i> Change</button>
       </div>
@@ -41,10 +45,6 @@
           :selectableYearRange='100'
           :mobileBreakpointWidth='800'
           ></datepick>
-      </div>
-      <div class="profileEdit__input">
-        <h3 class="input__title">Phone (not working):</h3>
-        <input class="input" type="text" name="" value="" v-model='newUserPhone'>
       </div>
       <div class="profileEdit__tags">
         <div class="modalWindow"  v-if='isOpenTagList'>
@@ -161,6 +161,7 @@ export default {
     for ( let tag in this.userInfo.tags){
       this.newUserTags.push(this.userInfo.tags[tag].name);
     }
+    window.scrollTo(0,0);
 
   }
 }
@@ -300,6 +301,7 @@ $primary-color:#1ca9f0;
 
     &__tags{
       width: 100%;
+      font-size: 1.1em;
     }
   }
 }

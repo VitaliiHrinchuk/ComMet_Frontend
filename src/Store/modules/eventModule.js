@@ -76,16 +76,12 @@ const actions = {
         commit('pushEventList', resultList);
         commit('updateEventsUrl', response.data.next);
       }, (error)=>{
-        console.log(error);
+
         commit('setEventListLoader', false);
         commit('setEventLoader', false);
         console.log(error.response.status);
         switch (error.response.status) {
           case 401: router.replace('/login/signIn');
-
-            break;
-          default:
-
         }
       });
     } else {
@@ -105,6 +101,11 @@ const actions = {
     }, (error)=>{
       //error
       commit('setEventLoader', false);
+
+      switch (error.response.status) {
+        case 401: router.replace('/login/signIn');
+        case 404: router.replace('/404');
+      }
     })
   }
 }

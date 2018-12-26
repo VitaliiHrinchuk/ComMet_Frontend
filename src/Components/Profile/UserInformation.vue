@@ -10,21 +10,33 @@
         <td class="userTable__col">{{userInfo.first_name}}</td>
       </tr>
       <tr class="userTable__row">
+        <td class="userTable__col userTable__col-title">Last Name: </td>
+        <td class="userTable__col">{{userInfo.last_name}}</td>
+      </tr>
+      <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Username: </td>
         <td class="userTable__col userTable__col-username">@{{userInfo.username}}</td>
+      </tr>
+      <tr class="userTable__row">
+        <td class="userTable__col userTable__col-title">Birthday: </td>
+        <td class="userTable__col">{{userInfo.date_of_birth}}</td>
+      </tr>
+      <tr class="userTable__row">
+        <td class="userTable__col userTable__col-title">Email: </td>
+        <td class="userTable__col">{{userInfo.email }}</td>
       </tr>
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">City: </td>
         <td class="userTable__col">{{userInfo.city}}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Birthday: </td>
-        <td class="userTable__col">{{userInfo.date_of_birth}}</td>
+        <td class="userTable__col userTable__col-title">Country: </td>
+        <td class="userTable__col">{{userInfo.country}}</td>
       </tr>
     </table>
 
     <table class="about__table userTable">
-      <tr class="userTable__row">
+      <!-- <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Last Name: </td>
         <td class="userTable__col">{{userInfo.last_name}}</td>
       </tr>
@@ -35,11 +47,8 @@
       <tr class="userTable__row">
         <td class="userTable__col userTable__col-title">Country: </td>
         <td class="userTable__col">{{userInfo.country}}</td>
-      </tr>
-      <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Phone (not working): </td>
-        <td class="userTable__col">{{userInfo.phone_number || "uknown "}}</td>
-      </tr>
+      </tr> -->
+
     </table>
 
     <h1 class="about__title about__title-lined">Favourite Tags</h1>
@@ -112,13 +121,13 @@ $primary-color: #1ca9f0;
     margin-bottom: 10px;
     font-size: .8em;
     &__row{
-      line-height: 30px;
+
     }
 
     &__col{
-
+      padding-bottom: 20px;
       &-title{
-        width: 150px;
+        padding-right: 10px;
       }
       &-username{
         color: $primary-color;

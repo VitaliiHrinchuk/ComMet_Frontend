@@ -457,10 +457,8 @@ $blue-color: #3AE2CE;
 @media screen and (max-width: 768px){
   .mainInfo{
     flex-basis: 80%;
-
-
-
   }
+
 
 }
 @media screen and (max-width: 560px){
@@ -477,7 +475,11 @@ $blue-color: #3AE2CE;
     }
   }
   .userTable{
+    font-size: .7em;
     margin-right: 0;
+    &__col{
+      padding-bottom: 5px;
+    }
   }
 }
 

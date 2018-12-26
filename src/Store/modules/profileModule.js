@@ -65,6 +65,11 @@ const actions = {
     }, (error)=>{
       //error
       commit('setProfileLoader', false);
+
+      switch (error.response.status) {
+        case 401: router.replace('/login/signIn');
+        case 404: router.replace('/404');
+      }
     });
   }
 }
