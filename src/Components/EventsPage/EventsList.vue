@@ -101,7 +101,6 @@
                     <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
                     <label :for="tag.name">{{tag.name}}</label>
                   </div>
-
               </div>
 
             </div>

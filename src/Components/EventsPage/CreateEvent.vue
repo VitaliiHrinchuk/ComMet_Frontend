@@ -9,14 +9,36 @@
       <i class="creationSection__icon creationSection__icon-red fas fa-map-marked-alt"></i>
       <h4 class="creationSection__desc">Where your event will be?</h4>
       <div class="creationData">
-        <div class="creationData__data">Uzhgorod</div>
+        <div class="creationData__data">{{place}}</div>
         <!-- <span class="input__title">Search city</span> -->
-        <input class="input" type="text" name="" value="" placeholder="Search city" v-model='place' @change="searchCity()">
-        <!-- <div class="searchDrop">
-          <ul class="searchDrop__list">
-            <li class="searchDrop__item"></li>
-          </ul>
-        </div> -->
+
+        <button class="bigButton bigButton-small" type="button" name="button" @click='isMapOpen = true'>Change</button>
+        <div class="modalWindow" v-if='isMapOpen'>
+          <div class="modalWindow__content modalWindow__content-map">
+            <div id="map" class="map">
+
+              <l-map :zoom="zoom" :center="center" @click='changeMarker' :options="{zoomControl: false}">
+                <l-control position="topleft" >
+                  <!-- <input class="input" type="text" placeholder="Search..." v-model='place' @change="searchCity()"> -->
+                  <div class="eventSearch__input shadow radius-5px bg-white">
+                    <input class="input input-map" type="text" name="" placeholder="Search..." v-model='searchPlace' @click.stop='' @keyup.13='searchCity()'>
+                    <i class="fas fa-search input__icon input__icon-map" @click.stop="searchCity()"></i>
+                    <div class="searchDrop" v-if='searcResults.length > 0' @click.stop=''>
+                      <ul class="searchDrop__list">
+                        <li class="searchDrop__item" v-for='(result, index) in searcResults' :key='index' @click='toPlace(index)'>{{result.name}} , {{result.country}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </l-control>
+                <l-tile-layer :url="url" :attribution="attribution" ></l-tile-layer>
+                <l-marker :lat-lng="mapMarker" ></l-marker>
+              </l-map>
+
+            </div>
+            <span class="modalWindow__close modalWindow__close-maxzindex" @click='isMapOpen = false'><i class="fas fa-times"></i></span>
+          </div>
+        </div>
+
       </div>
       <button
           class="creationSection__nextBtn textButton"
@@ -57,11 +79,9 @@
       <h4 class="creationSection__desc">What will your event be about?</h4>
 
       <div class="creationSection__container">
-        <div
-          class="creationSection__checkTag"
-          v-for='tag in tagList'
-          >
-          <input class="" type="checkbox" :id='tag.name' :value="tag.name" v-model='selectedTags'>
+
+        <div class="creationSection__checkTag" v-for='tag in tagList'>
+          <input class="checkTags" type="checkbox" :id='tag.name' :value="tag.name" v-model='selectedTags'>
           <label :for="tag.name">{{tag.name}}</label>
         </div>
 
@@ -88,6 +108,7 @@
         <span class="input__title">Event Description</span>
         <textarea class="input creationData__text" name="name" rows="8" cols="80" placeholder="Description"
           v-model='eventDesc'></textarea>
+          <input id="image-file" type="file" name="" value="">
       </div>
 
       <button class="creationSection__finishBtn bigButton bigButton-center" type="button" name="button" @click='postEventData()'>Finish</button>
@@ -100,27 +121,39 @@
 
 <script>
 import DatePick from 'vue-date-pick';
-
+import { L, LMap, LTileLayer, LMarker, LControl } from 'vue2-leaflet';
 
 export default {
   data(){
     return {
       date: '',
       wrongDate: false,
-      place: '',
+      place: 'Not selected',
       currentStep:1,
       selectedTags: [],
       time: '',
-      geo: {
-        lat: 0,
-        lon: 0
-      },
       eventName: '',
-      eventDesc: ''
+      eventDesc: '',
+
+      zoom:8,
+      center: L.latLng(48.6208, 22.287883),
+      url:'https://{s}-tiles.locationiq.org/v2/obk-en/r/{z}/{x}/{y}.png?key=1e4a846d952064',
+  		// url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      attribution:'',
+      marker: {lat: 12, lon: 13},
+      isMapOpen: false,
+
+      searchPlace: '',
+      searcResults: [],
+
     }
   },
   components: {
-    "datepick":DatePick
+    "datepick":DatePick,
+    LMap,
+    LTileLayer,
+    LMarker,
+    LControl
   },
   computed:{
     selectedDate: {
@@ -163,6 +196,13 @@ export default {
     tagList(){
       console.log(this.$store.getters.getTagsList);
       return this.$store.getters.getTagsList;
+    },
+    mapMarker(){
+      return L.latLng(this.marker.lat, this.marker.lon);
+    },
+    geo(){
+      return { lat: this.marker.lat,
+               lon: this.marker.lng}
     }
   },
   methods: {
@@ -171,21 +211,42 @@ export default {
       return currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
     },
     searchCity(){
+      let params = {
+        key: '1e4a846d952064',
+        q: this.searchPlace,
+        limit: 4
+      }
 
-      //
-      // let params = {
-      //   key: '1e4a846d952064',
-      //   q: this.place,
-      //
-      // }
-      //
-      // this.$axios.get('https://api.locationiq.com/v1/autocomplete.php?', {params}).then((response)=>{
-      //   console.log(response);
-      //
-      //
-      // }, (error)=>{
-      //
-      // });
+      this.$axios.get('https://api.locationiq.com/v1/autocomplete.php?', {params}).then((response)=>{
+        console.log(response);
+        response.data.forEach((item)=>{
+          if(item.osm_type == 'relation'){
+            this.searcResults.push({
+              name: item.address.name,
+              country: item.address.country,
+              lat: item.lat,
+              lon: item.lon
+            });
+          }
+        });
+      }, (error)=>{
+
+      });
+    },
+    toPlace(index){
+      let lat = this.searcResults[index].lat;
+      let lon = this.searcResults[index].lon;
+      this.place = this.searcResults[index].name;
+      this.marker.lat = lat;
+      this.marker.lon = lon;
+      this.center = L.latLng(lat, lon);
+      this.searcResults = [];
+      this.searchPlace = '';
+
+    },
+    changeMarker(e){
+      this.marker.lat = e.latlng.lat;
+      this.marker.lon = e.latlng.lng;
     },
     nextStep(step){
       this.currentStep = step;
@@ -208,27 +269,40 @@ export default {
 
       let axiosConfig = {
           headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'multipart/form-data',
           }
       };
+      let formData = new FormData();
+      console.log(document.getElementById("image-file").files[0]);
+      formData.append('avatar',document.getElementById("image-file").files[0]);
+      formData.append('name', this.eventName);
+      formData.append('description', this.eventDesc);
+      formData.append('time_begins', time);
 
+      formData.append('tags', JSON.stringify(this.selectedTags));
+      formData.append('avatar', formData);
+      formData.append('date_expire', date);
+      formData.append('city', 'Uzhgorod');
+      formData.append('country', 'Ukraine');
+      formData.append('geo', this.geo.lat + ' ' + this.geo.lon);
       let params = {
         'name': this.eventName,
         'description': this.eventDesc,
         'time_begins': time,
+        'members': [],
         'tags': this.selectedTags,
-        'avatar': require('../../assets/images/avatar__temp.jpg'),
+        'avatar': formData,
         'date_expire': date,
         'city': 'Uzhgorod',
         'country': 'Ukraine',
         'geo': this.geo.lat + ' ' + this.geo.lon
       }
 
-      this.$axios.post('https://comeandmeet.herokuapp.com/events/', params, axiosConfig).then(response=>{
+      this.$axios.post('https://comeandmeet.herokuapp.com/events/', formData, axiosConfig).then(response=>{
         console.log(response);
       }, error=>{
         //error
-        console.log(error);
+        console.log(error.response);
       });
 
     }
@@ -243,6 +317,7 @@ export default {
 
 <style lang="scss">
 $primary-color: #1ca9f0;
+$green-color: #2DDAA5;
 .creationHeader{
   background-color: $primary-color;
   padding: 50px;
@@ -297,20 +372,27 @@ $primary-color: #1ca9f0;
     margin-bottom: 20px;
   }
   &__checkTag{
-    background: $primary-color;
     position: relative;
     text-align: center;
     display: inline-block;
-    padding: 3px 6px;
-    border-radius: 3px;
     margin-bottom: 10px;
     margin-right: 5px;
     font-size: 14px;
+
     label{
-      color: #fff;
+      cursor: pointer;
+      color: $primary-color;
+      padding: 3px 6px;
+      border: 1px solid $primary-color;
+      border-radius: 3px;
       font-weight: bold;
       margin: 0;
-      padding: 0;
+      -webkit-touch-callout: none; /* iOS Safari */
+    		-webkit-user-select: none; /* Safari */
+    		 -khtml-user-select: none; /* Konqueror HTML */
+    			 -moz-user-select: none; /* Firefox */
+    				-ms-user-select: none; /* Internet Explorer/Edge */
+    						user-select: none;
       &:after{
         opacity: 0;
         content: '';
@@ -325,17 +407,18 @@ $primary-color: #1ca9f0;
         border-right: none;
         transform: rotate(-45deg);
       }
-      &:before{
-        opacity: 1;
-        content: '';
-        position: absolute;
-        top: 4px;
-        left: 5px;
-        border-radius: 2px;
-        background: #fff;
-        width: 15px;
-        height: 15px;
-      }
+      // &:before{
+      //   background: black;
+      //   opacity: 1;
+      //   content: '';
+      //   position: absolute;
+      //   top: 1px;
+      //   right: 0;
+      //   padding: 1px;
+      //   border-radius: 2px;
+      //   width: 15px;
+      //   height: 15px;
+      // }
     }
   }
   &__nextBtn{
@@ -361,7 +444,6 @@ $primary-color: #1ca9f0;
     margin-top: 5px;
     margin-bottom: 10px;
   }
-
   &-date{
     .vdpComponent.vdpWithInput > input {
       border-radius: 3px;
@@ -373,13 +455,18 @@ $primary-color: #1ca9f0;
     }
   }
 }
-input[type=checkbox] {
-    visibility: hidden;
+.creationSection__checkTag input[type=checkbox] {
+    display: none;
     padding: 0;
     margin: 0;
 }
-.creationSection__checkTag input[type=checkbox]:checked + label:after {
+.creationSection__checkTag input[type=checkbox]:checked label:after {
     opacity: 1;
+}
+.creationSection__checkTag input[type=checkbox]:checked + label{
+    background: $primary-color;
+    border-color: $primary-color;
+    color: #fff;
 }
 
 

@@ -59,8 +59,7 @@ const actions = {
       axios.get(state.loadEventsUrl).then((response)=>{
         console.log('refreshEventsList');
         console.log(response);
-        commit('setEventLoader', false);
-        commit('setEventListLoader', false);
+
         let list = response.data.results;
 
         let resultList = list.map((item)=>{
@@ -73,6 +72,9 @@ const actions = {
           resultItem.city = item.city;
           return resultItem;
         });
+
+        commit('setEventLoader', false);
+        commit('setEventListLoader', false);
         commit('pushEventList', resultList);
         commit('updateEventsUrl', response.data.next);
       }, (error)=>{

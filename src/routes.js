@@ -7,6 +7,7 @@ import EventPage from './Components/EventsPage/EventsList.vue';
 import Event from './Components/EventsPage/Event.vue'
 import CreateEvent from './Components/EventsPage/CreateEvent.vue'
 import Profile from './Components/Profile/Profile.vue'
+import Chat from './Components/Chat/Chat.vue'
 
 import ErrorNotFound from './Components/ErrorsPage/NotFound.vue'
 
@@ -29,7 +30,7 @@ let routes = [
 	{ path: '/Events', component: EventPage},
 	{ path: '/Event/Create', component: CreateEvent},
 	{ name:'eventPage', path: '/Event/:id', component: Event, props: true},
-
+	{ name: 'chatRoom', path: '/Chat/:id', component: Chat, props: true},
 
 
 	{ path: '/404', component: ErrorNotFound},

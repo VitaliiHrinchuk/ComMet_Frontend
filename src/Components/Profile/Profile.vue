@@ -28,7 +28,6 @@
             class="userPhotos__img"
             :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
             <i class="fas fa-search-plus"></i>
-
           </div>
         </div>
         <h2 class="mainInfo__realname">{{userData.first_name}} {{userData.last_name}}</h2>
@@ -166,7 +165,7 @@ export default {
       }
     },
     modalQuestion(){
-      return `You sure you sure that you want unsubcribe ${this.userData.username}?`;
+      return `You sure that you want unsubcribe ${this.userData.username}?`;
     }
 
   },

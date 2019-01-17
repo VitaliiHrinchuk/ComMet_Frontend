@@ -22,15 +22,6 @@
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
         <h1 >{{eventData.name}} </h1>
-        <!-- <div class="tag tag-red">
-          #Music
-        </div>
-        <div class="tag tag-green">
-          #Talking
-        </div>
-        <div class="tag tag-violet">
-          #Walk
-        </div> -->
         <div class="tag" v-for='tag in eventData.tags' v-bind:class='randomTagColor()'>
           {{tag}}
         </div>
@@ -54,8 +45,8 @@
       <div class="modalWindow" v-if='isMapOpen'>
         <div class="modalWindow__content modalWindow__content-map">
           <div id="map" class="map">
-            <l-map :zoom="zoom" :center="center">
-              <l-tile-layer :url="url" :attribution="attribution" ></l-tile-layer>
+            <l-map :zoom="zoom" :center="center" >
+              <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
               <l-marker :lat-lng="marker" ></l-marker>
             </l-map>
           </div>
@@ -136,7 +127,7 @@
             <span>{{eventData.members.length}} {{eventData.members.length == 1 ? 'Member' : 'Members'}}</span>
             <button class="textButton" type="button" name="button" @click='openUsersList()'>More</button>
           </div>
-          <button class="bigButton bigButton-members shadow" type="button" name="button">CHAT</button>
+          <router-link class="bigButton bigButton-members shadow" :to="{ name: 'chatRoom', params: {id: id} }">chat</router-link>
       </div>
 
 

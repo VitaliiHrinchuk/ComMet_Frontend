@@ -29,7 +29,11 @@ html{
 div,aside,input,textarea,ul {
 	box-sizing: border-box;
 }
-h1,h2,h3,h4,h5,h6, p {
+p{
+	padding: 0;
+	margin: 0;
+}
+h1,h2,h3,h4,h5,h6{
 	padding: 0;
 	margin: 0;
 
@@ -63,18 +67,26 @@ main {
 	font-size: .9em;
 	font-family: "Roboto";
 	position: relative;
-
+	&-map{
+		width: 200px;
+	}
 	&__title{
 		font-weight: normal;
 		font-size: .9em;
 		text-transform: capitalize;
 	}
+
 	&__icon{
 		position: absolute;
 		right: 10px;
 		top: 50%;
 		transform: translateY(-50%);
 		cursor: pointer;
+
+		&-map{
+			top: 17px;
+			overflow: hidden;
+		}
 	}
 }
 
@@ -173,6 +185,8 @@ $red: #FF0044;
 	border: none;
 	border-radius: 5px;
 	text-transform: uppercase;
+	text-align: center;
+	text-decoration: none;
 	color: #fff;
 	font-weight: bold;
 	font-size: 1.1em;
@@ -191,6 +205,13 @@ $red: #FF0044;
 	&-header{
 		padding: 5px 0;
 	}
+	&-small{
+		padding: 5px 10px;
+		width: auto;
+		font-size: .9em;
+		margin: 0 auto;
+		display: block;
+	}
 
 }
 .textButton{
@@ -205,6 +226,7 @@ $red: #FF0044;
 	cursor: pointer;
 	align-self: flex-end;
 	outline: none;
+
 	&:focus{
 		background: rgba(28,169,240,.09);
 	}
@@ -295,11 +317,12 @@ $red: #FF0044;
 
 
 .searchDrop{
-	position: absolute;
 	background: #fff;
 	border: 1px solid rgba(0,0,0,.4);
-	border-radius: 5px;
-	padding: 15px 15px;
+	border-radius: 0 0 5px 5px;
+	font-size: .9em;
+	width: 100%;
+	overflow: hidden;
 
 	&__list{
 		list-style: none;
@@ -308,7 +331,13 @@ $red: #FF0044;
 
 	&__item{
 		border-bottom: 1px solid rgba(0,0,0,.4);
-		padding-bottom: 5px;
+		padding: 5px 5px;
+		max-width: 188px;
+		overflow: hidden;
+		cursor: pointer;
+		&:hover{
+			background: #F0F0F0;
+		}
 	}
 }
 
@@ -616,6 +645,7 @@ $red: #FF0044;
 
 	&-nav{
 		padding: 0 2%;
+		border-bottom: 1px solid rgba(0,0,0,.25)
 	}
 }
 
@@ -813,7 +843,7 @@ $red: #FF0044;
 			width: 80%;
 
 			&-map{
-				width: 70%;
+				width: 90%;
 			}
 		}
 	}
