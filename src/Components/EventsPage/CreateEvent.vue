@@ -140,7 +140,7 @@ export default {
       url:'https://{s}-tiles.locationiq.org/v2/obk-en/r/{z}/{x}/{y}.png?key=1e4a846d952064',
   		// url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution:'',
-      marker: {lat: 12, lon: 13},
+      marker: {lat: 48.6208, lon: 22.287883},
       isMapOpen: false,
 
       searchPlace: '',
@@ -185,7 +185,6 @@ export default {
           weekday[6] = "Saturday";
 
       let arrayOfDate = this.date.split(' ');
-      console.log(arrayOfDate);
       let time = arrayOfDate[0];
       let date = arrayOfDate[1];
 
@@ -211,10 +210,11 @@ export default {
       return currentDate.getFullYear() + '-' + (currentDate.getMonth()+1) + '-' + currentDate.getDate();
     },
     searchCity(){
+      this.searcResults = [];
       let params = {
         key: '1e4a846d952064',
         q: this.searchPlace,
-        limit: 4
+        limit: 8
       }
 
       this.$axios.get('https://api.locationiq.com/v1/autocomplete.php?', {params}).then((response)=>{
@@ -247,6 +247,21 @@ export default {
     changeMarker(e){
       this.marker.lat = e.latlng.lat;
       this.marker.lon = e.latlng.lng;
+
+      let params = {
+        key: '1e4a846d952064',
+        lat: this.marker.lat,
+        lon: this.marker.lon,
+        format: 'json'
+      }
+
+      this.$axios.get('https://eu1.locationiq.com/v1/reverse.php?', {params}).then((response)=>{
+        let address = response.data.address;
+        console.log(address);
+        this.place = (address.city || address.village || address.town) + ', ' + address.country;
+      }, (error)=>{
+
+      })
     },
     nextStep(step){
       this.currentStep = step;

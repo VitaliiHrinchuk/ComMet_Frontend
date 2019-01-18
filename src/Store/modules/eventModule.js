@@ -56,6 +56,8 @@ const actions = {
 
     commit('setEventListLoader', true);
     if(state.loadEventsUrl){
+
+      
       axios.get(state.loadEventsUrl).then((response)=>{
         console.log('refreshEventsList');
         console.log(response);

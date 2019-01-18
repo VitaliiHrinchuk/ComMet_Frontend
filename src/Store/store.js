@@ -66,6 +66,11 @@ const store = new Vuex.Store({
         let checkLink = `${API_ACCOUNTS_URL}user_state/${token}/`;
 
         commit('setAppLoad', true);
+
+
+        
+
+
         axios.get(checkLink).then((response)=>{
           console.log('auth');
           console.log(response);
@@ -113,7 +118,7 @@ const store = new Vuex.Store({
             });
           });
         } else {
-      
+
         }
       },
 
