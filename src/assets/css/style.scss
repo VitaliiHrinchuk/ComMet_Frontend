@@ -568,7 +568,7 @@ $red: #FF0044;
 	  -webkit-transition: color .3s;
 	  -o-transition: color .3s;
 	  transition: color .3s;
-		display: block;
+		display: inline-block;
 		height: 50px;
 		line-height: 50px;
 		box-sizing: border-box;
@@ -577,7 +577,10 @@ $red: #FF0044;
 			border-bottom: 2px solid $primary-color;
 		}
 
-
+		&-children{
+			height: auto;
+			line-height: 1.3em;
+		}
 		&-active{
 			color: $primary-color;
 			border-bottom: 2px solid $primary-color;

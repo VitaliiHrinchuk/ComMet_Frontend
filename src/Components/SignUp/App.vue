@@ -1,9 +1,9 @@
 <template>
     <div>
       <div class="login  radius-5px shadow">
-        <router-link class="navigation__item" to="/login/signUp">SignUp</router-link>
+        <router-link class="navigation__item navigation__item-children" to="/login/signUp">SignUp</router-link>
         <span class="login__linkBorder"></span>
-        <router-link class="navigation__item" to="/login/signIn">SignIn</router-link>
+        <router-link class="navigation__item navigation__item-children" to="/login/signIn">SignIn</router-link>
       </div>
       <router-view></router-view>
     </div>
