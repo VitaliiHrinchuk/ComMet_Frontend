@@ -168,7 +168,8 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color:#1ca9f0;
+$primary-color:#0F8AD1;
+$green-color: #32c3a1;
 .profileEdit{
   position: relative;
   width: 100%;
@@ -228,7 +229,7 @@ $primary-color:#1ca9f0;
       padding: 5px 10px;
       margin: 0 auto;
       display: block;
-      background-color: #2DDAA5;
+      background-color: $green-color;
       margin-bottom: 10px;
     }
     &:hover{

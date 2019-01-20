@@ -331,7 +331,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #1ca9f0;
+$primary-color: #027DC4;
 $green-color: #2DDAA5;
 .creationHeader{
   background-color: $primary-color;
@@ -377,7 +377,7 @@ $green-color: #2DDAA5;
       color: #ffee7f;
     }
     &-green{
-      color: #7fffd4;
+      color: #73F3C8;
       font-weight: bold;
     }
   }

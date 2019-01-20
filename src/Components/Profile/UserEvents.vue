@@ -13,10 +13,10 @@
         class="note"
         v-if='userEvents.visited.length == 0 && selectedType == 0'
         >User has not visited any event</span>
-    <div class="" v-for='event in userEvents.visited' v-if='selectedType == 0'>
+    <div class="" v-for="event in userEvents.visited" v-if="selectedType == 0">
 
       <div class="profileEvent">
-        <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
+        <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + tempAvatar + '\')' }"></div>
         <h3 class="profileEvent__title">{{event.name}}</h3>
         <h4 class="profileEvent__date">{{event.date_expire}}</h4>
         <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
@@ -31,25 +31,13 @@
     <div class="" v-for='event in userEvents.created' v-if='selectedType == 1'>
 
       <div class="profileEvent">
-        <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
+        <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + 'require("../../assets/images/avatar__temp.jpg")' + '\')' }"></div>
         <h3 class="profileEvent__title">{{event.name}}</h3>
         <h4 class="profileEvent__date">{{event.date_expire}}</h4>
         <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
       </div>
     </div>
 
-    <!-- <div class="profileEvent">
-      <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
-      <h3 class="profileEvent__title">Walking through Berlin</h3>
-      <h4 class="profileEvent__date">Date: 11.11.2017</h4>
-      <button class="profileEvent__btn" type="button" name="button">show</button>
-    </div>
-    <div class="profileEvent profileEvent-last">
-      <img  class="profileEvent__img" src="../../assets/images/avatar__temp.jpg" alt="">
-      <h3 class="profileEvent__title">Walking through Berlin</h3>
-      <h4 class="profileEvent__date">Date: 11.11.2017</h4>
-      <button class="profileEvent__btn" type="button" name="button">show</button>
-    </div> -->
   </div>
 </template>
 
@@ -60,7 +48,8 @@ export default {
   },
   data(){
     return{
-      selectedType: 0
+      selectedType: 0,
+      tempAvatar: require('../../assets/images/avatar__temp.jpg'),
     }
   },
   methods: {
@@ -75,6 +64,7 @@ export default {
 </script>
 
 <style lang="scss">
+$primary-color: #027DC4;
   .userEvents{
 
     &__title{
@@ -85,6 +75,8 @@ export default {
       display: inline-block;
       margin-right: 10px;
       cursor: pointer;
+      border-bottom: 1px solid #cecccc;
+      color: $primary-color;
       &-lined{
         border-top: 1px solid #cecccc;
         padding-top: 15px;
@@ -93,6 +85,7 @@ export default {
       &-unactive{
         color: gray;
         opacity: .7;
+        border-bottom: none;
       }
     }
 
@@ -112,7 +105,7 @@ export default {
         font-size: .7em;
         margin-top: 10px;
         border: none;
-        background: #1ca9f0;
+        background: $primary-color;
         color: #fff;
         font-weight: bold;
         border-radius: 5px;
@@ -121,11 +114,16 @@ export default {
 
       }
       &__img{
-        width: 64px;
-        height: 64px;
+        position: relative;
+        background-position: center center;
+        background-size: cover;
+        width: 50px;
+        height: 50px;
         border-radius: 5px;
+        cursor: pointer;
+        overflow: hidden;
         float: left;
-        margin-right: 15px;
+        margin-right: 10px;
       }
       &__title{
         font-size: .8em;

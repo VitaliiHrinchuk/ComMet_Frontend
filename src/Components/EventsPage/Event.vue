@@ -22,7 +22,7 @@
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
       <div class="eventHeader__title">
         <h1 >{{eventData.name}} </h1>
-        <div class="tag" v-for='tag in eventData.tags' v-bind:class='randomTagColor()'>
+        <div class="tag" v-for='tag in eventData.tags' >
           {{tag}}
         </div>
       </div>
@@ -253,7 +253,7 @@ export default {
 
 <style lang="scss">
 $primary-color: #1ca9f0;
-$green-color: #2DDAA5;
+$green-color: #32c3a1;
 $red-color: #FF00AE;
 $violet-color: #B34EE9;
 $blue-color: #3AE2CE;

@@ -54,7 +54,7 @@
     <h1 class="about__title about__title-lined">Favourite Tags</h1>
     <span class="note" v-if='userInfo.tags.length == 0'>user has no favourite tags yet</span>
     <div class="about__tags" >
-      <div class="tag tag-red" v-for="tag in userInfo.tags">
+      <div class="tag" v-for="tag in userInfo.tags">
         {{tag.name}}
       </div>
       <!-- <div class="tag tag-green">
@@ -82,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #1ca9f0;
+$primary-color: #0F8AD1;
   .about{
 
     &__title{

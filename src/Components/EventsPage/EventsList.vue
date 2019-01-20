@@ -269,7 +269,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #1ca9f0;
+$primary-color: #0F8AD1;
 $green-color: #2DDAA5;
 $red-color: #FF00AE;
 $violet-color: #B34EE9;
@@ -288,7 +288,7 @@ $red: #FF0044;
   color: #fff;
 }
 .eventListHeader{
-  background: #1CA9F0;
+  background: #027DC4;
   padding: 10px 0;
   margin-bottom: 10px;
 }
@@ -342,14 +342,14 @@ $red: #FF0044;
     margin-bottom: 6px;
     transition: all .3s;
     &:hover{
-      color: #1CA9F0;
+      color: $primary-color;
       font-weight: bold;
-      border-left: 2px solid #1CA9F0;
+      border-left: 2px solid $primary-color;
     }
     &-active{
-      color: #1CA9F0;
+      color: $primary-color;
       font-weight: bold;
-      border-left: 2px solid #1CA9F0;
+      border-left: 2px solid $primary-color;
     }
   }
 }
@@ -400,7 +400,7 @@ $red: #FF0044;
 
 .addTagBtn{
   display: inline-block;
-  color: #1ca9f0;
+  color: $primary-color;
   cursor: pointer;
   margin: 0;
   padding: 0;
@@ -498,7 +498,7 @@ $red: #FF0044;
     font-weight: 500;
     text-transform: uppercase;
     cursor: pointer;
-    color: #1ca9f0;
+    color: $primary-color;
     margin-left: auto;
     z-index: 3;
   }

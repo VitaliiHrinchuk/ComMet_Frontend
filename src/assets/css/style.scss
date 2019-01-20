@@ -11,7 +11,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	background: #fafafa;
+	background: #E6ECF0;
 	// background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 	font-size: 18px;
 	letter-spacing: 0.025em;
@@ -100,8 +100,8 @@ main {
 	color: red;
 }
 /* GLobal styles */
-$primary-color: #1ca9f0;
-$green-color: #2DDAA5;
+$primary-color: #0F8AD1;
+$green-color: #32c3a1;
 $red-color: #FF00AE;
 $violet-color: #B34EE9;
 $blue-color: #3AE2CE;
@@ -250,7 +250,7 @@ $red: #FF0044;
 	}
 }
 .userRate{
-	color: #2DDAA5;
+	color: $green-color;
 	align-self: center;
 
 	&__header{
@@ -532,6 +532,7 @@ $red: #FF0044;
 	}
 	&__list{
 		width: 100%;
+		height: 100%;
 	}
 	&__toggler{
 		margin-left: auto;
@@ -550,6 +551,7 @@ $red: #FF0044;
   align-items: center;
   height: 50px;
   margin: 0;
+	background: #fff;
 	li{
 		list-style: none;
 		margin-right: 15px;
@@ -561,19 +563,24 @@ $red: #FF0044;
 	&__item{
 		text-decoration: none;
 	  font-weight: bold;
-	  color: #9CAAAC;
+	  color: #66757F;
 	  cursor: pointer;
 	  -webkit-transition: color .3s;
 	  -o-transition: color .3s;
 	  transition: color .3s;
-
+		display: block;
+		height: 50px;
+		line-height: 50px;
+		box-sizing: border-box;
 		&:hover{
-			color: #1CA9F0;
+			color: $primary-color;
+			border-bottom: 2px solid $primary-color;
 		}
 
 
 		&-active{
-			color: #1CA9F0;
+			color: $primary-color;
+			border-bottom: 2px solid $primary-color;
 		}
 		&-login{
 			margin-left: auto;
