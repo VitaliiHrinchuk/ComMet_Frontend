@@ -26,7 +26,6 @@ Vue.use(VueRouter);
 
 
 
-
 new Vue({
 	el: '#app',
 	store,

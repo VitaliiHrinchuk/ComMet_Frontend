@@ -35,7 +35,7 @@
               </l-map>
 
             </div>
-            <span class="modalWindow__close modalWindow__close-maxzindex" @click='isMapOpen = false'><i class="fas fa-times"></i></span>
+            <span class="modalWindow__close modalWindow__close-maxzindex" @click='closeMap()'><i class="fas fa-times"></i></span>
           </div>
         </div>
 
@@ -217,6 +217,9 @@ export default {
         limit: 8
       }
 
+      let tempToken = this.$axios.defaults.headers.common['Authorization'];
+      delete this.$axios.defaults.headers.common['Authorization'];
+
       this.$axios.get('https://api.locationiq.com/v1/autocomplete.php?', {params}).then((response)=>{
         console.log(response);
         response.data.forEach((item)=>{
@@ -232,6 +235,8 @@ export default {
       }, (error)=>{
 
       });
+
+      this.$axios.defaults.headers.common['Authorization'] = tempToken;
     },
     toPlace(index){
       let lat = this.searcResults[index].lat;
@@ -255,13 +260,17 @@ export default {
         format: 'json'
       }
 
+      let tempToken = this.$axios.defaults.headers.common['Authorization'];
+      delete this.$axios.defaults.headers.common['Authorization'];
+
       this.$axios.get('https://eu1.locationiq.com/v1/reverse.php?', {params}).then((response)=>{
         let address = response.data.address;
         console.log(address);
-        this.place = (address.city || address.village || address.town) + ', ' + address.country;
+        this.place = (address.road && address.house_number? address.road + " " + address.house_number + ", " :'') + (address.city || address.village || address.state) + ', ' + address.country;
       }, (error)=>{
-
-      })
+          console.log(error);
+      });
+      this.$axios.defaults.headers.common['Authorization'] = tempToken;
     },
     nextStep(step){
       this.currentStep = step;
@@ -274,6 +283,10 @@ export default {
         });
       }, 0);
 
+    },
+    closeMap(){
+      this.isMapOpen = false;
+      this.center = L.latLng(this.marker.lat, this.marker.lon);
     },
     postEventData(){
 
