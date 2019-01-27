@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="" style='padding-bottom: 100px;'>
+  <div class="" style=''>
     <div class="creationHeader">
       <h1 class="creationHeader__title">Create New Event</h1>
       <h2 class="creationHeader__title creationHeader__title-small">Do it in few steps</h2>
@@ -106,12 +106,11 @@
         <input class="input creationData__text" type="text" placeholder="Name"
           v-model='eventName'>
         <span class="input__title">Event Description</span>
-        <textarea class="input creationData__text" name="name" rows="8" cols="80" placeholder="Description"
-          v-model='eventDesc'></textarea>
-          <input id="image-file" type="file" name="" value="">
+        <textarea class="input creationData__text creationData__text-area" v-model='eventDesc'></textarea>
+          <!-- <input id="image-file" type="file" name="" value=""> -->
       </div>
 
-      <button class="creationSection__finishBtn bigButton bigButton-center" type="button" name="button" @click='postEventData()'>Finish</button>
+      <button class="bigButton bigButton-center creationSection__finishBtn " type="button" :disabled="!allDataIsOk" @click='postEventData()'>Finish</button>
     </div>
 
 
@@ -128,13 +127,17 @@ export default {
     return {
       date: '',
       wrongDate: false,
-      place: 'Not selected',
       currentStep:1,
       selectedTags: [],
       time: '',
       eventName: '',
       eventDesc: '',
 
+
+      //location data Data
+      place: 'Not selected',
+      placeCountry: '',
+      placeCity:'',
       zoom:8,
       center: L.latLng(48.6208, 22.287883),
       url:'https://{s}-tiles.locationiq.org/v2/obk-en/r/{z}/{x}/{y}.png?key=1e4a846d952064',
@@ -142,9 +145,10 @@ export default {
       attribution:'',
       marker: {lat: 48.6208, lon: 22.287883},
       isMapOpen: false,
-
       searchPlace: '',
       searcResults: [],
+
+
 
     }
   },
@@ -202,6 +206,22 @@ export default {
     geo(){
       return { lat: this.marker.lat,
                lon: this.marker.lng}
+    },
+
+    allDataIsOk(){
+      if(this.date                != '' &&
+         this.placeCity           != '' &&
+         this.placeCountry        != '' &&
+         this.eventName           != '' &&
+         this.eventDesc           != '' &&
+         this.selectedTags.length != 0 )
+         {
+
+           return true;
+         } else {
+           console.log(false);
+           return false;
+         }
     }
   },
   methods: {
@@ -257,7 +277,8 @@ export default {
         key: '1e4a846d952064',
         lat: this.marker.lat,
         lon: this.marker.lon,
-        format: 'json'
+        format: 'json',
+        "accept-language": 'en'
       }
 
       let tempToken = this.$axios.defaults.headers.common['Authorization'];
@@ -266,9 +287,13 @@ export default {
       this.$axios.get('https://eu1.locationiq.com/v1/reverse.php?', {params}).then((response)=>{
         let address = response.data.address;
         console.log(address);
-        this.place = (address.road && address.house_number? address.road + " " + address.house_number + ", " :'') + (address.city || address.village || address.state) + ', ' + address.country;
+        this.place = (address.road ? address.road + " " + (address.house_number || '') + ", " :'') + (address.city || address.village || address.state) + ', ' + address.country;
+
+        this.placeCity = address.city || address.village || address.state;
+        this.placeCountry = address.country;
+
       }, (error)=>{
-          console.log(error);
+        console.log(error);
       });
       this.$axios.defaults.headers.common['Authorization'] = tempToken;
     },
@@ -344,8 +369,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #027DC4;
-$green-color: #2DDAA5;
+@import '../../assets/css/colors.scss';
 .creationHeader{
   background-color: $primary-color;
   padding: 50px;
@@ -413,8 +437,9 @@ $green-color: #2DDAA5;
       padding: 3px 6px;
       border: 1px solid $primary-color;
       border-radius: 3px;
-      font-weight: bold;
+      font-weight: 600;
       margin: 0;
+      letter-spacing: 0.05em;
       -webkit-touch-callout: none; /* iOS Safari */
     		-webkit-user-select: none; /* Safari */
     		 -khtml-user-select: none; /* Konqueror HTML */
@@ -457,6 +482,10 @@ $green-color: #2DDAA5;
   }
   &__finishBtn{
     width: 150px;
+
+    &:disabled{
+      opacity: .3;
+    }
   }
 }
 .creationData{
@@ -466,11 +495,16 @@ $green-color: #2DDAA5;
     text-align: center;
     font-size: 1.1em;
     margin-bottom: 20px;
+    font-family: "Roboto";
   }
 
   &__text{
     margin-top: 5px;
     margin-bottom: 10px;
+    resize: none;
+    &-area{
+      height: 150px;
+    }
   }
   &-date{
     .vdpComponent.vdpWithInput > input {

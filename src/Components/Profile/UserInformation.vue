@@ -82,7 +82,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #0F8AD1;
+@import '../../assets/css/colors.scss';
   .about{
 
     &__title{

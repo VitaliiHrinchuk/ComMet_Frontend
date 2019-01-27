@@ -71,7 +71,7 @@
           </div>
 
         </div>
-        <button id="asideToggler" class="bigButton asideToggler" type="button" name="button" @click='openSortAside'><i class="fas fa-sort-amount-down"></i> Sort</button>
+        <button id="asideToggler" class="bigButton bigButton-normaltxt asideToggler" type="button"  @click='openSortAside'><i class="fas fa-filter"></i> Filter</button>
         <div id="adaptiveAside" class="adaptiveAside">
           <aside class="aside flexbox">
             <!-- <h3 class="text-gray aside__title">Sort</h3> -->
@@ -115,8 +115,8 @@
               type="button"
               name="button"
               @click='closeSortAside'
-              >close</button>
-            <button class="semicircleBtn" type="button" name="button">reset</button>
+              >Close</button>
+            <button class="semicircleBtn" type="button" name="button">Reset</button>
           </div>
 
         </div>
@@ -269,12 +269,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #0F8AD1;
-$green-color: #2DDAA5;
-$red-color: #FF00AE;
-$violet-color: #B34EE9;
-$blue-color: #3AE2CE;
-$red: #FF0044;
+@import '../../assets/css/colors.scss';
 
 .eventPageContainer{
 
@@ -288,7 +283,7 @@ $red: #FF0044;
   color: #fff;
 }
 .eventListHeader{
-  background: #027DC4;
+  background: $primary-color;
   padding: 10px 0;
   margin-bottom: 10px;
 }
@@ -357,7 +352,6 @@ $red: #FF0044;
   width: 30%;
   order: 3;
 
-
   &__buttons{
     display: none;
     position: fixed;
@@ -374,8 +368,8 @@ $red: #FF0044;
 }
 .asideToggler{
   display: none;
-  width: 50%;
-  margin: 0 auto;
+  width: 30%;
+  margin-left: auto;
   margin-bottom: 10px;
   padding: 5px 15px;
 }
@@ -575,7 +569,7 @@ $red: #FF0044;
     background: rgba(0,0,0,.5);
     z-index: 5;
     height: 100%;
-    padding: 30px 10px;
+    padding: 40px 10px;
     &-active{
       display: block;
     }

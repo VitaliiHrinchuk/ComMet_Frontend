@@ -53,7 +53,7 @@ export default {
 
     },
     prevPhoto(){
-      console.log(this.userPhotos.length);
+      console.log(this.userPhotos.length + ' its ok');
       if((this.currentModalImageIndex-1) < 0){
         this.currentModalImageIndex = this.userPhotos.length - 1;
       } else {

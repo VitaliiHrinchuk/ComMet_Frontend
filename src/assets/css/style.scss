@@ -15,7 +15,7 @@ body {
 	// background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 	font-size: 18px;
 	letter-spacing: 0.025em;
-	font-family: "Roboto";
+	font-family: 'Signika';
 }
 ul,li{
 	padding: 0;
@@ -100,12 +100,8 @@ main {
 	color: red;
 }
 /* GLobal styles */
-$primary-color: #0F8AD1;
-$green-color: #32c3a1;
-$red-color: #FF00AE;
-$violet-color: #B34EE9;
-$blue-color: #3AE2CE;
-$red: #FF0044;
+@import '../../assets/css/colors.scss';
+
 .shadow{
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
 }
@@ -130,7 +126,7 @@ $red: #FF0044;
   top: 0;
   left: 0;
   background: $primary-color;
-	padding: 1px 12px;
+	padding: 2px 12px;
 	margin-right: 5px;
 	margin-bottom: 10px;
 	border-radius: 5px;
@@ -142,7 +138,7 @@ $red: #FF0044;
 	-webkit-transition: all  .2s ease;
 	-o-transition: all .2s ease;
 	transition: all .2s ease;
-
+	letter-spacing: 0.05em;
 	&-green{
 		background: $green-color;
 	}
@@ -212,7 +208,9 @@ $red: #FF0044;
 		margin: 0 auto;
 		display: block;
 	}
-
+	&-normaltxt{
+		text-transform: none;
+	}
 }
 .textButton{
 	border:none;
@@ -228,16 +226,15 @@ $red: #FF0044;
 	outline: none;
 
 	&:focus{
-		background: rgba(28,169,240,.09);
+		background: transparentize($primary-color, .9);
 	}
 	&:active{
-		background: rgba(28,169,240,.04);
+		background: transparentize($primary-color, .9);
 	}
 }
 .semicircleBtn{
 	display: block;
 	padding: 3px 15px;
-	text-transform: uppercase;
 	background: $primary-color;
 	color: #fff;
 	border: none;
@@ -552,6 +549,7 @@ $red: #FF0044;
   height: 50px;
   margin: 0;
 	background: #fff;
+	letter-spacing: .07em;
 	li{
 		list-style: none;
 		margin-right: 15px;

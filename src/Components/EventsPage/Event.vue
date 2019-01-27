@@ -252,11 +252,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #1ca9f0;
-$green-color: #32c3a1;
-$red-color: #FF00AE;
-$violet-color: #B34EE9;
-$blue-color: #3AE2CE;
+@import '../../assets/css/colors.scss';
   .sticky{
     display: none;
     position: fixed;

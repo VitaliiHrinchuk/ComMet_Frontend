@@ -64,7 +64,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #027DC4;
+@import '../../assets/css/colors.scss';
   .userEvents{
 
     &__title{

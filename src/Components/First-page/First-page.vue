@@ -7,7 +7,7 @@
           <h1 class="">{{sliderTitles[currentSlide-1]}}</h1>
           <div class="images">
             <transition-group name="slide" tag="div">
-              <div class="images__item" :style="{ 'backgroundImage': 'url(\'' + image + '\')' }" alt="" v-for="(image,key) in imageList" v-bind:key="key" v-show="currentSlide-1 == key"></div>
+              <div class="images__item" :style="{ 'backgroundImage': 'url(\'' + image + '\')' }" alt="" v-for="(image,key) in imageList" v-bind:key="key+0" v-show="currentSlide-1 == key"></div>
             </transition-group>
           </div>
           <i class="slider__arrow fas fa-chevron-circle-right" v-on:click='nextSlide'></i>

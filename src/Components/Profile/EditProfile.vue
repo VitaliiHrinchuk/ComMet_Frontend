@@ -168,8 +168,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color:#0F8AD1;
-$green-color: #32c3a1;
+@import '../../assets/css/colors.scss';
 .profileEdit{
   position: relative;
   width: 100%;

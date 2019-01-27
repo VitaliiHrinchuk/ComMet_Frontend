@@ -8,14 +8,14 @@
         <div id="chatWindow" class="chatWindow">
           <div class="chatMessage"
               :class="{'chatMessage-current' : (msg.username === 'currentUser')}"
-              v-for='msg in messages'
+              v-for=' msg in messages'
 
               >
             <div class="chatMessage__photo"
                 :style="{ 'backgroundImage': 'url(\'' + tempAvatar + '\')' }">
             </div>
             <p class="chatMessage__text"
-              :class="{'chatMessage__text-current' : (msg.username === 'currentUser')}">{{msg.text}}</p>
+              :class="{'chatMessage__text-current' : (msg.username === 'currentUser')}">{{msg}}</p>
           </div>
         </div>
         <div class="chatInput">
@@ -42,23 +42,29 @@ export default {
   data(){
     return{
       tempAvatar: require('../../assets/images/avatar__temp.jpg'),
-      messages: [
-        {username: 'test', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut en'},
-        {username: 'test2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'},
-        {username: 'currentUser', text: 'hey all ma dudes'},
-        {username: 'test2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'},
-        {username: 'currentUser', text: "how r u?"},
-      ],
+      // messages: [
+      //   {username: 'test', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut en'},
+      //   {username: 'test2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'},
+      //   {username: 'currentUser', text: 'hey all ma dudes'},
+      //   {username: 'test2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'},
+      //   {username: 'currentUser', text: "how r u?"},
+      // ],
+      messages: [],
       currentMessage: '',
+      chatSocket: null
     }
   },
   methods:{
     sendMessage(){
-      if(this.currentMessage.trim() !== ''){
-        this.messages.push({username: 'currentUser', text: this.currentMessage});
-        this.currentMessage = '';
-        setTimeout(this.toBottomOfChat, 0);
-      }
+      // if(this.currentMessage.trim() !== ''){
+      //   this.messages.push({username: 'currentUser', text: this.currentMessage});
+      //   this.currentMessage = '';
+      //   setTimeout(this.toBottomOfChat, 0);
+      // }
+      this.chatSocket.send(JSON.stringify({
+            'message': this.currentMessage
+        }));
+      this.currentMessage = '';
     },
     toBottomOfChat(){
       document.getElementById('chatWindow').scrollTop = document.getElementById('chatWindow').scrollHeight;
@@ -68,8 +74,16 @@ export default {
   },
   created(){
 
+    this.chatSocket = new WebSocket(
+      'wss://comeandmeet.herokuapp.com/ws/chat/' + this.id + '/');
+      this.chatSocket.onmessage = (e)=> {
+           var data = JSON.parse(e.data);
+           this.messages.push(data.message);
+       };
 
-
+       this.chatSocket.onclose = function(e) {
+           console.error('Chat socket closed unexpectedly');
+       };
   },
   mounted(){
 
@@ -100,7 +114,7 @@ export default {
 </script>
 
 <style lang="scss">
-$primary-color: #1ca9f0;
+@import '../../assets/css/colors.scss';
 .chatHeader{
   height: 50px;
   position: fixed;
@@ -166,6 +180,7 @@ $primary-color: #1ca9f0;
   font-size: .9em;
   display: flex;
   margin-top: 20px;
+  font-family: "Roboto";
   &-current{
     flex-direction: row-reverse;
   }
