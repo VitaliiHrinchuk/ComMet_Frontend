@@ -479,6 +479,7 @@ export default {
   }
   &__container{
     width: 400px;
+    margin: 0 auto;
   }
   &__finishBtn{
     width: 150px;

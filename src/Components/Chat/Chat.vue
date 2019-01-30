@@ -7,7 +7,7 @@
       <div class="container container-chat">
         <div id="chatWindow" class="chatWindow">
           <div class="chatMessage"
-              :class="{'chatMessage-current' : (msg.username === 'currentUser')}"
+              :class="{'chatMessage-current' : (msg.username === currentUser)}"
               v-for=' msg in messages'
 
               >
@@ -15,7 +15,7 @@
                 :style="{ 'backgroundImage': 'url(\'' + tempAvatar + '\')' }">
             </div>
             <p class="chatMessage__text"
-              :class="{'chatMessage__text-current' : (msg.username === 'currentUser')}">{{msg}}</p>
+              :class="{'chatMessage__text-current' : (msg.username === currentUser)}">{{msg.message}}</p>
           </div>
         </div>
         <div class="chatInput">
@@ -51,7 +51,8 @@ export default {
       // ],
       messages: [],
       currentMessage: '',
-      chatSocket: null
+      chatSocket: null,
+      currentUser: this.$store.getters.getCurrentUser
     }
   },
   methods:{
@@ -67,23 +68,29 @@ export default {
       this.currentMessage = '';
     },
     toBottomOfChat(){
-      document.getElementById('chatWindow').scrollTop = document.getElementById('chatWindow').scrollHeight;
+      setTimeout(function(){
+        document.getElementById('chatWindow').scrollTo(0,document.getElementById('chatWindow').scrollHeight)
+      }, 0);
       console.log(document.getElementById('chatWindow').scrollTop);
       console.log(document.getElementById('chatWindow').scrollHeight);
     }
   },
   created(){
+    let token = this.$axios.defaults.headers.common['Authorization'].split(' ')[1];
+    this.chatSocket = new WebSocket('wss://comeandmeet.herokuapp.com/ws/chat/' + this.id + '/');
+    this.chatSocket.onopen = (e)=>{
+        this.chatSocket.send(JSON.stringify({"token":token}));
+    };
+    this.chatSocket.onmessage = (e)=> {
+       var data = JSON.parse(e.data);
+       console.log(data);
+       this.messages.push(data);
+       this.toBottomOfChat();
+    };
 
-    this.chatSocket = new WebSocket(
-      'wss://comeandmeet.herokuapp.com/ws/chat/' + this.id + '/');
-      this.chatSocket.onmessage = (e)=> {
-           var data = JSON.parse(e.data);
-           this.messages.push(data.message);
-       };
-
-       this.chatSocket.onclose = function(e) {
-           console.error('Chat socket closed unexpectedly');
-       };
+    this.chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
   },
   mounted(){
 
@@ -108,7 +115,6 @@ export default {
     msgArea.addEventListener('keydown', delayedResize);
 
     this.toBottomOfChat();
-
   }
 }
 </script>

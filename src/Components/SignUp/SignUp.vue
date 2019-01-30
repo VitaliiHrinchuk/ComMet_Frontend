@@ -113,16 +113,16 @@
 
     </div>
 
-      <div class="signUp" v-if="signUpEnd && !userConfirmed">
+      <div class="signUp verification" v-if="signUpEnd && !userConfirmed">
         <h1>Verification</h1>
-        <p>We sent a verification code to your Email address ({{userMail}}). Please, enter the code to continue </p>
+        <p class="verification__msg">We sent a verification code to your Email address ({{userMail}}). Please, enter the code to continue </p>
         <div class="userData">
           <input type="text"
                  class="input"
                  v-model="userVerificationCode"
                  v-bind:class="{errorInput : isErrors[0].verifErr}">
           <span class="errorMsg" v-if="isErrors[0].verifErr"><i class="fas fa-exclamation-circle"></i> You entered wrong verification code</span>
-          <button  class="signUp__submit verificationBtn" v-on:click="checkVerifCode()">Continue</button>
+          <button  class="bigButton verification__btn" v-on:click="checkVerifCode()">Continue</button>
         </div>
       </div>
 
@@ -372,7 +372,8 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
+@import '../../assets/css/colors.scss';
 .signUp{
 	position: relative;
 	display: flex;
@@ -391,71 +392,179 @@ export default {
 
 	animation-name: fadeout;
 	animation-duration: 1s;
+
+  &__title{
+    font-size: 2em;
+  	padding-bottom: 30px;
+  	padding-top: 30px;
+    color: $primary-color;
+  }
+  &__submit{
+    width: 100%;
+    height: 60px;
+    background: $primary-color;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,.1);
+    font-family: "Roboto";
+    font-size: 1.5em;
+    color: #fff;
+    outline-color: gray;
+    cursor: pointer;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+
+    &:hover{
+      background: darken($primary-color,5%);
+    }
+    &:disabled{
+      opacity: .3;
+    }
+    &-login{
+      height: 47px;
+    }
+  }
+  &__thx{
+    margin-top: 15px;
+    color: #2DDAA5;
+    text-align: center;
+    i{
+      margin-top: 25px;
+      margin-bottom: 20px;
+      font-size: 50px;
+    }
+  }
 }
-.signUp__title {
-	font-size: 2em;
-	padding-bottom: 30px;
-	padding-top: 30px;
-  color: #1ca9f0;
-}
+// .signUp__title {
+// 	font-size: 2em;
+// 	padding-bottom: 30px;
+// 	padding-top: 30px;
+//   color: #1ca9f0;
+// }
 .userData{
 	margin-bottom: 13px;
 	width: 100%;
   height: 70px;
   position: relative;
+  &__title{
+    font-size: .95em;
+  	margin-bottom: 5px;
+  	display: inline-block;
+    font-weight: normal;
+    &-BDay{
+      width: 100%;
+    }
+  }
+  &__input{
+    width: 100%;
+  	height: 30px;
+  	padding: 0 6px;
+  	border: 1px solid rgba(0,0,0,.2);
+  	border-radius: 3px;
+  	background: #FAFAFA;
+  	font-size: .9em;
+  	font-family: "Roboto";
+    &:focus{
+      background: #fff;
+    }
+  }
+  &__BDay{
+    border-radius: 5px;
+    margin-right: 15px;
+  }
+  &__day{
+    max-width: 17%;
+  }
+  &__month{
+    width: 23%;
+  }
+  &__year{
+    width: 17%;
+  }
+  &__aboutInput{
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    line-height: 13px;
+    color: #1ca9f0;
+    font-size: .6em;
+    border: 1px solid #1ca9f0;
+    border-radius: 50%;
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+  }
+  &__submit{
+    position: relative;
+  }
+  &__select{
+    width: calc(33% - 15px);
+    margin-right: 15px;
+  }
 }
-.userData__title{
-	font-size: .95em;
-	margin-bottom: 5px;
-	display: inline-block;
-  font-weight: normal;
+.verification{
+  &__msg{
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  &__btn{
+    margin: 20px auto;
+    display: block;
+  }
 }
-.userData__title-BDay{
-	width: 100%;
-}
-.userData__input {
-	width: 100%;
-	height: 30px;
-	padding: 0 6px;
-	border: 1px solid rgba(0,0,0,.2);
-	border-radius: 3px;
-	background: #FAFAFA;
-	font-size: .9em;
-	font-family: "Roboto";
-}
-.userData__input:focus {
-	background: #fff;
-}
-.userData-bday{
+// .userData__title{
+// 	font-size: .95em;
+// 	margin-bottom: 5px;
+// 	display: inline-block;
+//   font-weight: normal;
+// }
+// .userData__title-BDay{
+// 	width: 100%;
+// }
+// .userData__input {
+// 	width: 100%;
+// 	height: 30px;
+// 	padding: 0 6px;
+// 	border: 1px solid rgba(0,0,0,.2);
+// 	border-radius: 3px;
+// 	background: #FAFAFA;
+// 	font-size: .9em;
+// 	font-family: "Roboto";
+// }
+// .userData__input:focus {
+// 	background: #fff;
+// }
+// .userData-bday{
+//
+// }
+// .userData__BDay{
+//   border-radius: 5px;
+//   margin-right: 15px;
+// }
 
-}
-.userData__BDay{
-  border-radius: 5px;
-  margin-right: 15px;
-}
-
-.userData__day{
-	max-width: 17%;
-}
-.userData__month{
-	width: 23%;
-}
-.userData__year{
-	width: 17%;
-}
-.userData__aboutInput{
-	position: relative;
-	display: inline-block;
-	text-align: center;
-	line-height: 13px;
-	color: #1ca9f0;
-	font-size: .6em;
-	border: 1px solid #1ca9f0;
-	border-radius: 50%;
-	width: 13px;
-	height: 13px;
-	cursor: pointer;
-}
+// .userData__day{
+// 	max-width: 17%;
+// }
+// .userData__month{
+// 	width: 23%;
+// }
+// .userData__year{
+// 	width: 17%;
+// }
+// .userData__aboutInput{
+// 	position: relative;
+// 	display: inline-block;
+// 	text-align: center;
+// 	line-height: 13px;
+// 	color: #1ca9f0;
+// 	font-size: .6em;
+// 	border: 1px solid #1ca9f0;
+// 	border-radius: 50%;
+// 	width: 13px;
+// 	height: 13px;
+// 	cursor: pointer;
+// }
 .tipBlock{
 	position: absolute;
 	bottom: 10px;
@@ -474,32 +583,32 @@ export default {
 	-o-transition: all 1s;
 	transition: all 1s;
 }
-.userData__submit{
-	position: relative;
-}
-.signUp__submit{
-	width: 100%;
-	height: 60px;
-	background: #1ca9f0;
-	border: none;
-	border-radius: 5px;
-	box-shadow: 5px 5px 5px rgba(0,0,0,.1);
-	font-family: "Roboto";
-	font-size: 1.5em;
-	color: #fff;
-	outline-color: gray;
-	cursor: pointer;
-	-webkit-transition: all .3s;
-	-o-transition: all .3s;
-	transition: all .3s;
-}
+// .userData__submit{
+// 	position: relative;
+// }
+// .signUp__submit{
+// 	width: 100%;
+// 	height: 60px;
+// 	background: #1ca9f0;
+// 	border: none;
+// 	border-radius: 5px;
+// 	box-shadow: 5px 5px 5px rgba(0,0,0,.1);
+// 	font-family: "Roboto";
+// 	font-size: 1.5em;
+// 	color: #fff;
+// 	outline-color: gray;
+// 	cursor: pointer;
+// 	-webkit-transition: all .3s;
+// 	-o-transition: all .3s;
+// 	transition: all .3s;
+// }
 
-.signUp__submit:hover{
-	background: #0C99E0;
-}
-.signUp__submit:disabled{
-	opacity: .3;
-}
+// .signUp__submit:hover{
+// 	background: #0C99E0;
+// }
+// .signUp__submit:disabled{
+// 	opacity: .3;
+// }
 
 .goodInput{
   border-color: #2DDAA5;
@@ -510,19 +619,19 @@ export default {
 	top: 32px;
 	color: #2DDAA5;
 }
-.signUp__thx{
-  margin-top: 15px;
-  color: #2DDAA5;
-  text-align: center;
-}
-.signUp__thx i {
-  margin-top: 25px;
-  margin-bottom: 20px;
-  font-size: 50px;
-}
-.signUp__submit-login{
-  height: 47px;
-}
+// .signUp__thx{
+//   margin-top: 15px;
+//   color: #2DDAA5;
+//   text-align: center;
+// }
+// .signUp__thx i {
+//   margin-top: 25px;
+//   margin-bottom: 20px;
+//   font-size: 50px;
+// }
+// .signUp__submit-login{
+//   height: 47px;
+// }
 .md-list-item-content{
   min-height: 23px;
 }
@@ -530,10 +639,10 @@ export default {
   display: flex;
 
 }
-.userData__select{
-  width: calc(33% - 15px);
-  margin-right: 15px;
-}
+// .userData__select{
+//   width: calc(33% - 15px);
+//   margin-right: 15px;
+// }
 @media screen and (min-width: 1920px){
 	body{
 		font-size: 25px;

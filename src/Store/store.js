@@ -68,7 +68,7 @@ const store = new Vuex.Store({
         commit('setAppLoad', true);
 
 
-        
+
 
 
         axios.get(checkLink).then((response)=>{
@@ -122,14 +122,19 @@ const store = new Vuex.Store({
         }
       },
 
-      getTagsListAPI({commit}){
+      getTagsListAPI({state, commit}){
         console.log('tag');
-        axios.get(`${API_EVENTS_URL}tags`).then((response)=>{
+        // if(state.tagsList.length == 0){
 
-          commit('setGlobalState', {type:'tagsList', item:response.data.results});
-        }, (error)=>{
-          //error
-        });
+          axios.get(`${API_EVENTS_URL}tags/`).then((response)=>{
+
+            commit('setGlobalState', {type:'tagsList', item:response.data.results});
+            console.log(response);
+          }, (error)=>{
+            //error
+            console.log(error);
+          });
+        // }
       }
 
 

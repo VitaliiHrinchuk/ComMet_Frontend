@@ -3,6 +3,7 @@ import App from './Components/SignUp/App.vue';
 import FirstPage from './Components/First-page/First-page.vue';
 import SignUp from './Components/SignUp/SignUp.vue';
 import SignIn from './Components/SignUp/SignIn.vue';
+import ConfigHelper from './Components/SignUp/ConfigHelper.vue';
 import EventPage from './Components/EventsPage/EventsList.vue';
 import Event from './Components/EventsPage/Event.vue'
 import CreateEvent from './Components/EventsPage/CreateEvent.vue'
@@ -25,6 +26,7 @@ let routes = [
 			component: SignIn
 		}
 	] },
+	{ name: 'ConfigHelper', path: '/Setting', component: ConfigHelper },
 	{ name:'user', path: '/Profile/:username', component: Profile, props: true},
 	{ path: '/', component: FirstPage},
 	{ path: '/Events', component: EventPage},

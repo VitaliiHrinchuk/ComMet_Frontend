@@ -46,7 +46,7 @@
             <div class="eventData">
               <h3 class="eventData__title">{{event.name}}</h3>
               <div class="eventData__date">
-                <span>{{dateToString(event.date)}}</span>
+                <span><i class="eventData__icon far fa-calendar-alt"></i> {{dateToString(event.date)}}</span>
               </div>
               <div class="eventData__tags" >
                 <div class="tag" v-for="tag in event.tags">
@@ -60,10 +60,10 @@
                 </div> -->
               </div>
               <div class="eventData__place">
-                {{event.city}}
+                <i class="eventData__icon fas fa-map-marker-alt"></i> {{event.city}}
               </div>
               <div class="eventData__members">
-                  {{event.membersCount}} will come
+                <i class="eventData__icon far fa-user"></i> {{event.membersCount}} will come
               </div>
               <router-link class="textButton eventData__btn " :to="{ name: 'eventPage', params: {id:event.id} }">Event Page</router-link>
             </div>
@@ -315,6 +315,7 @@ export default {
   &-tags{
     padding: 15px 15px;
     margin-bottom: 15px;
+    border: 1px solid rgba(0,0,0,.2);
   }
   &__title{
     margin-bottom: 10px;
@@ -327,7 +328,7 @@ export default {
   list-style: none;
   font-size: .9em;
   margin:0;
-
+  border: 1px solid rgba(0,0,0,.2);
   padding: 10px 10px;
   cursor: pointer;
 
@@ -403,7 +404,7 @@ export default {
   width: calc(70% - 30px);
   order: 2;
   position: relative;
-
+  margin-bottom: 50px;
   &__title{
     margin-left: 15px;
   }
@@ -411,7 +412,7 @@ export default {
 
 .shortEvent{
   margin-bottom: 10px;
-
+  border: 1px solid rgba(0,0,0,.2);
   position: relative;
   width: 100%;
   background: #fff;
@@ -489,12 +490,15 @@ export default {
     font-weight: bold;
     text-decoration: none;
     font-size: .9em;
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
     cursor: pointer;
     color: $primary-color;
     margin-left: auto;
     z-index: 3;
+  }
+  &__icon{
+    color: $primary-color;
   }
 }
 

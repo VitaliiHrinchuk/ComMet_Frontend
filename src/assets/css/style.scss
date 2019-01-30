@@ -54,8 +54,6 @@ li{
 }
 main {
 	padding-top: 50px;
-	margin-bottom: 50px;
-
 }
 
 .input{
@@ -332,6 +330,9 @@ main {
 		max-width: 188px;
 		overflow: hidden;
 		cursor: pointer;
+		&-w100{
+			width: 100%;
+		}
 		&:hover{
 			background: #F0F0F0;
 		}
@@ -721,6 +722,24 @@ main {
 	bottom: -5px;
  	opacity: 0;
 
+}
+.slideConfig-leave-active {
+  	transition: all .2s;
+}
+.slideConfig-enter-active {
+  	transition: all .5s;
+}
+.slideConfig-leave-to  {
+	opacity: 0;
+	transform: translateX(-100px);
+}
+.slideConfig-enter{
+	opacity: 0;
+	transform: translateX(100px);
+}
+.slideConfig-enter-to  {
+	opacity: 1;
+	transform: translateX(0);
 }
 
 

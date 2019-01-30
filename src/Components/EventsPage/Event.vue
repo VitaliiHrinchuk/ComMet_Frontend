@@ -340,6 +340,7 @@ export default {
     border-radius: 5px;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    border: 1px solid rgba(0,0,0,.2);
     &__title{
       // color: $primary-color;
       margin-bottom: 8px;

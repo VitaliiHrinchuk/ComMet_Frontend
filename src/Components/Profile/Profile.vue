@@ -273,6 +273,7 @@ export default {
   &__block{
     background: #fff;
     padding: 30px 15px;
+
   }
 }
   .mainInfo{
@@ -283,7 +284,7 @@ export default {
     align-self: flex-start;
     width: calc(19% - 30px);
     margin-right: 30px;
-
+    border: 1px solid rgba(0,0,0,.2);
     &__avatar{
       width: 110px;
       height: 110px;
@@ -370,6 +371,7 @@ export default {
     background: #fff;
     width: 70%;
     overflow: auto;
+    border: 1px solid rgba(0,0,0,.2);
     &__content{
       padding: 15px 35px;
     }

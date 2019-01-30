@@ -86,6 +86,7 @@ export default {
 
     position: relative;
     background-position: center center;
+    background-color: gray;
     background-size: cover;
     width: 120px;
     height: 120px;
@@ -94,6 +95,7 @@ export default {
     margin-right: 8px;
     margin-bottom: 20px;
     overflow: hidden;
+
     img {
       max-width: 100%;
       min-height: 100%;
