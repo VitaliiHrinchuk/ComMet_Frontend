@@ -26,13 +26,13 @@ let routes = [
 			component: SignIn
 		}
 	] },
-	{ name: 'ConfigHelper', path: '/Setting', component: ConfigHelper },
-	{ name:'user', path: '/Profile/:username', component: Profile, props: true},
+	{ name: 'ConfigHelper', path: '/Setting', component: ConfigHelper, meta: {requiresAuth: true} },
+	{ name: 'user', path: '/Profile/:username', component: Profile, props: true, meta: {requiresAuth: true}},
 	{ path: '/', component: FirstPage},
-	{ path: '/Events', component: EventPage},
-	{ path: '/Event/Create', component: CreateEvent},
-	{ name:'eventPage', path: '/Event/:id', component: Event, props: true},
-	{ name: 'chatRoom', path: '/Chat/:id', component: Chat, props: true},
+	{ name:'Events', path: '/Events', component: EventPage, meta: {requiresAuth: true, title: ' - Events'}},
+	{ path: '/Event/Create', component: CreateEvent, meta: {requiresAuth: true}},
+	{ name:'eventPage', path: '/Event/:id', component: Event, props: true, meta: {requiresAuth: true}},
+	{ name: 'chatRoom', path: '/Chat/:id',  component: Chat, props: true, meta: {requiresAuth: true}},
 
 
 	{ path: '/404', component: ErrorNotFound},

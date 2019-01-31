@@ -1,21 +1,37 @@
 <template lang="html">
   <div class="ConfigHelper container">
+    <div class="blockLoader" v-if="isDataSending || isTagsSending">
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner"></div>
+      </div>
+    </div>
     <h1 class="ConfigHelper__title">Lets us help you to configure your ComMet account</h1>
-    <transition name="slideConfig" tag="div" mode="out-in">
+    <transition name="slideConfig"  tag="div" mode="out-in">
     <div class="configSlide" v-if="currentSlide == 1" v-bind:key="1" >
       <h2 class="configSlide__title">Where do you live?</h2>
       <div class="configSlide__setting">
-        <button class="placeSet__btn bigButton bigButton-small" type="button" name="button">Auto Check</button>
+        <button class="placeSet__btn bigButton bigButton-small" type="button" name="button"
+          @click="autoCheckPlace()"
+          :disabled="autoSearchLoader"
+          >Auto Check
+          <span class="loader loader-buttonOut" v-if="autoSearchLoader"></span>
+        </button>
         <span class="choice">OR</span>
         <div class="placeSet__search">
-          <input class="input " type="text" placeholder="City Name">
-          <i class="fas fa-search input__icon " ></i>
-          <div class="searchDrop" >
-            <ul class="searchDrop__list">
-              <li class="searchDrop__item searchDrop__item-w100" v-for='(result, index) in searcResults' :key='index' @click='toPlace(index)'>{{result.name}} , {{result.country}}</li>
+          <span class="loader loader-search" v-if="searchLoader"></span>
+          <input id="placeInput" class="input " type="text" placeholder="City Name"
+          v-model="searchCityPlace"
+          @keyup.13="searchCity"
+        >
+          <i class="fas fa-search input__icon input__icon-map" @click="searchCity()" v-if="!searchLoader"></i>
+          <div class="searchDrop" v-if="isSearchDrop">
+            <ul id="dropList" class="searchDrop__list">
+              <li class="searchDrop__item searchDrop__item-w100" v-if="searchCityResult.length == 0 && !searchLoader">No results</li>
+              <li class="searchDrop__item searchDrop__item-w100" v-for='(result, index) in searchCityResult' :key='index' @click="selectCity(index)">{{result.name}} , {{result.country}}</li>
             </ul>
           </div>
         </div>
+        <h2 class="placeSet__result" v-if="selectedCity != null">{{selectedCity.name}}, {{selectedCity.country}} </h2>
       </div>
     </div>
     <div class="configSlide" v-if="currentSlide == 2" v-bind:key="2" >
@@ -39,51 +55,191 @@
           <button class="bigButton bigButton-small" type="button" name="button">Change</button>
       </div>
     </div>
+    <div class="configSlide" v-if="currentSlide == 4" v-bind:key="4" >
+      <div class="configSlide__end">
+        <h1>Good! </h1>
+        <!-- <i class="fas fa-check"></i> -->
+      </div>
+      <h2 class="configSlide__title">Now you can use ComMet to the fullest!</h2>
+      <div class="configSlide__setting configSlide__setting-links">
+
+        <router-link class="bigButton bigButton-small" :to="{ name: 'Events'}" replace>Events</router-link>
+        <router-link class="bigButton bigButton-small" :to="{ name: 'user', params: {username: currentUser}}" replace>Profile</router-link>
+
+      </div>
+    </div>
     </transition>
     <button
       class="bigButton bigButton-small ConfigHelper__next"
       type="button"
       name="next"
-      v-if="currentSlide != 3"
+      v-if="currentSlide != 3 && currentSlide != 4"
       @click="nextSlide"
-      >Next</button>
+      :style="searchCityResult.length>0 && isSearchDrop ? {'zIndex': -1}: {'zIndex': 1} "
+      :disabled="accessNext"
+      >Next <i class="fas fa-arrow-right"></i></button>
     <button
       class="bigButton bigButton-small ConfigHelper__next"
       type="button"
       name="finish"
       v-if="currentSlide == 3"
       @click="finishConfig()"
-      >Finish</button>
-    <button class="textButton ConfigHelper__skip" type="button" name="skip">Skip</button>
+      >Finish <i class="fas fa-check"></i></button>
+      <modal
+        v-if='isModalQuestion'
+        :question='modalQuestion'
+        @decline='isModalQuestion = false'
+        @accept="skipConfigure()"
+        @close-list='isModalQuestion = false'
+      ></modal>
+    <button class="textButton ConfigHelper__skip" type="button" name="skip" @click="isModalQuestion = true">Skip</button>
   </div>
 </template>
 
 <script>
+import ModalQuestion from '../ModalQuestion.vue';
 export default {
+  components:{
+    'modal': ModalQuestion
+  },
   data(){
     return{
       currentSlide: 1,
 
+      autoSearchLoader: false,
+      searchLoader: false,
+      isDataSending: false,
+      isTagsSending: false,
+
+      searchCityResult: [],
+      searchCityPlace: '',
+
+      isSearchDrop: false,
 
       avatar:require('../../assets/images/avatar__temp.jpg'),
+
+      isModalQuestion: false,
+      modalQuestion: "Are you sure you want to skip account setup? \n (You can always change your data in your profile)",
+
+
+      selectedCity: null,
       selectedTags: [],
+      currentUser: this.$store.getters.getCurrentUser
     }
   },
   computed:{
     tagList(){
       return this.$store.getters.getTagsList;
     },
+    accessNext(){
+      switch (this.currentSlide) {
+        case 1: return this.selectedCity != null ? false : true;
+        case 2: return this.selectedTags.length != 0 ? false : true;
+        default: return true;
+      }
+    },
+    userCurrentLocation(){
+
+    }
   },
   methods:{
     nextSlide(){
       this.currentSlide++;
     },
-    finishConfig(){
+    searchCity(){
+      this.isSearchDrop = true;
+      this.searchCityResult = [];
+      let params = {
+        key: '1e4a846d952064',
+        q: this.searchCityPlace,
+        limit: 10
+      }
 
+      let tempToken = this.$axios.defaults.headers.common['Authorization'];
+      delete this.$axios.defaults.headers.common['Authorization'];
+
+      this.searchLoader = true;
+      this.$axios.get('https://api.locationiq.com/v1/autocomplete.php?', {params}).then((response)=>{
+        console.log(response);
+        this.searchLoader = false;
+        response.data.forEach((item)=>{
+          if(item.osm_type == 'relation'){
+            this.searchCityResult.push({
+              name: item.address.name,
+              country: item.address.country,
+              lat: item.lat,
+              lon: item.lon
+            });
+          }
+        });
+      }, (error)=>{
+        this.searchLoader = false;
+      });
+
+      this.$axios.defaults.headers.common['Authorization'] = tempToken;
+    },
+    selectCity(index){
+      this.isSearchDrop = false;
+      this.searchCityPlace = '';
+      console.log("select");
+      this.selectedCity = this.searchCityResult[index];
+    },
+    autoCheckPlace(){
+      console.log("start");
+      this.autoSearchLoader = true;
+      this.$store.dispatch('checkUserCurrentLocation').then(response => {
+        this.autoSearchLoader = false;
+        this.selectedCity = {};
+        this.selectedCity.name = response.city;
+        this.selectedCity.country = response.country;
+        console.log(response);
+      }, error => {
+        //error
+      }) ;
+    },
+    finishConfig(){
+        this.isDataSending = true;
+        this.isTagsSending = true;
+        let updObj = {
+          'city':    this.selectedCity.name,
+          'country': this.selectedCity.contry,
+
+        };
+        this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/`, updObj).then(response=>{
+          console.log(response);
+          this.isDataSending = false;
+
+          console.log(this.selectedTags);
+          let newTagsArray = JSON.parse(JSON.stringify(this.selectedTags));
+          this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
+            console.log(response);
+            this.isTagsSending = false;
+            this.currentSlide = 4;
+          }, error=>{
+                //tags error
+          });
+        }, error=>{
+              //data error
+        });
+
+
+    },
+    skipConfigure(){
+      this.$router.push(`/Events`);
     }
   },
+
   created(){
     this.$store.dispatch('getTagsListAPI');
+  },
+  mounted(){
+    document.addEventListener('click', (e)=>{
+      let target = e.target;
+      if(target !== document.getElementById('placeInput') &&
+         target !== document.getElementById('searchDrop')){
+           this.isSearchDrop = false;
+         }
+    });
   }
 }
 </script>
@@ -100,6 +256,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  overflow: hidden;
   &__title{
     color: #565656;
     text-align: center;
@@ -121,11 +278,36 @@ export default {
     font-weight: 400;
     margin-bottom: 30px;
   }
+  &__setting{
+
+    &-links{
+      display: flex;
+      justify-content: center;
+      a{
+        margin: 0 5px;
+      }
+    }
+  }
+  &__end{
+    color: $green-color;
+    font-size: 1.5em;
+    text-align: center;
+  }
 }
 .placeSet{
   &__search{
     width: 50%;
     margin: 0 auto;
+    position: relative;
+  }
+  &__result{
+    margin: 0 auto;
+    text-align: center;
+    font-weight: 400;
+    margin-top: 20px;
+    color: #565656;
+  }
+  &__btn{
     position: relative;
   }
 }
@@ -145,5 +327,65 @@ export default {
   border-radius: 50%;
   margin: 20px auto;
   overflow: hidden;
+}
+@media screen and (max-width: 1920px){
+
+}
+
+@media screen and (max-width: 1600px){
+
+
+}
+
+@media screen and (max-width: 1368px){
+
+}
+@media screen and (max-width: 1120px){
+
+}
+@media screen and (max-width: 960px){
+  .ConfigHelper{
+    &__title{
+      font-size: 1.2em;
+    }
+  }
+  .configSlide{
+    width: 100%;
+    &__title{
+      font-size: 1.1em;
+    }
+
+  }
+  .placeSet{
+    &__buttonm{
+      font-size: 1em;
+    }
+    &__search{
+      width: 50%;
+    }
+    &__result{
+      font-size: 1.1em;
+    }
+  }
+}
+
+@media screen and (max-width: 768px){
+  .placeSet{
+    &__search{
+      width: 50%;
+    }
+  }
+}
+@media screen and (max-width: 560px){
+  .placeSet{
+    &__search{
+      width: 80%;
+    }
+  }
+}
+
+
+@media screen and (max-width: 480px){
+
 }
 </style>

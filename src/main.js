@@ -71,7 +71,23 @@ new Vue({
 		// this.$store.dispatch('getTagsListAPI');
 		console.log(this.$router.options.routes);
 
-
+		router.beforeEach((to, from, next) => {
+			// document.title = "ComMet" + to.meta.title;
+		  if (to.matched.some(record => record.meta.requiresAuth)) {
+		    // этот путь требует авторизации, проверяем залогинен ли
+		    // пользователь, и если нет, перенаправляем на страницу логина
+		    if (!this.$store.getters.getIsAuthorized) {
+					console.log("you cant");
+		      next({
+		        path: '/login/signIn'
+		      })
+		    } else {
+		      next()
+		    }
+		  } else {
+		    next() // всегда так или иначе нужно вызвать next()!
+		  }
+		})
 
 		// this.$store.dispatch('checkUserCurrentLocation');
 		// this.$axios.get('https://master.apis.dev.openstreetmap.org/#map=16/48.5370/31.1680').then((response)=>{

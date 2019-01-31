@@ -63,7 +63,7 @@
           #{{tag}}
         </div> -->
         <h3 class="profileEdit__title">Your Favourite Tags</h3>
-        <div class="tag tag-green" v-for='tag in newUserTags'>
+        <div class="tag" v-for='tag in newUserTags'>
           {{tag}}
           <span class="tag__remove" @click='removeTag(tag)'><i class="far fa-times-circle"></i></span>
         </div>

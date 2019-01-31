@@ -25,7 +25,7 @@ const store = new Vuex.Store({
       isAuthorized: false,
       currentUser: '',
       appLoading: true,
-      userCurrentLocation: 'Unknown',
+      userCurrentLocation: '',
 
       tagsList: []
   },
@@ -38,6 +38,7 @@ const store = new Vuex.Store({
       return state.appLoading;
     },
     getUserCurrentLocation(state){
+      console.log("get");
       return state.userCurrentLocation;
     },
     getCurrentUser(state){
@@ -102,21 +103,36 @@ const store = new Vuex.Store({
       },
       checkUserCurrentLocation({commit}){
 
-        let self = this;
         if ("geolocation" in navigator) {
           /* геолокация доступна */
-          navigator.geolocation.getCurrentPosition(function(position){
-            let lat = position.coords.latitude;
-            let lon = position.coords.longitude;
-            axios.get(`https://eu1.locationiq.com/v1/reverse.php?key=${MAP_API_TOKEN}&lat=${lat}&lon=${lon}&format=json`).then((response)=>{
-              let city = response.data.address.city;
-              let country = response.data.address.country;
-              console.log("yepy");
-              commit('setGlobalState', {type:'userCurrentLocation', item: city +', '+country});
-            }, (error)=>{
 
+          return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(function(position){
+              let tempToken = axios.defaults.headers.common['Authorization'];
+              delete axios.defaults.headers.common['Authorization'];
+
+              let lat = position.coords.latitude;
+              let lon = position.coords.longitude;
+              let params = {
+                key: MAP_API_TOKEN,
+                lat: lat,
+                lon: lon,
+                format: 'json',
+                'accept-language': 'en'
+              }
+
+              axios.get('https://eu1.locationiq.com/v1/reverse.php?', {params}).then((response)=>{
+                commit('setGlobalState', {type:'userCurrentLocation', item: response.data.address});
+                resolve(response.data.address);
+              }, (error)=>{
+                //error
+                reject(error);
+              });
+              axios.defaults.headers.common['Authorization'] = tempToken;
             });
-          });
+          })
+
+
         } else {
 
         }

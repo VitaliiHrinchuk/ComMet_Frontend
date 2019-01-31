@@ -62,8 +62,10 @@ export default {
       //   this.currentMessage = '';
       //   setTimeout(this.toBottomOfChat, 0);
       // }
+      console.log(this.currentUser);
       this.chatSocket.send(JSON.stringify({
-            'message': this.currentMessage
+            'message': this.currentMessage,
+            "username": this.currentUser
         }));
       this.currentMessage = '';
     },
@@ -90,6 +92,7 @@ export default {
 
     this.chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
+        console.log(e);
     };
   },
   mounted(){
@@ -150,7 +153,7 @@ export default {
 }
 .chatWindow{
   background: #fff;
-  height: 80vh;
+  height: calc(100vh - 100px);
   overflow: auto;
   padding: 20px;
   padding-top: 70px;
@@ -223,7 +226,11 @@ export default {
   }
 }
 .chatInput{
-  width: 100%;
+  width: 90%;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   border-top: 1px solid rgba(0,0,0,.25);
   box-shadow: 1px 1px 1px rgba(0,0,0,.1);
   padding-right: 20px;
@@ -231,7 +238,6 @@ export default {
   display: flex;
 
   &__area{
-    min-height: 100%;
     width: 95%;
     padding: 0 10px;
     padding-top: 18px;
@@ -274,6 +280,9 @@ export default {
     &-chat{
       padding: 0;
     }
+  }
+  .chatInput{
+    width: 100%;
   }
   .chatWindow{
     font-size: .7em;

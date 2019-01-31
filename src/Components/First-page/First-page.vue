@@ -58,6 +58,7 @@ export default {
   created(){
     setInterval(this.nextSlide,5000);
     console.log(this.$store.getters.getIsAuthorized);
+    console.log(this.$router);
   }
 }
 </script>
