@@ -26,7 +26,7 @@
         <div class="mainInfo__avatar">
           <div
             class="userPhotos__img"
-            :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
+            :style="{ 'backgroundImage': 'url(\'' + userAvatar + '\')' }" >
             <i class="fas fa-search-plus"></i>
           </div>
         </div>
@@ -140,6 +140,9 @@ export default {
     userData(){
       return this.$store.getters.getUserData;
     },
+    userAvatar(){
+      return this.$store.state.imagesUrl + this.userData.avatar;
+    },
     isCurrent(){
       return (this.$store.getters.getCurrentUser === this.userData.username ? true : false);
     },
@@ -166,7 +169,8 @@ export default {
     },
     modalQuestion(){
       return `You sure that you want unsubcribe ${this.userData.username}?`;
-    }
+    },
+
 
   },
   methods: {

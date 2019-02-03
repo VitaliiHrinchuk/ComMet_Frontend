@@ -1,13 +1,18 @@
 <template lang="html">
     <div>
+      <div class="loaderBg" v-if="isChatLoading">
+        <div class="screenLoader">
+          <div class="screenLoader screenLoader-inner"></div>
+        </div>
+      </div>
       <div class="chatHeader">
-        <span class="chatHeader__back"><i class="fas fa-chevron-left"></i></span>
+        <span class="chatHeader__back" @click="backToEvent()"><i class="fas fa-chevron-left"></i></span>
         <h1 class="chatHeader__title">Chat</h1>
       </div>
       <div class="container container-chat">
         <div id="chatWindow" class="chatWindow">
           <div class="chatMessage"
-              :class="{'chatMessage-current' : (msg.username === currentUser)}"
+              :class="{'chatMessage-current' : (msg.user.username === currentUser || msg.user === currentUser)}"
               v-for=' msg in messages'
 
               >
@@ -15,7 +20,7 @@
                 :style="{ 'backgroundImage': 'url(\'' + tempAvatar + '\')' }">
             </div>
             <p class="chatMessage__text"
-              :class="{'chatMessage__text-current' : (msg.username === currentUser)}">{{msg.message}}</p>
+              :class="{'chatMessage__text-current' : (msg.user.username === currentUser || msg.user === currentUser)}">{{msg.text}}</p>
           </div>
         </div>
         <div class="chatInput">
@@ -42,6 +47,7 @@ export default {
   data(){
     return{
       tempAvatar: require('../../assets/images/avatar__temp.jpg'),
+      isChatLoading: true,
       // messages: [
       //   {username: 'test', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut en'},
       //   {username: 'test2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt'},
@@ -57,15 +63,10 @@ export default {
   },
   methods:{
     sendMessage(){
-      // if(this.currentMessage.trim() !== ''){
-      //   this.messages.push({username: 'currentUser', text: this.currentMessage});
-      //   this.currentMessage = '';
-      //   setTimeout(this.toBottomOfChat, 0);
-      // }
       console.log(this.currentUser);
       this.chatSocket.send(JSON.stringify({
-            'message': this.currentMessage,
-            "username": this.currentUser
+            'text': this.currentMessage,
+            "user": this.currentUser
         }));
       this.currentMessage = '';
     },
@@ -75,25 +76,55 @@ export default {
       }, 0);
       console.log(document.getElementById('chatWindow').scrollTop);
       console.log(document.getElementById('chatWindow').scrollHeight);
+    },
+    backToEvent(){
+      this.$router.push(`/Event/${this.id}`);
+    },
+    getChatMessage(id){
+      this.isChatLoading = true;
+      let chatMessagesURL = "https://comeandmeet.herokuapp.com/chat/message/get_by_event/";
+      let params = {
+        "event": id
+      }
+      this.$axios.get(chatMessagesURL,{params}).then(response=>{
+        console.log(response);
+        this.messages = response.data;
+        this.isChatLoading = false;
+        this.toBottomOfChat();
+      }, error =>{
+        //error
+      });
+    },
+    connectToSocket(id){
+      let token = this.$axios.defaults.headers.common['Authorization'].split(' ')[1];
+      this.chatSocket = new WebSocket('wss://comeandmeet.herokuapp.com/ws/chat/' + id + '/');
+      this.chatSocket.onopen = (e)=>{
+          this.chatSocket.send(JSON.stringify({"token":token}));
+      };
+      this.chatSocket.onmessage = (e)=> {
+         var data = JSON.parse(e.data);
+         if(!data.error){
+           console.log(data);
+           this.messages.push(data);
+           this.toBottomOfChat();
+         }
+         console.log(data);
+      };
+      this.chatSocket.onerror= (e)=>{
+          console.log(e.data);
+          this.backToEvent();
+      };
+      this.chatSocket.onclose = function(e) {
+          console.error('Chat socket closed unexpectedly');
+          console.log(e);
+          console.log("try to recconect");
+          setTimeout(this.connectToSocket(id),2000);
+      };
     }
   },
   created(){
-    let token = this.$axios.defaults.headers.common['Authorization'].split(' ')[1];
-    this.chatSocket = new WebSocket('wss://comeandmeet.herokuapp.com/ws/chat/' + this.id + '/');
-    this.chatSocket.onopen = (e)=>{
-        this.chatSocket.send(JSON.stringify({"token":token}));
-    };
-    this.chatSocket.onmessage = (e)=> {
-       var data = JSON.parse(e.data);
-       console.log(data);
-       this.messages.push(data);
-       this.toBottomOfChat();
-    };
-
-    this.chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-        console.log(e);
-    };
+    this.connectToSocket(this.id);
+    this.getChatMessage(this.id);
   },
   mounted(){
 
@@ -117,7 +148,12 @@ export default {
     msgArea.addEventListener('drop',delayedResize);
     msgArea.addEventListener('keydown', delayedResize);
 
-    this.toBottomOfChat();
+
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.getChatMessage(to.params.id);
+    this.connectToSocket(to.params.id);
+    next();
   }
 }
 </script>
@@ -153,10 +189,10 @@ export default {
 }
 .chatWindow{
   background: #fff;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 150px);
   overflow: auto;
   padding: 20px;
-  padding-top: 70px;
+  // padding-bottom: 70px;
   z-index: 2;
   box-shadow: 1px 1px 1px rgba(0,0,0,.1);
   &::-webkit-scrollbar {
@@ -170,7 +206,7 @@ export default {
 
   /* Handle */
   &::-webkit-scrollbar-thumb {
-    height: 15px;
+    height: 100px;
     box-shadow: inset 0 0 10px 10px $primary-color;
     border: solid 2px transparent;
     border-radius: 10px;
@@ -239,12 +275,14 @@ export default {
 
   &__area{
     width: 95%;
+    height: 50px;
     padding: 0 10px;
     padding-top: 18px;
     border: none;
     font-family: 'Roboto';
     resize: none;
     outline: none;
+
   }
   &__send{
     font-size: 1.7em;
@@ -279,6 +317,7 @@ export default {
   .container{
     &-chat{
       padding: 0;
+      padding-top: 50px;
     }
   }
   .chatInput{

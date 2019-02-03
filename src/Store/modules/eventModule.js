@@ -7,7 +7,7 @@ const API_EVENTS_URL = `https://comeandmeet.herokuapp.com/events/`;
 
 const state = {
   eventsList: [],
-  loadEventsUrl: `${API_EVENTS_URL}?limit=3&offset=0`,
+  loadEventsUrl: `${API_EVENTS_URL}get_not_expired/?limit=3&offset=0`,
   eventListLoader: false,
   eventData: {},
   eventScreenLoader: true,
@@ -30,8 +30,12 @@ const getters = {
 }
 
 const mutations = {
-  setEventsState(state, {type, item}){
-    state[type] = item;
+
+  setEventData(state, value){
+    state['eventData'] = value;
+  },
+  setMembersData(state, value){
+    state['eventData'].members = value;
   },
   setEventLoader(state, value){
     state['eventScreenLoader'] = value;
@@ -57,7 +61,7 @@ const actions = {
     commit('setEventListLoader', true);
     if(state.loadEventsUrl){
 
-      
+
       axios.get(state.loadEventsUrl).then((response)=>{
         console.log('refreshEventsList');
         console.log(response);
@@ -68,10 +72,11 @@ const actions = {
           let resultItem = {};
           resultItem.id = item.id;
           resultItem.name = item.name;
-          resultItem.membersCount = item.members.length;
+          resultItem.membersCount = item.members_count;
           resultItem.tags = item.tags;
           resultItem.date = item.date_expire;
           resultItem.city = item.city;
+          resultItem.avatar = item.avatar;
           return resultItem;
         });
 
@@ -99,13 +104,21 @@ const actions = {
     axios.get(eventUrl).then((response)=>{
       console.log('getEventDataAPI');
       console.log(response.data);
-      commit('setEventsState', {type: 'eventData', item:response.data});
-      commit('setEventLoader', false);
+      commit('setEventData', response.data);
+
+
+      axios.get(`${eventUrl}get_members`).then((response)=>{
+        console.log(response);
+        commit('setEventLoader', false);
+        commit('setMembersData', response.data);
+      }, (error)=>{
+        // error
+      });
 
     }, (error)=>{
       //error
       commit('setEventLoader', false);
-
+      console.log(error);
       switch (error.response.status) {
         case 401: router.replace('/login/signIn');
         case 404: router.replace('/404');

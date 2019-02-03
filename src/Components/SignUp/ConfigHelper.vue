@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="ConfigHelper container">
-    <div class="blockLoader" v-if="isDataSending || isTagsSending">
+    <div class="blockLoader" v-if="isDataSending">
       <div class="screenLoader">
         <div class="screenLoader screenLoader-inner"></div>
       </div>
@@ -47,12 +47,14 @@
     </div>
     <div class="configSlide" v-if="currentSlide == 3" v-bind:key="3" >
       <h2 class="configSlide__title">How do you look like?</h2>
-      <div class="configSlide__setting">
+        <div class="configSlide__setting">
           <div
-            class="configAvatar"
-            :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
-          </div>
-          <button class="bigButton bigButton-small" type="button" name="button">Change</button>
+            class="roundImage"
+            :style="{ 'backgroundImage': 'url(\'' + newAvatar + '\')' }"
+            ref="avatarDemo" >
+        </div>
+        <input class="profileEdit__fileInput" type="file" accept="image/*" ref="imageInput" name="avatarInput" id="avatarInput" @change="uploadImage" >
+        <label class="textButton textButton-avatarchange" for="avatarInput"><i class="fas fa-camera"></i> Change</label>
       </div>
     </div>
     <div class="configSlide" v-if="currentSlide == 4" v-bind:key="4" >
@@ -83,6 +85,7 @@
       type="button"
       name="finish"
       v-if="currentSlide == 3"
+      :disabled="!newAvatar"
       @click="finishConfig()"
       >Finish <i class="fas fa-check"></i></button>
       <modal
@@ -109,14 +112,13 @@ export default {
       autoSearchLoader: false,
       searchLoader: false,
       isDataSending: false,
-      isTagsSending: false,
 
       searchCityResult: [],
       searchCityPlace: '',
 
       isSearchDrop: false,
 
-      avatar:require('../../assets/images/avatar__temp.jpg'),
+      // avatar:require('../../assets/images/avatar__temp.jpg'),
 
       isModalQuestion: false,
       modalQuestion: "Are you sure you want to skip account setup? \n (You can always change your data in your profile)",
@@ -124,6 +126,7 @@ export default {
 
       selectedCity: null,
       selectedTags: [],
+      newAvatar: null,
       currentUser: this.$store.getters.getCurrentUser
     }
   },
@@ -199,30 +202,55 @@ export default {
     },
     finishConfig(){
         this.isDataSending = true;
-        this.isTagsSending = true;
-        let updObj = {
-          'city':    this.selectedCity.name,
-          'country': this.selectedCity.contry,
 
-        };
-        this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/`, updObj).then(response=>{
-          console.log(response);
+        // let updObj = {
+        //   'city':    this.selectedCity.name,
+        //   'country': this.selectedCity.contry,
+        //
+        // };
+
+        let newTagsArray = JSON.parse(JSON.stringify(this.selectedTags));
+        let formData = new FormData();
+        formData.append("city", this.selectedCity.name);
+        formData.append("country", this.selectedCity.contry);
+        formData.append("country", this.selectedCity.contry);
+        formData.append("tags", newTagsArray);
+        formData.append("avatar", this.newAvatar);
+
+        this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/`, formData).then(response=>{
           this.isDataSending = false;
-
-          console.log(this.selectedTags);
-          let newTagsArray = JSON.parse(JSON.stringify(this.selectedTags));
-          this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
-            console.log(response);
-            this.isTagsSending = false;
-            this.currentSlide = 4;
-          }, error=>{
-                //tags error
-          });
+           this.currentSlide = 4;
+          console.log(response);
         }, error=>{
-              //data error
+          //error
         });
+        // this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/`, updObj).then(response=>{
+        //   console.log(response);
+        //   this.isDataSending = false;
+        //
+        //   console.log(this.selectedTags);
+        //   let newTagsArray = JSON.parse(JSON.stringify(this.selectedTags));
+        //   this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
+        //     console.log(response);
+        //     this.isTagsSending = false;
+        //     this.currentSlide = 4;
+        //   }, error=>{
+        //         //tags error
+        //   });
+        // }, error=>{
+        //       //data error
+        // });
 
 
+    },
+    uploadImage(){
+      this.newAvatar = this.$refs.imageInput.files[0];
+      let reader = new FileReader();
+      reader.onload = e =>{
+        console.log(e);
+        this.$refs.avatarDemo.style.backgroundImage = "url(" + e.target.result + ")";
+      }
+      reader.readAsDataURL(this.newAvatar);
     },
     skipConfigure(){
       this.$router.push(`/Events`);

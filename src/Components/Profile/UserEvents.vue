@@ -16,7 +16,7 @@
     <div class="" v-for="event in userEvents.visited" v-if="selectedType == 0">
 
       <div class="profileEvent">
-        <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + tempAvatar + '\')' }"></div>
+        <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + getEventsPhotos(event.avatar) + '\')' }"></div>
         <h3 class="profileEvent__title">{{event.name}}</h3>
         <h4 class="profileEvent__date">{{event.date_expire}}</h4>
         <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
@@ -31,7 +31,7 @@
     <div class="" v-for='event in userEvents.created' v-if='selectedType == 1'>
 
       <div class="profileEvent">
-        <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + 'require("../../assets/images/avatar__temp.jpg")' + '\')' }"></div>
+        <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + getEventsPhotos(event.avatar) + '\')' }"></div>
         <h3 class="profileEvent__title">{{event.name}}</h3>
         <h4 class="profileEvent__date">{{event.date_expire}}</h4>
         <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
@@ -58,7 +58,27 @@ export default {
     },
     changeType(type){
       this.selectedType = type;
-    }
+    },
+    getEventsPhotos(url){
+      return this.$store.state.imagesUrl + url;
+    },
+    // dateToString(date){
+    //   const monthNames = ["January", "February", "March", "April", "May", "June",
+    //     "July", "August", "September", "October", "November", "December"
+    //   ];
+    //   const weekday = new Array(7);
+    //       weekday[0] =  "Sunday";
+    //       weekday[1] = "Monday";
+    //       weekday[2] = "Tuesday";
+    //       weekday[3] = "Wednesday";
+    //       weekday[4] = "Thursday";
+    //       weekday[5] = "Friday";
+    //       weekday[6] = "Saturday";
+    //
+    //   let resultDate = new Date(date);
+    //
+    //   return weekday[resultDate.getDay()] + ', ' +monthNames[resultDate.getMonth()] + ' ' + resultDate.getDate();
+    // },
   }
 }
 </script>

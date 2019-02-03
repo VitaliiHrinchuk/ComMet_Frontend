@@ -14,6 +14,7 @@ Vue.use(axios);
 const API_ACCOUNTS_URL = `https://comeandmeet.herokuapp.com/accounts/`;
 const API_EVENTS_URL = `https://comeandmeet.herokuapp.com/events/`;
 const MAP_API_TOKEN = '1e4a846d952064';
+const IMAGE_CLOUD_URL = 'https://res.cloudinary.com/son313/';
 
 const store = new Vuex.Store({
   modules: {
@@ -26,7 +27,8 @@ const store = new Vuex.Store({
       currentUser: '',
       appLoading: true,
       userCurrentLocation: '',
-
+      eventsUrl: API_EVENTS_URL,
+      imagesUrl: IMAGE_CLOUD_URL,
       tagsList: []
   },
   getters: {

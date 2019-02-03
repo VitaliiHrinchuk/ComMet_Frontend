@@ -10,15 +10,14 @@
 
       <div class="profileEdit__header">
         <button class="profileEdit__backBtn"  type="button" name="button" @click="$emit('close-edit')"><i class="fas fa-chevron-left"></i></button>
-        <div class="mainInfo__avatar">
           <div
-            class="userPhotos__img"
-            :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }" >
+            class="roundImage"
+            :style="{ 'backgroundImage': 'url(\'' + avatar + '\')' }"
+            ref="avatarDemo" >
             <i class="fas fa-search-plus"></i>
-
-          </div>
         </div>
-        <button type="button" name="button" class="profileEdit__btn"><i class="fas fa-camera"></i> Change</button>
+        <input class="profileEdit__fileInput" type="file" accept="image/*" ref="imageInput" name="avatarInput" id="avatarInput" @change="uploadImage" >
+        <label class="profileEdit__fileLabel" for="avatarInput"><i class="fas fa-camera"></i> Change</label>
       </div>
 
       <div class="profileEdit__input">
@@ -96,7 +95,7 @@ export default {
       newUserCountry: this.userInfo.country,
       newUserPhone: this.userInfo.phone_number,
       newUserTags: [],
-      avatar: require('../../assets/images/avatar__temp.jpg'),
+      newUserAvatar: null,
 
       isUpdateEnd: false,
       isUpdateTagsEnd: false,
@@ -114,6 +113,9 @@ export default {
     tagList(){
       return this.$store.getters.getTagsList;
     },
+    avatar(){
+      return this.$store.state.imagesUrl + this.userInfo.avatar;
+    }
   },
   methods:{
     removeTag(tag){
@@ -135,9 +137,29 @@ export default {
         'country':        this.newUserCountry,
 
       };
-      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/`, updObj).then(response=>{
+
+      let userDataURL = `https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/`;
+      this.$axios.patch (userDataURL, updObj).then(response=>{
         console.log(response);
-        this.isUpdateEnd = false;
+        //
+        // let axiosConfig = {
+        //   headers: {
+        //     "Content-Type": "application/x-www-form-urlencoded"
+        //   }
+        // }
+        let params = {
+          avatar: this.newUserAvatar
+        }
+        let formData = new FormData();
+        formData.append("avatar", this.newUserAvatar);
+        this.$axios.patch(userDataURL,formData).then(response=>{
+          console.log("avatarLoad");
+          console.log(response);
+          this.isUpdateEnd = false;
+        }, error=>{
+          //error
+        });
+
       }, error=>{
         //error
       });
@@ -154,6 +176,16 @@ export default {
     openTagList(){
       this.$store.dispatch('getTagsListAPI');
       this.isOpenTagList = true;
+    },
+    uploadImage(){
+      this.newUserAvatar = this.$refs.imageInput.files[0];
+      let reader = new FileReader();
+      reader.onload = e =>{
+        console.log(e);
+        this.$refs.avatarDemo.style.backgroundImage = "url(" + e.target.result + ")";
+      }
+      reader.readAsDataURL(this.newUserAvatar);
+
     }
   },
   created(){
@@ -272,6 +304,33 @@ export default {
 
     .tag:hover .tag__remove{
       display: block;
+    }
+  }
+
+  &__fileInput{
+    width: 0.1px;
+  	height: 0.1px;
+  	opacity: 0;
+  	overflow: hidden;
+  	position: absolute;
+  	z-index: -1;
+
+  }
+  &__fileLabel{
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 4px 8px;
+    font-size: .9em;
+    &-event{
+      color: $primary-color;
+      margin: 0 auto;
+    }
+    &:hover{
+      background: transparentize(#fff, .9);
+    }
+    &:focus{
+      background: transparentize(#fff, .9);
     }
   }
 }

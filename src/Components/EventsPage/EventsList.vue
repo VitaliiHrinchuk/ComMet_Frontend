@@ -41,7 +41,7 @@
           <!-- <h3 class="text-gray eventList__title">Events list</h3> -->
           <span class="note" v-if='filteredEventList.length == 0'>no events by your queries</span>
           <div class="shortEvent shadow radius-5px" v-for="event in filteredEventList" >
-            <div class="shortEvent__avatar">
+            <div class="shortEvent__avatar" :style="{ 'backgroundImage': 'url(\'' + getImageUrl(event.avatar) + '\')' }">
             </div>
             <div class="eventData">
               <h3 class="eventData__title">{{event.name}}</h3>
@@ -210,6 +210,13 @@ export default {
   methods: {
     test(){
       alert('ss');
+    },
+    getImageUrl(url){
+      if(url != ""){
+        return this.$store.state.imagesUrl + url;
+      } else {
+        return require('../../assets/images/logo_alt.jpg');
+      }
     },
     loadEvents(){
       this.$store.dispatch('refreshEventsList');
@@ -422,7 +429,7 @@ export default {
   &__avatar{
     width: 30%;
     display: block;
-    background-image: url('https://www.abidcars.com/blog/wp-content/uploads/2015/12/traveling-by-car.jpg');
+    // background-image: url('https://www.abidcars.com/blog/wp-content/uploads/2015/12/traveling-by-car.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;

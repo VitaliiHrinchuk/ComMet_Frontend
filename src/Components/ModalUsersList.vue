@@ -12,7 +12,10 @@
       <h1 class="modalWindow__title">{{title}}</h1>
         <span class="note" v-if='usersData.length == 0'>{{note}}</span>
         <div class="user user-list" v-for='user in usersData'>
-          <img class="user__avatar" src="../assets/images/temp-avatar.jpg" alt="">
+          <div
+            class="roundImage roundImage-members"
+            :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(user.avatar) + '\')' }" @click="showUserProfile(eventData.author.username)">
+          </div>
           <div class="user__nameBlock">
             <h3 class="fullName" v-if='user.first_name  || user.last_name'  @click='showUserProfile(user.username)'>{{user.first_name}}  {{user.last_name}}</h3>
             <h3 class="fullName" v-else @click='showUserProfile(user)'>{{user}}</h3>
@@ -42,6 +45,9 @@ export default {
     showUserProfile(username){
       this.$emit('close-list');
       this.$router.push(`/Profile/${username}`);
+    },
+    getAvatarImage(url){
+      return this.$store.state.imagesUrl + url;
     }
   }
 }

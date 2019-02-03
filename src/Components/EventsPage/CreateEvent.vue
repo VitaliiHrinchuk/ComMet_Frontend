@@ -1,11 +1,16 @@
 <template lang="html">
   <div class="" style=''>
+    <div class="loaderBg loaderBg-transparent" v-if="isDataUploading">
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner"></div>
+      </div>
+    </div>
     <div class="creationHeader">
       <h1 class="creationHeader__title">Create New Event</h1>
       <h2 class="creationHeader__title creationHeader__title-small">Do it in few steps</h2>
     </div>
     <div id="1step" class="creationSection" v-if='currentStep >= 1'>
-      <h3 class="creationSection__title">Step 1 of 4</h3>
+      <h3 class="creationSection__title">Step 1 of 5</h3>
       <i class="creationSection__icon creationSection__icon-red fas fa-map-marked-alt"></i>
       <h4 class="creationSection__desc">Where your event will be?</h4>
       <div class="creationData">
@@ -50,7 +55,7 @@
     </div>
 
     <div id="2step" class="creationSection" v-show='currentStep >= 2'>
-      <h3 class="creationSection__title">Step 2 of 4</h3>
+      <h3 class="creationSection__title">Step 2 of 5</h3>
       <i class="creationSection__icon creationSection__icon-orange far fa-calendar-alt"></i>
       <h4 class="creationSection__desc">When it will be?</h4>
       <div class="creationData creationData-date">
@@ -74,7 +79,7 @@
     </div>
 
     <div id="3step" class="creationSection" v-show='currentStep >= 3'>
-      <h3 class="creationSection__title">Step 3 of 4</h3>
+      <h3 class="creationSection__title">Step 3 of 5</h3>
       <i class="creationSection__icon creationSection__icon-yellow fas fa-tags"></i>
       <h4 class="creationSection__desc">What will your event be about?</h4>
 
@@ -97,7 +102,7 @@
     </div>
 
     <div id="4step" class="creationSection" v-show='currentStep >= 4'>
-      <h3 class="creationSection__title">Step 4 of 4</h3>
+      <h3 class="creationSection__title">Step 4 of 5</h3>
       <i class="creationSection__icon creationSection__icon-green far fa-comments"></i>
       <h4 class="creationSection__desc">Name your event and describe it</h4>
 
@@ -107,12 +112,39 @@
           v-model='eventName'>
         <span class="input__title">Event Description</span>
         <textarea class="input creationData__text creationData__text-area" v-model='eventDesc'></textarea>
+        <span class="input__title">Members limit (0 if unlimited)</span>
+        <input class="input creationData__text" type="number" value="20" min="0" v-model="eventMembersLimit">
           <!-- <input id="image-file" type="file" name="" value=""> -->
       </div>
-
-      <button class="bigButton bigButton-center creationSection__finishBtn " type="button" :disabled="!allDataIsOk" @click='postEventData()'>Finish</button>
+      <button
+          class="creationSection__nextBtn textButton"
+          type="button"
+          name="button"
+          @click='nextStep(5)'
+          v-if='currentStep == 4'
+          >Next</button>
     </div>
+    <div id="5step" class="creationSection" v-show='currentStep >= 5'>
+      <h3 class="creationSection__title">Step 5 of 5</h3>
+      <i class="creationSection__icon creationSection__icon-blue far fa-image"></i>
+      <h4 class="creationSection__desc">Image of your event (skip to use standart)</h4>
 
+      <input class="profileEdit__fileInput" type="file" accept="image/*" ref="imageInput" name="avatarInput" id="avatarInput" @change="uploadImage" >
+      <label class="profileEdit__fileLabel profileEdit__fileLabel-event" for="avatarInput"><i class="fas fa-camera"></i> Change</label>
+      <div
+          class="roundImage roundImage-creationpage"
+          :style="{ 'backgroundImage': 'url(\'' + (eventAvatar || require('../../assets/images/logo_alt.jpg')) + '\')' }"
+          ref="avatarDemo" >
+      </div>
+
+
+
+      <button class="bigButton bigButton-center creationSection__finishBtn " type="button"
+        :disabled="!allDataIsOk || isDataUploading"
+        @click='postEventData()'>
+        Finish
+      </button>
+    </div>
 
   </div>
 
@@ -132,7 +164,8 @@ export default {
       time: '',
       eventName: '',
       eventDesc: '',
-
+      eventMaxMembers: 0,
+      eventAvatar: null,
 
       //location data Data
       place: 'Not selected',
@@ -149,6 +182,8 @@ export default {
       searcResults: [],
 
 
+      isDataUploading: false,
+
 
     }
   },
@@ -160,6 +195,18 @@ export default {
     LControl
   },
   computed:{
+    eventMembersLimit:{
+      set(newValue){
+        if(newValue<0){
+          this.eventMaxMembers = 0;
+        } else {
+          this.eventMaxMembers = newValue;
+        }
+      },
+      get(){
+        return this.eventMaxMembers;
+      }
+    },
     selectedDate: {
       set(newDate){
         if(Date.parse(newDate) < Date.now()){
@@ -314,49 +361,52 @@ export default {
       this.center = L.latLng(this.marker.lat, this.marker.lon);
     },
     postEventData(){
-
+      this.isDataUploading = true;
       let arrayOfDate = this.date.split(' ');
       let time = arrayOfDate[0];
       let date = arrayOfDate[1];
 
-
-      let axiosConfig = {
-          headers: {
-              'Content-Type': 'multipart/form-data',
-          }
-      };
       let formData = new FormData();
-      console.log(document.getElementById("image-file").files[0]);
-      formData.append('avatar',document.getElementById("image-file").files[0]);
-      formData.append('name', this.eventName);
-      formData.append('description', this.eventDesc);
-      formData.append('time_begins', time);
+      // let params = {
+      //   'name': this.eventName,
+      //   'description': this.eventDesc,
+      //   'time_begins': time,
+      //   'tags': this.selectedTags,
+      //   'avatar': '',
+      //   'date_expire': date,
+      //   'city': 'Uzhgorod',
+      //   'country': 'Ukraine',
+      //   'geo': this.geo.lat + ' ' + this.geo.lon
+      // }
 
-      formData.append('tags', JSON.stringify(this.selectedTags));
-      formData.append('avatar', formData);
-      formData.append('date_expire', date);
-      formData.append('city', 'Uzhgorod');
-      formData.append('country', 'Ukraine');
-      formData.append('geo', this.geo.lat + ' ' + this.geo.lon);
-      let params = {
-        'name': this.eventName,
-        'description': this.eventDesc,
-        'time_begins': time,
-        'members': [],
-        'tags': this.selectedTags,
-        'avatar': formData,
-        'date_expire': date,
-        'city': 'Uzhgorod',
-        'country': 'Ukraine',
-        'geo': this.geo.lat + ' ' + this.geo.lon
-      }
-
-      this.$axios.post('https://comeandmeet.herokuapp.com/events/', formData, axiosConfig).then(response=>{
+       formData.append('name', this.eventName);
+       formData.append('description', this.eventDesc);
+       formData.append('time_begins', time);
+       formData.append('tags', JSON.stringify(this.selectedTags));
+       // formData.append('tags', "#sport");
+       formData.append('avatar',this.eventAvatar);
+       formData.append('max_members', this.eventMaxMembers);
+       formData.append('date_expire', date);
+       formData.append('city', this.placeCity);
+       formData.append('country', this.placeCountry);
+       formData.append('geo', this.geo.lat + ' ' + this.geo.lon);
+      this.$axios.post('https://comeandmeet.herokuapp.com/events/create/', formData).then(response=>{
+        this.isDataUploading = false;
         console.log(response);
       }, error=>{
         //error
         console.log(error.response);
       });
+
+    },
+    uploadImage(){
+      this.eventAvatar = this.$refs.imageInput.files[0];
+      let reader = new FileReader();
+      reader.onload = e =>{
+        console.log(e);
+        this.$refs.avatarDemo.style.backgroundImage = "url(" + e.target.result + ")";
+      }
+      reader.readAsDataURL(this.eventAvatar);
 
     }
 
@@ -416,6 +466,9 @@ export default {
     &-green{
       color: #73F3C8;
       font-weight: bold;
+    }
+    &-blue{
+      color: #4C6EF5;
     }
   }
   &__desc{

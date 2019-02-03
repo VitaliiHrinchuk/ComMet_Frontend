@@ -14,9 +14,14 @@
     @close-list= 'usersListActive = false'
 
     ></users-list>
-    <div id="sticky" class="sticky">
-      <h1 class="sticky__title">{{eventData.name}}  </h1>
-      <button class="bigButton bigButton-header shadow" type="button" name="button">Join Event</button>
+    <div id="sticky" class="sticky" v-if="!isScreenLoader">
+      <h1 class="sticky__title">{{eventData.name}}</h1>
+      <button class="bigButton bigButton-header shadow" type="button" name="button"
+        v-if="eventData.author.username != currentUser"
+        @click="joinEvent()"
+        :disabled="joiningLoader">
+        Join Event
+        <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span></button>
       <span class="sticky__date">{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</span>
     </div>
     <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
@@ -26,7 +31,14 @@
           {{tag}}
         </div>
       </div>
-      <button class="eventHeader__btn bigButton shadow" type="button" name="button">Join Event</button>
+      <button class="eventHeader__btn bigButton shadow" type="button" name="button"
+        v-if="eventData.author.username != currentUser"
+        @click="joinEvent()"
+        :disabled="joiningLoader">
+        Join Event
+        <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span>
+      </button>
+
     </div>
     <div class="container eventContainer" v-if="!isScreenLoader">
       <div class="eventBox eventBox-place">
@@ -65,8 +77,10 @@
           <h2 class="eventBox__title">Author</h2>
           <div class="eventBox__content">
             <div class="user">
-              <img class="user__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-
+              <div
+                class="roundImage roundImage-event"
+                :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(eventData.author.avatar) + '\')' }" @click="showUserProfile(eventData.author.username)">
+              </div>
               <div class="userRate">
                 <h3 class="fullName fullName-author" @click='showUserProfile(eventData.author.username)'>{{eventData.author.first_name}} {{eventData.author.last_name}}</h3>
                 <i v-for='rate in Math.floor(eventData.author.user_rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
@@ -118,13 +132,16 @@
           <h2 class="eventBox__title">Members</h2>
           <div class="eventBox__content">
             <div class="user user-list" v-for='member in randomMembers'>
-              <img class="user__avatar" src="../../assets/images/temp-avatar.jpg" alt="">
-              <h3 class="fullName" @click='showUserProfile(member)'>{{member}}</h3>
+              <div
+                class="roundImage roundImage-members"
+                :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(member.avatar) + '\')' }" @click="showUserProfile(eventData.author.username)">
+              </div>
+              <h3 class="fullName" @click='showUserProfile(member.username)'>{{member.first_name}} {{member.last_name}}</h3>
             </div>
 
           </div>
           <div class="eventBox__members">
-            <span>{{eventData.members.length}} {{eventData.members.length == 1 ? 'Member' : 'Members'}}</span>
+            <span>{{eventData.members_count}} {{eventData.members_count == 1 ? 'Member' : 'Members'}} of {{eventData.max_members}}</span>
             <button class="textButton" type="button" name="button" @click='openUsersList()'>More</button>
           </div>
           <router-link class="bigButton bigButton-members shadow" :to="{ name: 'chatRoom', params: {id: id} }">chat</router-link>
@@ -154,6 +171,7 @@ export default {
   },
   data(){
     return {
+      currentUser: this.$store.getters.getCurrentUser,
       headerCoord: 0,
       usersListActive: false,
       zoom:8,
@@ -162,8 +180,9 @@ export default {
   		// url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution:'',
       marker: L.latLng(48.6208, 22.287883),
+      isMapOpen: false,
 
-      isMapOpen: false
+      joiningLoader: false
     }
   },
   computed:{
@@ -182,9 +201,10 @@ export default {
       } else {
         return this.eventData.members;
       }
+    },
+    authorAvatar(){
+
     }
-
-
   },
   methods:{
     stickyHeader(){
@@ -227,6 +247,24 @@ export default {
     },
     openMap(){
       this.isMapOpen = true;
+    },
+    joinEvent(){
+      console.log('joined');
+      let url = `${this.$store.state.eventsUrl}${this.id}/add_follower/`;
+      let params = {
+        username: this.$store.getters.getCurrentUser
+      }
+      this.joiningLoader = true;
+      this.$axios.patch(url,params).then(response=>{
+        this.joiningLoader = false;
+        console.log(response);
+      }, error => {
+        //error
+        this.joiningLoader = false;
+      });
+    },
+    getAvatarImage(url){
+      return this.$store.state.imagesUrl + url;
     }
   },
   mounted(){
@@ -495,6 +533,7 @@ export default {
 
     .userRate{
       font-size: .9em;
+
     }
     .bigButton{
       font-size: .9em;
