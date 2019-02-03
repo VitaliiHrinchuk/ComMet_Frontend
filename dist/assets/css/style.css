@@ -1037,7 +1037,7 @@ to{top:50px
 }
 .chatHeader__back{font-size:2em;color:#43819E;cursor:pointer
 }
-.chatWindow{background:#fff;height:calc(100vh - 150px);overflow:auto;padding:20px;z-index:2;box-shadow:1px 1px 1px rgba(0,0,0,0.1)
+.chatWindow{background:#fff;height:calc(100vh - 150px);overflow:auto;padding:30px;padding-top:40px;z-index:2;box-shadow:1px 1px 1px rgba(0,0,0,0.1)
 }
 .chatWindow::-webkit-scrollbar{width:8px
 }
@@ -1047,17 +1047,17 @@ to{top:50px
 }
 .chatWindow::-webkit-scrollbar-thumb:hover{box-shadow:inset 0 0 10px 10px #31A5CC;border:solid 1px transparent
 }
-.chatMessage{font-size:.9em;display:flex;margin-top:20px;font-family:"Roboto"
+.chatMessage{font-size:.9em;display:flex;margin-bottom:20px;font-family:"Roboto"
 }
 .chatMessage-current{flex-direction:row-reverse
 }
 .chatMessage__photo{position:relative;background-position:center center;background-size:cover;width:50px;height:50px;border-radius:50%;cursor:pointer;overflow:hidden;margin:0 15px;order:1;align-self:flex-end
 }
-.chatMessage__text{max-width:65%;padding:15px 15px;margin:0;position:relative;top:-30px;background-color:#f7f8fd;border-radius:20px 20px 20px 0px;overflow:auto;order:2;word-wrap:break-all;white-space:pre-line
+.chatMessage__text{max-width:65%;padding:15px 15px;margin:0;position:relative;top:-30px;background-color:#f7f8fd;border-radius:20px 20px 20px 0px;overflow:auto;order:2;word-wrap:break-word;white-space:pre-line
 }
 .chatMessage__text-current{background:#cdeafc;border-radius:20px 20px 0 20px
 }
-.chatInput{width:90%;position:fixed;bottom:0;left:50%;transform:translateX(-50%);border-top:1px solid rgba(0,0,0,0.25);box-shadow:1px 1px 1px rgba(0,0,0,0.1);padding-right:20px;background:#fff;display:flex
+.chatInput{width:90%;position:fixed;bottom:0;left:50%;transform:translateX(-50%);border-top:1px solid rgba(0,0,0,0.25);box-shadow:1px 1px 1px rgba(0,0,0,0.1);box-sizing:border-box;padding-right:20px;background:#fff;display:flex
 }
 .chatInput__area{width:95%;height:50px;padding:0 10px;padding-top:18px;border:none;font-family:'Roboto';resize:none;outline:none
 }
