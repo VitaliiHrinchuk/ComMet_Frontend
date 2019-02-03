@@ -99,6 +99,7 @@ export default {
       let token = this.$axios.defaults.headers.common['Authorization'].split(' ')[1];
       this.chatSocket = new WebSocket('wss://comeandmeet.herokuapp.com/ws/chat/' + id + '/');
       this.chatSocket.onopen = (e)=>{
+          // this.isChatLoading = true;
           this.chatSocket.send(JSON.stringify({"token":token}));
       };
       this.chatSocket.onmessage = (e)=> {
@@ -111,20 +112,22 @@ export default {
          console.log(data);
       };
       this.chatSocket.onerror= (e)=>{
-          console.log(e.data);
-          this.backToEvent();
+          console.log('socket error');
+          console.log(e);
+          this.isChatLoading = true;
       };
-      this.chatSocket.onclose = function(e) {
-          console.error('Chat socket closed unexpectedly');
+      this.chatSocket.onclose = (e)=> {
+          console.log("closed");
           console.log(e);
           console.log("try to recconect");
-          setTimeout(this.connectToSocket(id),2000);
+          this.isChatLoading = true;
+          // setTimeout(this.connectToSocket(id),2000);
       };
     }
   },
   created(){
-    this.connectToSocket(this.id);
     this.getChatMessage(this.id);
+    this.connectToSocket(this.id);
   },
   mounted(){
 
@@ -152,6 +155,7 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     this.getChatMessage(to.params.id);
+    this.chatSocket.close();
     this.connectToSocket(to.params.id);
     next();
   }
@@ -191,7 +195,8 @@ export default {
   background: #fff;
   height: calc(100vh - 150px);
   overflow: auto;
-  padding: 20px;
+  padding: 30px;
+  padding-top: 40px;
   // padding-bottom: 70px;
   z-index: 2;
   box-shadow: 1px 1px 1px rgba(0,0,0,.1);
@@ -224,7 +229,7 @@ export default {
 
   font-size: .9em;
   display: flex;
-  margin-top: 20px;
+  margin-bottom: 20px;
   font-family: "Roboto";
   &-current{
     flex-direction: row-reverse;
@@ -252,7 +257,7 @@ export default {
     border-radius: 20px 20px 20px 0px;
     overflow: auto;
     order: 2;
-    word-wrap: break-all;
+    word-wrap: break-word;
     white-space: pre-line;
     &-current{
       background: #cdeafc;
@@ -269,6 +274,7 @@ export default {
   transform: translateX(-50%);
   border-top: 1px solid rgba(0,0,0,.25);
   box-shadow: 1px 1px 1px rgba(0,0,0,.1);
+  box-sizing: border-box;
   padding-right: 20px;
   background: #fff;
   display: flex;

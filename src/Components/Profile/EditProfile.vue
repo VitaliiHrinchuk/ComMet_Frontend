@@ -129,41 +129,35 @@ export default {
       this.isUpdateEnd     = true;
       this.isUpdateTagsEnd = true;
 
-      let updObj = {
-        'first_name':     this.newUserFirstName,
-        'last_name':      this.newUserLastName,
-        'date_of_birth':  this.newUserBirthday,
-        'city':           this.newUserCity,
-        'country':        this.newUserCountry,
+      // let updObj = {
+      //   'first_name':     this.newUserFirstName,
+      //   'last_name':      this.newUserLastName,
+      //   'date_of_birth':  this.newUserBirthday,
+      //   'city':           this.newUserCity,
+      //   'country':        this.newUserCountry,
+      //
+      // };
 
-      };
+
+      let formData = new FormData();
+
+      formData.append('first_name', this.newUserFirstName);
+      formData.append('last_name', this.newUserLastName);
+      formData.append('date_of_birth', this.newUserBirthday);
+      formData.append('city', this.newUserCity);
+      formData.append('country', this.newUserCountry);
+      formData.append("avatar", this.newUserAvatar);
+
 
       let userDataURL = `https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/`;
-      this.$axios.patch (userDataURL, updObj).then(response=>{
-        console.log(response);
-        //
-        // let axiosConfig = {
-        //   headers: {
-        //     "Content-Type": "application/x-www-form-urlencoded"
-        //   }
-        // }
-        let params = {
-          avatar: this.newUserAvatar
-        }
-        let formData = new FormData();
-        formData.append("avatar", this.newUserAvatar);
-        this.$axios.patch(userDataURL,formData).then(response=>{
-          console.log("avatarLoad");
-          console.log(response);
-          this.isUpdateEnd = false;
-        }, error=>{
-          //error
-        });
 
+      this.$axios.patch (userDataURL, formData).then(response=>{
+        console.log(response);
+        this.isUpdateEnd = false;
       }, error=>{
         //error
       });
-      console.log(this.newUserTags);
+
       let newTagsArray = JSON.parse(JSON.stringify(this.newUserTags));
       this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
         console.log(response);

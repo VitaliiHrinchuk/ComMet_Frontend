@@ -383,6 +383,8 @@ export default {
        formData.append('description', this.eventDesc);
        formData.append('time_begins', time);
        formData.append('tags', JSON.stringify(this.selectedTags));
+       // formData.append('tags',JSON.parse(JSON.stringify(this.selectedTags)));
+       formData.append('author', this.$store.getters.getCurrentUser);
        // formData.append('tags', "#sport");
        formData.append('avatar',this.eventAvatar);
        formData.append('max_members', this.eventMaxMembers);

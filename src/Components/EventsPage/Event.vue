@@ -57,9 +57,9 @@
       <div class="modalWindow" v-if='isMapOpen'>
         <div class="modalWindow__content modalWindow__content-map">
           <div id="map" class="map">
-            <l-map :zoom="zoom" :center="center" >
+            <l-map :zoom="zoom" :center="getGeoCoords" >
               <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-              <l-marker :lat-lng="marker" ></l-marker>
+              <l-marker :lat-lng="getGeoCoords" ></l-marker>
             </l-map>
           </div>
           <span class="modalWindow__close modalWindow__close-maxzindex" @click='isMapOpen = false'><i class="fas fa-times"></i></span>
@@ -175,11 +175,9 @@ export default {
       headerCoord: 0,
       usersListActive: false,
       zoom:8,
-      center: L.latLng(48.6208, 22.287883),
       url:'https://{s}-tiles.locationiq.org/v2/obk-en/r/{z}/{x}/{y}.png?key=1e4a846d952064',
   		// url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution:'',
-      marker: L.latLng(48.6208, 22.287883),
       isMapOpen: false,
 
       joiningLoader: false
@@ -202,8 +200,12 @@ export default {
         return this.eventData.members;
       }
     },
-    authorAvatar(){
 
+    getGeoCoords(){
+      let coords = this.eventData.geo.split(' ');
+      let lat = coords[0];
+      let lon = coords[1];
+      return L.latLng(lat, lon)
     }
   },
   methods:{

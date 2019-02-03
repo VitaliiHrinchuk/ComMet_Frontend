@@ -212,8 +212,7 @@ export default {
         let newTagsArray = JSON.parse(JSON.stringify(this.selectedTags));
         let formData = new FormData();
         formData.append("city", this.selectedCity.name);
-        formData.append("country", this.selectedCity.contry);
-        formData.append("country", this.selectedCity.contry);
+        formData.append("country", this.selectedCity.country);
         formData.append("tags", newTagsArray);
         formData.append("avatar", this.newAvatar);
 
