@@ -40,7 +40,7 @@
               </l-map>
 
             </div>
-            <span class="modalWindow__close modalWindow__close-maxzindex" @click='closeMap()'><i class="fas fa-times"></i></span>
+            <span class="modalWindow__close  modalWindow__close-map" @click='closeMap()'><i class="fas fa-times"></i></span>
           </div>
         </div>
 

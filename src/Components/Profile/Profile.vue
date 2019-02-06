@@ -25,9 +25,9 @@
       <div class="mainInfo profile__block shadow radius-5px">
         <div class="mainInfo__avatar">
           <div
-            class="userPhotos__img"
-            :style="{ 'backgroundImage': 'url(\'' + userAvatar + '\')' }" >
-            <i class="fas fa-search-plus"></i>
+            class="roundImage roundImage-avatar"
+            :style="{ 'backgroundImage': 'url(\'' + userAvatar + '\')' }"
+            ref="avatarDemo" >
           </div>
         </div>
         <h2 class="mainInfo__realname">{{userData.first_name}} {{userData.last_name}}</h2>
@@ -88,7 +88,7 @@
         <div class="detailInfo__content">
             <user-info   v-show="selectedTab == 1" v-bind:userInfo="userDetailInfo" @edit-profile='editingProfile = true'></user-info>
             <user-events v-show="selectedTab == 2" v-bind:userEvents="{visited: userData.events_visited, created: userData.events_created}"></user-events>
-            <user-photos v-show="selectedTab == 3" :isCurrentUser="isCurrent"></user-photos>
+            <user-photos v-show="selectedTab == 3" :isCurrentUser="isCurrent" :photos="userData.user_photos"></user-photos>
         </div>
       </div>
 
@@ -109,11 +109,12 @@ import ModalQuestion from '../ModalQuestion.vue';
 
 export default {
   props:{
-    username: {required: true}
+    username: {required: true},
+    tab: {required: false, default: 1}
   },
   data(){
     return{
-      selectedTab: '3',
+      selectedTab: '1',
       editingProfile:false,
       avatar: require('../../assets/images/avatar__temp.jpg'),
       usersListActive: false,
@@ -255,6 +256,7 @@ export default {
   created(){
     this.$store.dispatch('getUserDataAPI', this.username);
     console.log(this.isCurrent);
+    this.selectedTab = this.tab;
   },
   beforeRouteUpdate (to, from, next) {
     this.$store.dispatch('getUserDataAPI', to.params.username);
@@ -273,7 +275,7 @@ export default {
   flex-wrap: wrap;
   padding-top: 30px;
   padding-bottom: 30px;
-  max-height: 700px;
+  // max-height: 700px;
   &__block{
     background: #fff;
     padding: 30px 15px;
@@ -290,8 +292,7 @@ export default {
     margin-right: 30px;
     border: 1px solid rgba(0,0,0,.2);
     &__avatar{
-      width: 110px;
-      height: 110px;
+
       border-radius: 50%;
       overflow: hidden;
     }

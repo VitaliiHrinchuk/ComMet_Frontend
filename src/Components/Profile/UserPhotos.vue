@@ -1,5 +1,12 @@
 <template lang="html">
   <div class="userPhotos">
+    <div class="blockLoader blockLoader-notransparent" v-if="downloadPercent !== 100">
+      <div class="screenLoader">
+        <div class="screenLoader screenLoader-inner">
+        </div>
+      </div>
+      <span class="blockLoader__progress">{{downloadPercent}}%</span>
+    </div>
     <h2 class="userPhotos__title">Photos</h2>
     <div class="modalImage" v-if="isFullScreenImage">
       <i class="modalImage__close fas fa-times" @click="closeFullScreenImage()"></i>
@@ -10,8 +17,8 @@
     <div class="userPhotos__addBlock" v-if="isCurrentUser" @click="isAddWindow = true">
       <i class="fas fa-plus"></i>
     </div>
-    <div class="modalWindow" v-if='isAddWindow && isCurrentUser'>
-      <div class="modalWindow__content modalWindow__content">
+    <div class="modalWindow " v-if='isAddWindow && isCurrentUser'>
+      <div class="modalWindow__content modalWindow__content-map">
         <div class="addPhotosBlock">
           <div class="addPhotosBlock__control">
             <input class="profileEdit__fileInput"
@@ -23,18 +30,46 @@
               @change="showPreview"
               multiple>
             <label class="textButton textButton-smalltext textButton-avatarchange " for="avatarInput"><i class="fas fa-plus"></i> add</label>
-            <button class="bigButton bigButton-small bigButton-green" type="button" v-if="newPhotos.length > 0" @click="uploadPhotos"><i class="fas fa-upload"></i> Upload</button>
+            <button class="bigButton bigButton-small bigButton-green" type="button" v-if="previewPhotos.length > 0" @click="uploadPhotos"><i class="fas fa-upload"></i> Upload</button>
           </div>
           <div class="addPhotosBlock__container">
             <div
                 class="roundImage roundImage-userphotos"
-                v-for="photo in newPhotos"
-                :style="{ 'backgroundImage': photo }"
+                v-for="photo in previewPhotos"
+                :style="{ 'backgroundImage': photo.url }"
                 ref="avatarDemo" >
+                <i class="roundImage__icon far fa-trash-alt" @click="removeUploadedPhoto(photo.index)"></i>
+            </div>
+            <div class="blockLoader" v-if="photosLoaderLength != 0 && loadedPhotos != photosLoaderLength && loadedPhotos != 0">
+              <div class="screenLoader">
+                <div class="screenLoader screenLoader-inner">
+                </div>
+              </div>
+              <span class="blockLoader__progress">{{uploadPercent}}%</span>
             </div>
           </div>
         </div>
         <span class="modalWindow__close modalWindow__close-maxzindex" @click='isAddWindow = false'><i class="fas fa-times"></i></span>
+      </div>
+    </div>
+    <div class="modalWindow" v-if="isModalError">
+      <div class="modalWindow__content ">
+        <div class="errorMessage">
+          <i class="errorMessage__icon far fa-times-circle"></i>
+          <h2 class="errorMessage__text">Something went wrong, please try again</h2>
+          <span class="errorMessage__code" v-if="errorCode"> Error Code  {{errorCode}}</span>
+          <div class="errorMessage__buttons">
+            <button class="bigButton bigButton-normaltxt bigButton-small creationSection__finishBtn " type="button"
+              @click='uploadPhotos()'>
+              Try again
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
+        <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">Close</button>
       </div>
     </div>
     <div
@@ -52,21 +87,37 @@
 
 <script>
 export default {
-  props:['name', "isCurrentUser"],
+  props:['name', "isCurrentUser", "photos"],
   data(){
     return{
-      userPhotos: [require('../../assets/images/avatar__temp.jpg'),
-                   'https://media.gettyimages.com/photos/jaipur-the-pink-hawa-mahal-background-picture-id827349644',
-                   require('../../assets/images/avatar__temp3.jpg'),
-                   require('../../assets/images/avatar__temp.jpg'),
-                                require('../../assets/images/avatar__temp2.jpg'),
-                                require('../../assets/images/avatar__temp3.jpg')],
+      userPhotos: [],
+
+      downloadedUserPhotos: 0,
+
       currentModalImage: '',
       currentModalImageIndex: 0,
+
+
       isFullScreenImage: false,
       isAddWindow: false,
+      isModalError: false,
+      errorCode: null,
 
-      newPhotos: []
+      previewPhotos: [],
+      photosToUpload: [],
+
+      loadedPhotos: 0,
+      photosLoaderLength: 0,
+    }
+  },
+  computed:{
+    uploadPercent(){
+      let loaded = this.loadedPhotos / this.photosLoaderLength;
+      return parseInt(loaded * 100);
+    },
+    downloadPercent(){
+      let downloaded = this.downloadedUserPhotos / this.userPhotos.length;
+      return parseInt(downloaded * 100);
     }
   },
   methods: {
@@ -86,7 +137,7 @@ export default {
 
     },
     prevPhoto(){
-      console.log(this.userPhotos.length + ' its ok');
+      console.log(this.photos.length + ' its ok');
       if((this.currentModalImageIndex-1) < 0){
         this.currentModalImageIndex = this.userPhotos.length - 1;
       } else {
@@ -98,31 +149,48 @@ export default {
     closeFullScreenImage(){
       this.isFullScreenImage = false;
     },
-    showPreview(){
+    compressPhoto(image, index, callback){
+      let img = document.createElement('img');
+      img.src = image;
+      img.onload = ()=>{
+        let canv = document.createElement('canvas');
+        let ctx = canv.getContext('2d');
+        let scale = 150 / img.width;
+        canv.height = img.height * scale;
+        canv.width = img.width * scale;
+        ctx.drawImage(img, 0, 0, canv.width, canv.height);
 
-      console.log(this.newPhotos);
-      // let reader = new FileReader();
-      // reader.onload = e =>{
-      //   console.log(e);
-      //   this.newPhotos.push("url(" + e.target.result + ")");
-      //   // this.$refs.avatarDemo.style.backgroundImage = "url(" + e.target.result + ")";
-      // }
+        callback(canv.toDataURL(), index);
+      }
+    },
+    showPreview(){
+      console.log(this.photosToUpload);
+      console.log(this.previewPhotos);
 
       let photos = this.$refs.imageInput.files;
+      this.loadedPhotos = 0;
+      this.photosLoaderLength = photos.length;
+        // this.photosToUpload = this.photosToUpload.concat(photos);
       for (let i = 0; i < photos.length; i++) {
+        this.photosToUpload.push(photos[i]);
         let reader = new FileReader();
         reader.onload = e =>{
-          console.log(e);
-          this.newPhotos.push("url(" + e.target.result + ")");
-          // this.$refs.avatarDemo.style.backgroundImage = "url(" + e.target.result + ")";
+          this.compressPhoto(e.target.result, i, (dataURL, index)=>{
+            this.previewPhotos.push({url:"url(" + dataURL + ")", index: index});
+            this.loadedPhotos++;
+          })
+
         }
         reader.readAsDataURL(photos[i]);
       }
     },
     uploadPhotos(){
       // this.newPhotos = [];
-
+      this.isModalError = false;
       let photos = this.$refs.imageInput.files;
+      this.loadedPhotos = 0;
+      this.photosLoaderLength = photos.length;
+
       console.log(photos);
       for (let i = 0; i < photos.length; i++) {
         this.sendPhoto(photos[i]);
@@ -134,11 +202,47 @@ export default {
       formData.append("img_value ", photo);
       this.$axios.post("https://comeandmeet.herokuapp.com/accounts/photos/",formData).then(response=>{
         console.log(response);
+        this.loadedPhotos++;
+        this.checkIfUploadEnd();
       }, error=>{
         //error
+        this.isModalError = true;
+        this.errorCode = error.response.status;
+        this.loadedPhotos = 0;
+        this.photosLoaderLength = 0;
       });
+    },
+    checkIfUploadEnd(){
+      console.log(this.loadedPhotos + " " + this.photosLoaderLength);
+      if(this.loadedPhotos === this.photosLoaderLength){
+        console.log("ok");
+        this.isAddWindow = false;
+        this.$store.dispatch('getUserDataAPI', this.$store.getters.getCurrentUser);
+      }
+    },
+    removeUploadedPhoto(index){
+      console.log(this.photosToUpload[index]);
+      this.photosToUpload.splice(index, 1);
+      this.previewPhotos = this.previewPhotos.filter((item)=>{
+        return item.index != index;
+      });
+    },
+
+  },
+  created(){
+    this.userPhotos = this.photos.map(item=>{
+      console.log(this.$store.state.imagesUrl + item.img_value);
+      return this.$store.state.imagesUrl + item.img_value;
+    });
+    for (var i = 0; i < this.userPhotos.length; i++) {
+      let tempImage = document.createElement('img');
+      tempImage.src = this.userPhotos[i];
+      tempImage.onload = ()=>{
+        this.downloadedUserPhotos++;
+      }
     }
   }
+
 }
 </script>
 
@@ -147,7 +251,7 @@ export default {
 .userPhotos{
   display: flex;
   flex-wrap: wrap;
-
+  position: relative;
   &__title{
     font-size: 1em;
     font-weight: normal;
@@ -162,7 +266,7 @@ export default {
     background-position: center center;
     background-color: gray;
     background-size: cover;
-    width: 120px;
+    width: calc(100% / 6 - 8px);
     height: 120px;
     border-radius: 5px;
     cursor: pointer;
@@ -206,7 +310,7 @@ export default {
     }
   }
   &__addBlock{
-    width: 120px;
+    width: calc(100% / 6 - 10px);
     height: 120px;
     border-radius: 5px;
     border: 3px dashed $primary-color;
@@ -237,11 +341,44 @@ export default {
     display: flex;
   }
 }
+@media screen and (max-width: 1120px){
+  .userPhotos{
+    &__img{
+      margin-right: 5px;
+      width: calc(100% / 5 - 8px);
+      height: 118px;
+    }
+    &__addBlock{
+      width: calc(100% / 5 - 10px);
+      height: 118px;
+    }
+  }
+}
+@media screen and (max-width: 960px){
+
+}
+@media screen and (max-width: 768px){
+  .userPhotos{
+    &__img{
+      margin-right: 5px;
+      width: calc(100% / 4 - 8px);
+      height: 118px;
+    }
+    &__addBlock{
+      width: calc(100% / 4 - 10px);
+      height: 118px;
+    }
+  }
+}
 @media screen and (max-width: 560px){
 	.userPhotos{
     &__img{
       margin-right: 5px;
-      width: 118px;
+      width: calc(100% / 3 - 8px);
+      height: 118px;
+    }
+    &__addBlock{
+      width: calc(100% / 3 - 10px);
       height: 118px;
     }
   }
@@ -254,6 +391,14 @@ export default {
       height: 90px;
       align-self: center;
     }
+    &__addBlock{
+      width: calc(50% - 9px);
+      height: 90px;
+    }
+  }
+  .addPhotosBlock{
+    padding: 30px;
+
   }
 }
 </style>

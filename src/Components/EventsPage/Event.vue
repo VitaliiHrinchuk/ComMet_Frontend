@@ -582,7 +582,7 @@ export default {
   @media screen and (max-width: 768px){
     .eventHeader{
       position: relative;
-      margin-top: 30px;
+      // margin-top: 30px;
 
       &__btn{
         width: 100%;
