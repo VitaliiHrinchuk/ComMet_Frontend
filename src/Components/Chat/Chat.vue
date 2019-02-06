@@ -17,7 +17,8 @@
 
               >
             <div class="chatMessage__photo"
-                :style="{ 'backgroundImage': 'url(\'' + tempAvatar + '\')' }">
+                :style="{ 'backgroundImage': 'url(\'' + (msg.user.avatar  ? getImageUrl(msg.user.avatar) : getImageUrl(msg.avatar))   + '\')' }"
+                @click="toUserProfile(msg.user)">
             </div>
             <p class="chatMessage__text"
               :class="{'chatMessage__text-current' : (msg.user.username === currentUser || msg.user === currentUser)}">{{msg.text}}</p>
@@ -123,6 +124,18 @@ export default {
           this.isChatLoading = true;
           // setTimeout(this.connectToSocket(id),2000);
       };
+    },
+    getImageUrl(url){
+      return this.$store.state.imagesUrl + url;
+    },
+    toUserProfile(user){
+      console.log(user);
+      if(typeof user === 'object'){
+        this.$router.push({name: 'user', params: {username: user.username}});
+      } else {
+        this.$router.push({name: 'user', params: {username: user}});
+      }
+
     }
   },
   created(){

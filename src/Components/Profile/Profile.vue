@@ -88,7 +88,7 @@
         <div class="detailInfo__content">
             <user-info   v-show="selectedTab == 1" v-bind:userInfo="userDetailInfo" @edit-profile='editingProfile = true'></user-info>
             <user-events v-show="selectedTab == 2" v-bind:userEvents="{visited: userData.events_visited, created: userData.events_created}"></user-events>
-            <user-photos v-show="selectedTab == 3" ></user-photos>
+            <user-photos v-show="selectedTab == 3" :isCurrentUser="isCurrent"></user-photos>
         </div>
       </div>
 
@@ -113,7 +113,7 @@ export default {
   },
   data(){
     return{
-      selectedTab: '1',
+      selectedTab: '3',
       editingProfile:false,
       avatar: require('../../assets/images/avatar__temp.jpg'),
       usersListActive: false,

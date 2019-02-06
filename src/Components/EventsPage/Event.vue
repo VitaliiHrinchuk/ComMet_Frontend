@@ -44,7 +44,7 @@
       <div class="eventBox eventBox-place">
           <h2 class="eventBox__title">Place</h2>
           <div class="eventBox__content">
-            <p>{{eventData.country}},{{eventData.city}}</p>
+            <p>{{eventData.city}}, {{eventData.country}}</p>
           </div>
           <button
             class="textButton"

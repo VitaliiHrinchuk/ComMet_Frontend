@@ -141,11 +141,44 @@
 
       <button class="bigButton bigButton-center creationSection__finishBtn " type="button"
         :disabled="!allDataIsOk || isDataUploading"
+        v-if="!isEventCreated"
         @click='postEventData()'>
         Finish
       </button>
-    </div>
 
+    </div>
+    <div class="modalWindow" v-if="isModalError">
+      <div class="modalWindow__content ">
+        <div class="errorMessage">
+          <i class="errorMessage__icon far fa-times-circle"></i>
+          <h2 class="errorMessage__text">Something went wrong, please try again</h2>
+          <span class="errorMessage__code" v-if="errorCode"> Error Code  {{errorCode}}</span>
+          <div class="errorMessage__buttons">
+            <button class="bigButton bigButton-normaltxt bigButton-small creationSection__finishBtn " type="button"
+              :disabled="!allDataIsOk || isDataUploading"
+              @click='postEventData()'>
+              Try again
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
+        <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">Close</button>
+      </div>
+    </div>
+    <div class="modalWindow modalWindow-light" v-if="isEventCreated">
+      <div class="modalWindow__content modalWindow__content-question">
+        <div class="doneMessage">
+          <i class="doneMessage__icon far fa-check-circle"></i>
+          <h2 class="doneMessage__text">Awesome!</h2>
+          <h3 class="doneMessage__text">You just created an event</h3>
+          <router-link class="bigButton bigButton-small bigButton-normaltxt bigButton-green" :to="{ name: 'Events'}" replace>Events page</router-link>
+        </div>
+        <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
+      </div>
+    </div>
   </div>
 
 </template>
@@ -183,6 +216,9 @@ export default {
 
 
       isDataUploading: false,
+      isModalError: false,
+      errorCode: 500,
+      isEventCreated: false
 
 
     }
@@ -252,7 +288,7 @@ export default {
     },
     geo(){
       return { lat: this.marker.lat,
-               lon: this.marker.lng}
+               lon: this.marker.lon}
     },
 
     allDataIsOk(){
@@ -362,6 +398,7 @@ export default {
     },
     postEventData(){
       this.isDataUploading = true;
+      this.isModalError = false;
       let arrayOfDate = this.date.split(' ');
       let time = arrayOfDate[0];
       let date = arrayOfDate[1];
@@ -378,11 +415,14 @@ export default {
       //   'country': 'Ukraine',
       //   'geo': this.geo.lat + ' ' + this.geo.lon
       // }
-
+       let tagsArray = JSON.parse(JSON.stringify(this.selectedTags));
+       for (let i = 0; i < this.selectedTags.length; i++) {
+         formData.append('tags', this.selectedTags[i]);
+       }
        formData.append('name', this.eventName);
        formData.append('description', this.eventDesc);
        formData.append('time_begins', time);
-       formData.append('tags', JSON.stringify(this.selectedTags));
+       // formData.append('tags', tagsArray);
        // formData.append('tags',JSON.parse(JSON.stringify(this.selectedTags)));
        formData.append('author', this.$store.getters.getCurrentUser);
        // formData.append('tags', "#sport");
@@ -392,12 +432,16 @@ export default {
        formData.append('city', this.placeCity);
        formData.append('country', this.placeCountry);
        formData.append('geo', this.geo.lat + ' ' + this.geo.lon);
+       console.log(tagsArray);
       this.$axios.post('https://comeandmeet.herokuapp.com/events/create/', formData).then(response=>{
         this.isDataUploading = false;
+        this.isEventCreated = true;
         console.log(response);
       }, error=>{
         //error
-        console.log(error.response);
+        this.isDataUploading = false;
+        this.isModalError = true;
+        this.errorCode = error.response.status;
       });
 
     },

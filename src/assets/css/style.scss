@@ -188,6 +188,7 @@ main {
 	align-self: center;
 	cursor: pointer;
 	letter-spacing: 0.07em;
+	box-shadow:1px 1px 2px rgba(0,0,0,.2);
 	&:disabled{
 		opacity: .3;
 		z-index: 3;
@@ -214,6 +215,9 @@ main {
 	&-normaltxt{
 		text-transform: none;
 	}
+	&-green{
+		background: $accept-color;
+	}
 }
 .textButton{
 	border:none;
@@ -233,6 +237,9 @@ main {
 		width: 100px;
 		display: block;
 		text-align: center;
+	}
+	&-smalltext{
+		text-transform: capitalize;
 	}
 	&:focus{
 		background: transparentize($primary-color, .9);
@@ -412,7 +419,9 @@ main {
 	height: 100%;
 	display: block;
 	z-index: 5;
-
+	&-light{
+		background: rgba(0,0,0,.2);
+	}
 	&__content{
 		position: absolute;
 		top: 20%;
@@ -423,6 +432,7 @@ main {
 		padding: 10px 10px 0 10px;
 		max-height: 80%;
 		min-height: 250px;
+		overflow-y: auto;
 		&-map{
 			padding: 0;
 			width: 800px;
@@ -447,12 +457,54 @@ main {
 		font-size: 1.3em;
 		cursor: pointer;
 		z-index: 6;
-
+		&-button{
+			font-size: .9em;
+		}
 		&-maxzindex{
 			z-index: 9999;
 			font-size: 1.6em;
 		}
 	}
+}
+.errorMessage{
+	padding: 20px;
+	display: flex;
+	min-height: 200px;
+	width: 100%;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	color: #DB3B21;
+	&__icon{
+		font-size: 3em;
+	}
+	&__text{
+		font-size: 1.3em;
+	}
+	&__buttons{
+
+	}
+}
+.doneMessage{
+	padding: 20px;
+	padding-bottom: 30px;
+	display: flex;
+	min-height: 200px;
+	width: 100%;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	font-size: 1.2em;
+	&__icon{
+		font-size: 3em;
+		color: $accept-color;
+		margin-bottom: 20px;
+	}
+	&__text{
+		font-weight: 400;
+		margin-bottom: 20px;
+	}
+
 }
 .roundImage{
 	position: relative;
@@ -484,6 +536,13 @@ main {
 		width: 245px;
 		height: 190px;
 		border: 1px solid rgba(0,0,0,.2);
+	}
+	&-userphotos{
+		width: 60px;
+		height: 60px;
+		margin-right: 10px;
+		border-radius: 5px;
+		margin: 5px 4px;
 	}
 }
 #map{
@@ -921,6 +980,9 @@ main {
 			}
 		}
 	}
+	.errorMessage{
+		font-size: .7em;
+	}
 }
 
 @media screen and (max-width: 768px){
@@ -937,7 +999,13 @@ main {
 				width: 90%;
 			}
 		}
+		&__close{
+			&-button{
+				font-size: .7em;
+			}
+		}
 	}
+
 	.modalQuestion{
 		&__question{
 			font-size: .8em;

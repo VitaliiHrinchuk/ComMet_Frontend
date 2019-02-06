@@ -270,7 +270,7 @@ export default {
   destroyed(){
     document.removeEventListener('scroll',this.onScroll);
     this.$store.commit('clearEventList');
-    this.$store.commit('updateEventsUrl', 'https://comeandmeet.herokuapp.com/events/?limit=3&offset=0');
+    this.$store.commit('updateEventsUrl', 'https://comeandmeet.herokuapp.com/events/get_not_expired/?limit=3&offset=0');
   },
 }
 </script>
