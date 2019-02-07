@@ -129,7 +129,7 @@ main {
 	margin-bottom: 10px;
 	border-radius: 5px;
 	/* box-shadow: 3px 3px 5px rgba(28,169,240,.3); */
-	box-shadow: 3px 3px 5px rgba(0,0,0,.1);
+	box-shadow: 1px 1px 5px rgba(0,0,0,.1);
 	color: #fff;
 	font-weight: 500;
 	cursor: pointer;
@@ -241,6 +241,10 @@ main {
 	&-smalltext{
 		text-transform: capitalize;
 	}
+	&-center{
+		margin: 0 auto;
+		display: block;
+	}
 	&:focus{
 		background: transparentize($primary-color, .9);
 	}
@@ -313,17 +317,31 @@ main {
 		z-index: 4;
 	}
 	&__next{
+		-webkit-touch-callout: none; /* iOS Safari */
+			-webkit-user-select: none; /* Safari */
+			 -khtml-user-select: none; /* Konqueror HTML */
+				 -moz-user-select: none; /* Firefox */
+					-ms-user-select: none; /* Internet Explorer/Edge */
+							user-select: none;
 		position: absolute;
 		top: 50%;
 		right: 10px;
 		color: #fff;
+		font-size: 3em;
 		cursor: pointer;
 	}
 	&__prev{
+		-webkit-touch-callout: none; /* iOS Safari */
+			-webkit-user-select: none; /* Safari */
+			 -khtml-user-select: none; /* Konqueror HTML */
+				 -moz-user-select: none; /* Firefox */
+					-ms-user-select: none; /* Internet Explorer/Edge */
+							user-select: none;
 		position: absolute;
 		top: 50%;
 		left: 10px;
 		color: #fff;
+		font-size: 3em;
 		cursor: pointer;
 	}
 }
@@ -761,6 +779,10 @@ main {
 	height: 100%;
 	background: rgba(255,255,255,.5);
 	z-index: 4;
+	&-modalImage{
+		background: transparent;
+
+	}
 	&-notransparent{
 		background: rgba(255,255,255,1);
 	}
@@ -773,7 +795,11 @@ main {
 		color: $primary-color;
 		font-weight: bold;
 		animation-name: none;
-
+		&-bottom{
+			top: 90%;
+			left: 50%;
+			transform: translate(-50%,0);
+		}
 	}
 }
 
@@ -789,7 +815,15 @@ main {
 	border-bottom-color: $primary-color;
 	border-radius: 50%;
 	animation: 2s infinite spin ease;
-
+	&-light{
+		border-top-color: gray;
+		border-bottom-color: gray;
+	}
+	&-bottom{
+		top: 90%;
+		left: 50%;
+		transform: translate(-50%,0);
+	}
 	&-inner{
 		height: 70px;
 		width: 70px;

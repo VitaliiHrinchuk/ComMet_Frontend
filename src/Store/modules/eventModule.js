@@ -12,6 +12,10 @@ const state = {
   eventData: {},
   eventScreenLoader: true,
 
+
+  eventFilterProperties:{
+    
+  }
 }
 
 const getters = {

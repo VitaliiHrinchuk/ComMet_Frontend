@@ -1,88 +1,101 @@
 <template lang="html">
-  <div class="userPhotos">
-    <div class="blockLoader blockLoader-notransparent" v-if="downloadPercent !== 100">
-      <div class="screenLoader">
-        <div class="screenLoader screenLoader-inner">
+  <div class="">
+    <div class="userPhotos">
+      <div class="blockLoader " v-if="downloadPercent !== 100 && userPhotos.length > 0">
+        <div class="screenLoader screenLoader-bottom">
+          <div class="screenLoader screenLoader-inner">
+          </div>
+        </div>
+        <span class="blockLoader__progress blockLoader__progress-bottom">{{downloadPercent}}%</span>
+      </div>
+      <h2 class="userPhotos__title">Photos</h2>
+      <span
+          class="note"
+          v-if='userPhotos.length == 0 && !isCurrentUser'
+          >User has no photos</span>
+      <div class="modalImage" v-show="isFullScreenImage">
+        <i class="modalImage__close fas fa-times" @click="closeFullScreenImage()"></i>
+        <img class="modalImage__img" ref="modalImage" alt="full screen">
+        <span class="modalImage__next" @click='nextPhoto()'><i class="fas fa-angle-right"></i></span>
+        <span class="modalImage__prev" @click='prevPhoto()'><i class="fas fa-angle-left"></i></span>
+        <div class="blockLoader blockLoader-modalImage" v-if="modalImageLoader">
+          <div class="screenLoader screenLoader-light">
+          </div>
         </div>
       </div>
-      <span class="blockLoader__progress">{{downloadPercent}}%</span>
-    </div>
-    <h2 class="userPhotos__title">Photos</h2>
-    <div class="modalImage" v-if="isFullScreenImage">
-      <i class="modalImage__close fas fa-times" @click="closeFullScreenImage()"></i>
-      <img class="modalImage__img" :src='currentModalImage' alt="full screen">
-      <span class="modalImage__next" @click='nextPhoto()'>Next</span>
-      <span class="modalImage__prev" @click='prevPhoto()'>Prev</span>
-    </div>
-    <div class="userPhotos__addBlock" v-if="isCurrentUser" @click="isAddWindow = true">
-      <i class="fas fa-plus"></i>
-    </div>
-    <div class="modalWindow " v-if='isAddWindow && isCurrentUser'>
-      <div class="modalWindow__content modalWindow__content-map">
-        <div class="addPhotosBlock">
-          <div class="addPhotosBlock__control">
-            <input class="profileEdit__fileInput"
-              type="file"
-              accept="image/*"
-              ref="imageInput"
-              name="avatarInput"
-              id="avatarInput"
-              @change="showPreview"
-              multiple>
-            <label class="textButton textButton-smalltext textButton-avatarchange " for="avatarInput"><i class="fas fa-plus"></i> add</label>
-            <button class="bigButton bigButton-small bigButton-green" type="button" v-if="previewPhotos.length > 0" @click="uploadPhotos"><i class="fas fa-upload"></i> Upload</button>
-          </div>
-          <div class="addPhotosBlock__container">
-            <div
-                class="roundImage roundImage-userphotos"
-                v-for="photo in previewPhotos"
-                :style="{ 'backgroundImage': photo.url }"
-                ref="avatarDemo" >
-                <i class="roundImage__icon far fa-trash-alt" @click="removeUploadedPhoto(photo.index)"></i>
+      <div class="userPhotos__addBlock" v-if="isCurrentUser" @click="isAddWindow = true">
+        <i class="fas fa-plus"></i>
+      </div>
+      <div class="modalWindow " v-if='isAddWindow && isCurrentUser'>
+        <div class="modalWindow__content modalWindow__content-map">
+          <div class="addPhotosBlock">
+            <div class="addPhotosBlock__control">
+              <input class="profileEdit__fileInput"
+                type="file"
+                accept="image/*"
+                ref="imageInput"
+                name="avatarInput"
+                id="avatarInput"
+                @change="showPreview"
+                multiple>
+              <label class="textButton textButton-smalltext textButton-avatarchange " for="avatarInput"><i class="fas fa-plus"></i> add</label>
+              <button class="bigButton bigButton-small bigButton-green" type="button" v-if="previewPhotos.length > 0" @click="uploadPhotos"><i class="fas fa-upload"></i> Upload</button>
             </div>
-            <div class="blockLoader" v-if="photosLoaderLength != 0 && loadedPhotos != photosLoaderLength && loadedPhotos != 0">
-              <div class="screenLoader">
-                <div class="screenLoader screenLoader-inner">
-                </div>
+            <div class="addPhotosBlock__container">
+              <div
+                  class="roundImage roundImage-userphotos"
+                  v-for="photo in previewPhotos"
+                  :style="{ 'backgroundImage': photo.url }"
+                  ref="avatarDemo" >
+                  <i class="roundImage__icon far fa-trash-alt" @click="removeUploadedPhoto(photo.index)"></i>
               </div>
-              <span class="blockLoader__progress">{{uploadPercent}}%</span>
+              <div class="blockLoader" v-if="photosLoaderLength != 0 && loadedPhotos != photosLoaderLength && loadedPhotos != 0">
+                <div class="screenLoader">
+                  <div class="screenLoader screenLoader-inner">
+                  </div>
+                </div>
+                <span class="blockLoader__progress">{{uploadPercent}}%</span>
+              </div>
             </div>
           </div>
+          <span class="modalWindow__close modalWindow__close-maxzindex" @click='isAddWindow = false'><i class="fas fa-times"></i></span>
         </div>
-        <span class="modalWindow__close modalWindow__close-maxzindex" @click='isAddWindow = false'><i class="fas fa-times"></i></span>
       </div>
-    </div>
-    <div class="modalWindow" v-if="isModalError">
-      <div class="modalWindow__content ">
-        <div class="errorMessage">
-          <i class="errorMessage__icon far fa-times-circle"></i>
-          <h2 class="errorMessage__text">Something went wrong, please try again</h2>
-          <span class="errorMessage__code" v-if="errorCode"> Error Code  {{errorCode}}</span>
-          <div class="errorMessage__buttons">
-            <button class="bigButton bigButton-normaltxt bigButton-small creationSection__finishBtn " type="button"
-              @click='uploadPhotos()'>
-              Try again
-            </button>
+      <div class="modalWindow" v-if="isModalError">
+        <div class="modalWindow__content ">
+          <div class="errorMessage">
+            <i class="errorMessage__icon far fa-times-circle"></i>
+            <h2 class="errorMessage__text">Something went wrong, please try again</h2>
+            <span class="errorMessage__code" v-if="errorCode"> Error Code  {{errorCode}}</span>
+            <div class="errorMessage__buttons">
+              <button class="bigButton bigButton-normaltxt bigButton-small creationSection__finishBtn " type="button"
+                @click='uploadPhotos()'>
+                Try again
+              </button>
+
+            </div>
 
           </div>
 
+          <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
+          <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">Close</button>
         </div>
-
-        <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
-        <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">Close</button>
       </div>
+        <div
+          class="userPhotos__img"
+          v-for='photo in sortedPhotos'
+          @click="setFullScreenImage(photo.index)"
+          :style="{ 'backgroundImage': photo.url }" >
+          <!-- <img class="" alt="userPhoto"> -->
+          <i class="fas fa-search-plus"></i>
+       </div>
     </div>
-    <div
-      class="userPhotos__img"
-      v-for='(photo, index) in userPhotos'
-      @click="setFullScreenImage(photo,index)"
-      :style="{ 'backgroundImage': 'url(\'' + photo + '\')' }" >
-      <!-- <img class="" alt="userPhoto"> -->
-      <i class="fas fa-search-plus"></i>
-
-    </div>
-
+    <button type="button"
+      class="textButton textButton-smalltext textButton-center"
+      @click="loadPreviewPhotos"
+      v-if="previewPhotoCount < userPhotos.length">More</button>
   </div>
+
 </template>
 
 <script>
@@ -91,6 +104,11 @@ export default {
   data(){
     return{
       userPhotos: [],
+      optimizedSmallPhotos: [],
+
+      previewPhotoCount: 0,
+
+
 
       downloadedUserPhotos: 0,
 
@@ -101,6 +119,7 @@ export default {
       isFullScreenImage: false,
       isAddWindow: false,
       isModalError: false,
+      modalImageLoader: false,
       errorCode: null,
 
       previewPhotos: [],
@@ -116,14 +135,29 @@ export default {
       return parseInt(loaded * 100);
     },
     downloadPercent(){
-      let downloaded = this.downloadedUserPhotos / this.userPhotos.length;
+
+      let limit = (this.userPhotos.length - this.previewPhotoCount < 10)  ? this.userPhotos.length : 10 ;
+      console.log(this.previewPhotoCount);
+      // console.log("lim "+limit);
+      let downloaded = this.downloadedUserPhotos / limit;
       return parseInt(downloaded * 100);
+    },
+    sortedPhotos(){
+      return this.optimizedSmallPhotos.sort((a ,b) => a.index - b.index);
     }
   },
   methods: {
-    setFullScreenImage(src, index){
+    setFullScreenImage(index){
+      this.$refs.modalImage.src = '';
       this.isFullScreenImage = true;
-      this.currentModalImage = src;
+      // this.currentModalImage =this.userPhotos[index];
+      this.modalImageLoader = true;
+
+      this.$refs.modalImage.src =this.userPhotos[index];
+      this.$refs.modalImage.onload = ()=>{
+        this.modalImageLoader = false;
+      }
+
       this.currentModalImageIndex = index;
     },
     nextPhoto(){
@@ -132,36 +166,51 @@ export default {
       } else {
         this.currentModalImageIndex++;
       }
-
-      this.currentModalImage = this.userPhotos[this.currentModalImageIndex];
+      this.setFullScreenImage(this.currentModalImageIndex);
+      // this.currentModalImage = this.userPhotos[this.currentModalImageIndex];
 
     },
     prevPhoto(){
-      console.log(this.photos.length + ' its ok');
       if((this.currentModalImageIndex-1) < 0){
         this.currentModalImageIndex = this.userPhotos.length - 1;
       } else {
         this.currentModalImageIndex--;
       }
-      console.log(this.currentModalImageIndex);
-      this.currentModalImage = this.userPhotos[this.currentModalImageIndex];
+      this.setFullScreenImage(this.currentModalImageIndex);
     },
     closeFullScreenImage(){
       this.isFullScreenImage = false;
     },
     compressPhoto(image, index, callback){
       let img = document.createElement('img');
+      img.setAttribute('crossOrigin', 'anonymous');
       img.src = image;
       img.onload = ()=>{
         let canv = document.createElement('canvas');
         let ctx = canv.getContext('2d');
-        let scale = 150 / img.width;
+        let scale = 130 / img.width;
         canv.height = img.height * scale;
         canv.width = img.width * scale;
         ctx.drawImage(img, 0, 0, canv.width, canv.height);
 
         callback(canv.toDataURL(), index);
       }
+      img.onerror = (e)=>{
+        console.log(e);
+      }
+    },
+    loadPreviewPhotos(){
+      // this.downloadedUserPhotos = 0;
+      let limit = (this.userPhotos.length - this.previewPhotoCount <= 10)  ? this.userPhotos.length : 10 ;
+      console.log(limit);
+      for (let i = this.previewPhotoCount; i < limit; i++) {
+        console.log("load");
+        this.compressPhoto(this.userPhotos[i], i, (dataURL, index)=>{
+          this.downloadedUserPhotos++;
+          this.optimizedSmallPhotos.push({url:"url(" + dataURL + ")", index: index});
+        });
+      }
+      this.previewPhotoCount+=limit;
     },
     showPreview(){
       console.log(this.photosToUpload);
@@ -231,18 +280,20 @@ export default {
   },
   created(){
     this.userPhotos = this.photos.map(item=>{
-      console.log(this.$store.state.imagesUrl + item.img_value);
       return this.$store.state.imagesUrl + item.img_value;
     });
-    for (var i = 0; i < this.userPhotos.length; i++) {
-      let tempImage = document.createElement('img');
-      tempImage.src = this.userPhotos[i];
-      tempImage.onload = ()=>{
-        this.downloadedUserPhotos++;
-      }
-    }
-  }
 
+    // for (var i = 0; i < this.userPhotos.length; i++) {
+    //   let tempImage = document.createElement('img');
+    //   tempImage.src = this.userPhotos[i];
+    //   tempImage.onload = ()=>{
+    //     this.downloadedUserPhotos++;
+    //   }
+    // }
+  },
+  mounted(){
+    this.loadPreviewPhotos();
+  }
 }
 </script>
 
