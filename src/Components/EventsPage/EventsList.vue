@@ -227,9 +227,11 @@ export default {
       let listHeight = document.querySelector('#eventList').offsetHeight;
 
 
-      let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-
+      let bottomOfWindow = (document.documentElement.scrollT || window.scrollY) + window.innerHeight >= document.documentElement.offsetHeight;
+      console.log(document.documentElement.scrollTop + window.innerHeight);
       if(bottomOfWindow && !this.isEventListLoader){
+
+        console.log("bottom");
         this.loadEvents();
       }
     },

@@ -10,11 +10,12 @@ const state = {
   loadEventsUrl: `${API_EVENTS_URL}get_not_expired/?limit=3&offset=0`,
   eventListLoader: false,
   eventData: {},
+  eventMembers: [],
   eventScreenLoader: true,
 
 
   eventFilterProperties:{
-    
+
   }
 }
 
@@ -39,7 +40,7 @@ const mutations = {
     state['eventData'] = value;
   },
   setMembersData(state, value){
-    state['eventData'].members = value;
+    state['eventMembers'] = value;
   },
   setEventLoader(state, value){
     state['eventScreenLoader'] = value;
@@ -110,14 +111,8 @@ const actions = {
       console.log(response.data);
       commit('setEventData', response.data);
 
+      commit('setEventLoader', false);
 
-      axios.get(`${eventUrl}get_members`).then((response)=>{
-        console.log(response);
-        commit('setEventLoader', false);
-        commit('setMembersData', response.data);
-      }, (error)=>{
-        // error
-      });
 
     }, (error)=>{
       //error
@@ -128,6 +123,22 @@ const actions = {
         case 404: router.replace('/404');
       }
     })
+  },
+  getEventMembers({commit}, id){
+    console.log('getEventMembers');
+    let eventUrl = `${API_EVENTS_URL}${id}/`;
+    return new Promise((resolve, reject)=>{
+      axios.get(eventUrl+"get_members/").then((response)=>{
+        console.log(response);
+        commit('setMembersData', response.data);
+        resolve(response.data);
+      }, (error)=>{
+        // error
+        reject(error);
+        // commit('setEventLoader', false);
+      });
+    });
+
   }
 }
 

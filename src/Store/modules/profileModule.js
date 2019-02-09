@@ -37,7 +37,7 @@ const mutations = {
 
 const actions = {
   getUserDataAPI({state, commit, rootState},username){
-    let userDataUrl =`${API_ACCOUNTS_URL}users/${username}`;
+    let userDataUrl =`${API_ACCOUNTS_URL}users/${username}/`;
     commit('setProfileLoader', true);
     axios.get(userDataUrl).then((response)=>{
 

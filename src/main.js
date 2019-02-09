@@ -2,7 +2,8 @@ import Vue from 'vue';
 import axios from 'axios';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
-
+import  smoothscroll  from 'smoothscroll-polyfill';
+smoothscroll.polyfill();
 
 // import 'leaflet/dist/leaflet.css'
 

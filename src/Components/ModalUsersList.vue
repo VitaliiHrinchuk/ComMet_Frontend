@@ -14,7 +14,7 @@
         <div class="user user-list" v-for='user in usersData'>
           <div
             class="roundImage roundImage-members"
-            :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(user.avatar) + '\')' }" @click="showUserProfile(eventData.author.username)">
+            :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(user.avatar) + '\')' }" @click="showUserProfile(usersData.username)">
           </div>
           <div class="user__nameBlock">
             <h3 class="fullName" v-if='user.first_name  || user.last_name'  @click='showUserProfile(user.username)'>{{user.first_name}}  {{user.last_name}}</h3>

@@ -1,155 +1,157 @@
 <template lang="html">
   <div class=" tempClass">
-    <div class="loaderBg" v-if="isScreenLoader">
+    <div class="loaderBg" v-if="isScreenLoader || eventMembersLoader">
       <div class="screenLoader">
         <div class="screenLoader screenLoader-inner"></div>
       </div>
     </div>
+    <div v-if="!isScreenLoader">
+      <users-list
+      v-if='usersListActive'
+      :usersData='eventMembers'
+      title='Event Members'
+      note='This event has no members yet'
+      @close-list= 'usersListActive = false'
 
-    <users-list
-    v-if='usersListActive'
-    :usersData='eventData.members'
-    title='Event Members'
-    note='This event has no members yet'
-    @close-list= 'usersListActive = false'
-
-    ></users-list>
-    <div id="sticky" class="sticky" v-if="!isScreenLoader">
-      <h1 class="sticky__title">{{eventData.name}}</h1>
-      <button class="bigButton bigButton-header shadow" type="button" name="button"
-        v-if="eventData.author.username != currentUser"
-        @click="joinEvent()"
-        :disabled="joiningLoader">
-        Join Event
-        <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span></button>
-      <span class="sticky__date">{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</span>
-    </div>
-    <div class="eventHeader" id="eventHeader" v-if="!isScreenLoader">
-      <div class="eventHeader__title">
-        <h1 >{{eventData.name}} </h1>
-        <div class="tag" v-for='tag in eventData.tags' >
-          {{tag}}
+      ></users-list>
+      <div id="sticky" class="sticky" >
+        <h1 class="sticky__title">{{eventData.name}}</h1>
+        <button class="bigButton bigButton-header shadow" type="button" name="button"
+          v-if="eventData.author.username != currentUser"
+          @click="joinEvent()"
+          :disabled="joiningLoader">
+          Join Event
+          <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span></button>
+        <span class="sticky__date">{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</span>
+      </div>
+      <div class="eventHeader" id="eventHeader" ref="eventHeader" >
+        <div class="eventHeader__title" v-if="!isScreenLoader">
+          <h1 >{{eventData.name}} </h1>
+          <div class="tag" v-for='tag in eventData.tags' >
+            {{tag}}
+          </div>
         </div>
-      </div>
-      <button class="eventHeader__btn bigButton shadow" type="button" name="button"
-        v-if="eventData.author.username != currentUser"
-        @click="joinEvent()"
-        :disabled="joiningLoader">
-        Join Event
-        <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span>
-      </button>
+        <button class="eventHeader__btn bigButton shadow" type="button" name="button"
+          v-if="eventData.author.username != currentUser && eventData.author.username"
+          @click="joinEvent()"
+          :disabled="joiningLoader">
+          Join Event
+          <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span>
+        </button>
 
-    </div>
-    <div class="container eventContainer" v-if="!isScreenLoader">
-      <div class="eventBox eventBox-place">
-          <h2 class="eventBox__title">Place</h2>
-          <div class="eventBox__content">
-            <p>{{eventData.city}}, {{eventData.country}}</p>
-          </div>
-          <button
-            class="textButton"
-            type="button"
-            name="button"
-            @click='openMap'
-            >Open map</button>
       </div>
-
-      <div class="modalWindow" v-if='isMapOpen'>
-        <div class="modalWindow__content modalWindow__content-map">
-          <div id="map" class="map">
-            <l-map :zoom="zoom" :center="getGeoCoords" >
-              <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-              <l-marker :lat-lng="getGeoCoords" ></l-marker>
-            </l-map>
-          </div>
-          <span class="modalWindow__close modalWindow__close-maxzindex" @click='isMapOpen = false'><i class="fas fa-times"></i></span>
-        </div>
-      </div>
-
-      <div class="eventBox eventBox-date">
-          <h2 class="eventBox__title">Date</h2>
-          <div class="eventBox__content eventBox__content-date">
-            <p>{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</p>
-          </div>
-      </div>
-
-      <div class="eventBox eventBox-author">
-          <h2 class="eventBox__title">Author</h2>
-          <div class="eventBox__content">
-            <div class="user">
-              <div
-                class="roundImage roundImage-event"
-                :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(eventData.author.avatar) + '\')' }" @click="showUserProfile(eventData.author.username)">
-              </div>
-              <div class="userRate">
-                <h3 class="fullName fullName-author" @click='showUserProfile(eventData.author.username)'>{{eventData.author.first_name}} {{eventData.author.last_name}}</h3>
-                <i v-for='rate in Math.floor(eventData.author.user_rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
-                <span class="note" v-if='Math.floor(eventData.author.user_rate)*1 == 0'>Unrated yet </span>
-              </div>
-            </div>
-          </div>
-          <!-- <button class="textButton" type="button" name="button">Profile</button> -->
-      </div>
-      <div class="helpContainer">
-        <div class="eventBox eventBox-desc">
-            <h2 class="eventBox__title">Description</h2>
+      <div class="container eventContainer" v-if="!isScreenLoader">
+        <div class="eventBox eventBox-place">
+            <h2 class="eventBox__title">Place</h2>
             <div class="eventBox__content">
-              <p>{{eventData.description}}</p>
-              <span class="note" v-if='eventData.description == ""'> This event has not description</span>
+              <p>{{eventData.city}}, {{eventData.country}}</p>
             </div>
-            <!-- <button class="textButton" type="button" name="button">More</button> -->
+            <button
+              class="textButton"
+              type="button"
+              name="button"
+              @click='openMap'
+              >Open map</button>
         </div>
 
-        <!-- <div class="eventBox eventBox-plan">
-            <h2 class="eventBox__title">Plan</h2>
+        <div class="modalWindow" v-if='isMapOpen'>
+          <div class="modalWindow__content modalWindow__content-map">
+            <div id="map" class="map">
+              <l-map :zoom="zoom" :center="getGeoCoords" >
+                <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+                <l-marker :lat-lng="getGeoCoords" ></l-marker>
+              </l-map>
+            </div>
+            <span class="modalWindow__close modalWindow__close-map" @click='isMapOpen = false'><i class="fas fa-times"></i></span>
+          </div>
+        </div>
+
+        <div class="eventBox eventBox-date">
+            <h2 class="eventBox__title">Date</h2>
+            <div class="eventBox__content eventBox__content-date">
+              <p>{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</p>
+            </div>
+        </div>
+
+        <div class="eventBox eventBox-author">
+            <h2 class="eventBox__title">Author</h2>
             <div class="eventBox__content">
-              <div class="arrowContainer">
-                <i class="arrowContainer__arrow arrowContainer__arrow-left fas fa-angle-left"></i>
-                <i class="arrowContainer__arrow arrowContainer__arrow-right fas fa-angle-right"></i>
-              </div>
-              <div class="planContainer">
-
-                <div class="plan plan-green shadow">
-                  <h3 class="plan__time">8:00</h3>
-                  <p class="plan__desc">Meeting</p>
+              <div class="user">
+                <div
+                  class="roundImage roundImage-event"
+                  :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(eventData.author.avatar) + '\')' }" @click="showUserProfile(eventData.author.username)">
                 </div>
-                <div class="plan plan-red shadow">
-                  <h3 class="plan__time">10:00</h3>
-                  <p class="plan__desc">Coffee</p>
+                <div class="userRate">
+                  <h3 class="fullName fullName-author" @click='showUserProfile(eventData.author.username)'>{{eventData.author.first_name}} {{eventData.author.last_name}}</h3>
+                  <i v-for='rate in Math.floor(eventData.author.user_rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
+                  <span class="note" v-if='Math.floor(eventData.author.user_rate)*1 == 0'>Unrated yet </span>
                 </div>
-                <div class="plan plan-violet shadow">
-                  <h3 class="plan__time">12:00</h3>
-                  <p class="plan__desc">Go to the cinema</p>
-                </div>
-
               </div>
             </div>
-        </div> -->
-      </div>
-
-
-      <div class="eventBox eventBox-members">
-          <h2 class="eventBox__title">Members</h2>
-          <div class="eventBox__content">
-            <div class="user user-list" v-for='member in randomMembers'>
-              <div
-                class="roundImage roundImage-members"
-                :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(member.avatar) + '\')' }" @click="showUserProfile(eventData.author.username)">
+            <!-- <button class="textButton" type="button" name="button">Profile</button> -->
+        </div>
+        <div class="helpContainer">
+          <div class="eventBox eventBox-desc">
+              <h2 class="eventBox__title">Description</h2>
+              <div class="eventBox__content">
+                <p>{{eventData.description}}</p>
+                <span class="note" v-if='eventData.description == ""'> This event has not description</span>
               </div>
-              <h3 class="fullName" @click='showUserProfile(member.username)'>{{member.first_name}} {{member.last_name}}</h3>
+              <!-- <button class="textButton" type="button" name="button">More</button> -->
+          </div>
+
+          <!-- <div class="eventBox eventBox-plan">
+              <h2 class="eventBox__title">Plan</h2>
+              <div class="eventBox__content">
+                <div class="arrowContainer">
+                  <i class="arrowContainer__arrow arrowContainer__arrow-left fas fa-angle-left"></i>
+                  <i class="arrowContainer__arrow arrowContainer__arrow-right fas fa-angle-right"></i>
+                </div>
+                <div class="planContainer">
+
+                  <div class="plan plan-green shadow">
+                    <h3 class="plan__time">8:00</h3>
+                    <p class="plan__desc">Meeting</p>
+                  </div>
+                  <div class="plan plan-red shadow">
+                    <h3 class="plan__time">10:00</h3>
+                    <p class="plan__desc">Coffee</p>
+                  </div>
+                  <div class="plan plan-violet shadow">
+                    <h3 class="plan__time">12:00</h3>
+                    <p class="plan__desc">Go to the cinema</p>
+                  </div>
+
+                </div>
+              </div>
+          </div> -->
+        </div>
+
+
+        <div class="eventBox eventBox-members" v-if="1">
+            <h2 class="eventBox__title">Members</h2>
+            <div class="eventBox__content">
+              <div class="user user-list" v-for='member in randomMembers'>
+                <div
+                  class="roundImage roundImage-members"
+                  :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(member.avatar) + '\')' }" @click="showUserProfile(member.username)">
+                </div>
+                <h3 class="fullName" @click='showUserProfile(member.username)'>{{member.first_name}} {{member.last_name}}</h3>
+              </div>
+
             </div>
+            <div class="eventBox__members">
+              <span>{{eventData.members_count}} {{eventData.members_count == 1 ? 'Member' : 'Members'}} of {{eventData.max_members}}</span>
+              <button class="textButton" type="button" name="button" @click='openUsersList()'>More</button>
+            </div>
+            <router-link class="bigButton bigButton-members shadow" :to="{ name: 'chatRoom', params: {id: id} }">chat</router-link>
+        </div>
 
-          </div>
-          <div class="eventBox__members">
-            <span>{{eventData.members_count}} {{eventData.members_count == 1 ? 'Member' : 'Members'}} of {{eventData.max_members}}</span>
-            <button class="textButton" type="button" name="button" @click='openUsersList()'>More</button>
-          </div>
-          <router-link class="bigButton bigButton-members shadow" :to="{ name: 'chatRoom', params: {id: id} }">chat</router-link>
+
+
       </div>
-
-
-
     </div>
+
   </div>
 
 </template>
@@ -172,6 +174,10 @@ export default {
   data(){
     return {
       currentUser: this.$store.getters.getCurrentUser,
+
+      eventMembers: [],
+      eventMembersLoader: false,
+
       headerCoord: 0,
       usersListActive: false,
       zoom:8,
@@ -194,10 +200,10 @@ export default {
       return this.$store.getters.getEventData;
     },
     randomMembers(){
-      if(this.eventData.members.length > 6){
-        return this.eventData.members[Math.floor(Math.random()*this.eventData.members.length)];
+      if(this.eventData.members_count > 6){
+        return this.eventMembers[Math.floor(Math.random()*this.eventData.members_count)];
       } else {
-        return this.eventData.members;
+        return this.eventMembers;
       }
     },
 
@@ -210,8 +216,9 @@ export default {
   },
   methods:{
     stickyHeader(){
+
       let stickyBlock = document.getElementById('sticky');
-      let header = document.getElementById('eventHeader');
+      let header = this.$refs.eventHeader;
 
 
       let sticky = 50 + header.offsetHeight;
@@ -283,9 +290,24 @@ export default {
 
   created(){
     this.$store.dispatch('getEventDataAPI',this.id);
+    this.eventmembersLoader = true;
+    this.$store.dispatch('getEventMembers', this.id).then(response=>{
+      console.log("edge hello");
+      this.eventmembersLoader = false;
+      this.eventMembers = response;
+    }, error=>{
+      //error
+    });
   },
   beforeRouteUpdate (to, from, next) {
     this.$store.dispatch('getEventDataAPI',to.params.id);
+    this.eventmembersLoader = true;
+    this.$store.dispatch('getEventMembers', to.params.id).then(response=>{
+      this.eventmembersLoader = false;
+      this.eventMembers = response;
+    }, error=>{
+      //error
+    });
     next();
   }
 }
