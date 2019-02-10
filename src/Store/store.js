@@ -23,6 +23,7 @@ const store = new Vuex.Store({
     profileModule
   },
   state: {
+      API_USERS_URL: "https://comeandmeet.herokuapp.com/accounts/users/",
       isAuthorized: false,
       currentUser: '',
       appLoading: true,

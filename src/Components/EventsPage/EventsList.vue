@@ -39,14 +39,14 @@
             </div> -->
           <span class="loader loader-list" v-if="isEventListLoader"></span>
           <!-- <h3 class="text-gray eventList__title">Events list</h3> -->
-          <span class="note" v-if='filteredEventList.length == 0'>no events by your queries</span>
-          <div class="shortEvent shadow radius-5px" v-for="event in filteredEventList" >
+          <span class="note" v-if='!isEventListLoader && eventsList.length === 0'>no events by your queries</span>
+          <div class="shortEvent shadow radius-5px" v-for="event in eventsList" >
             <div class="shortEvent__avatar" :style="{ 'backgroundImage': 'url(\'' + getImageUrl(event.avatar) + '\')' }">
             </div>
             <div class="eventData">
               <h3 class="eventData__title">{{event.name}}</h3>
               <div class="eventData__date">
-                <span><i class="eventData__icon far fa-calendar-alt"></i> {{dateToString(event.date)}}</span>
+                <span><i class="eventData__icon far fa-calendar-alt"></i> {{dateToString(event.date_expire)}}</span>
               </div>
               <div class="eventData__tags" >
                 <div class="tag" v-for="tag in event.tags">
@@ -63,7 +63,7 @@
                 <i class="eventData__icon fas fa-map-marker-alt"></i> {{event.city}}
               </div>
               <div class="eventData__members">
-                <i class="eventData__icon far fa-user"></i> {{event.membersCount}} will come
+                <i class="eventData__icon far fa-user"></i> {{event.members_count}} will come
               </div>
               <router-link class="textButton eventData__btn " :to="{ name: 'eventPage', params: {id:event.id} }">Event Page</router-link>
             </div>
@@ -77,25 +77,37 @@
             <!-- <h3 class="text-gray aside__title">Sort</h3> -->
             <div class="eventSort shadow radius-5px bg-white">
               <ul class="sortList text-gray">
-                <li class="sortList__item sortList__item-active">All events</li>
-                <li class="sortList__item">My events</li>
-                <li class="sortList__item">Recommended events</li>
-                <li class="sortList__item">Nearest events</li>
+                <li class="sortList__item"
+                  :class="{'sortList__item-active' :(selectedFilterTab == 1)}"
+                  @click="filterByAll">All events</li>
+                <li class="sortList__item"
+                  :class="{'sortList__item-active' : (selectedFilterTab == 2)}"
+                  @click="filterByUserEvents">My events</li>
+                <!-- <li class="sortList__item"
+                  :class="{'sortList__item-active' :selectedFilterTab == 3}">Recommended events</li> -->
+                <li class="sortList__item"
+                  :class="{'sortList__item-active' :(selectedFilterTab == 3)}"
+                  @click="filterBNearestEvents">Nearest events</li>
               </ul>
             </div>
 
             <div class="eventSort-tags shadow radius-5px bg-white">
-              <h4 class="eventSort__title text-gray">Included tags</h4>
+              <h4 class="eventSort__title text-gray"><i class="fas fa-tag"></i> Included tags</h4>
               <div class="tag tag-search" v-for='tag in filterTags'>
                   {{tag}}
               </div>
-              <div class="addTagBtn" @click = 'openList = true'>
+              <div class="addTagBtn" @click = 'isListTags = true'>
                 +
               </div>
+              <button type="button"
+                class="semicircleBtn semicircleBtn-border semicircleBtn-small semicircleBtn-right"
+                v-if="filterTags.length > 0"
+                @click="clearFilterTags"
+              >Clear</button>
             </div>
-            <div class="modalWindow" v-if='openList'>
+            <div class="modalWindow" v-if='isListTags'>
               <div class="modalWindow__content">
-                <span class="modalWindow__close" @click='openList = false'><i class="fas fa-times"></i></span>
+                <span class="modalWindow__close" @click='closeFilterTagList'><i class="fas fa-times"></i></span>
                 <h2 class="modalWindow__title">Tags</h2>
                   <div class="creationSection__checkTag" v-for='tag in tagList'>
                     <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
@@ -104,10 +116,21 @@
               </div>
 
             </div>
-            <datepick
-                v-model="sortDate"
-                :hasInputElement="false"
-            ></datepick>
+
+            <div class="eventSort-tags shadow radius-5px bg-white">
+              <h4 class="eventSort__title text-gray"><i class="far fa-calendar-alt"></i> Date</h4>
+              <span class="">From:</span>
+              <datepick
+                  v-model="filterDateStart"
+                  :hasInputElement="true"
+              ></datepick>
+              <span>To:</span>
+              <datepick
+                  v-model="filterDateEnd"
+                  :hasInputElement="true"
+              ></datepick>
+            </div>
+
           </aside>
           <div class="adaptiveAside__buttons">
             <button
@@ -116,7 +139,7 @@
               name="button"
               @click='closeSortAside'
               >Close</button>
-            <button class="semicircleBtn" type="button" name="button">Reset</button>
+            <button class="semicircleBtn" type="button" @click="resetAll">Reset</button>
           </div>
 
         </div>
@@ -143,11 +166,16 @@ export default {
   data(){
     return{
       // eventsList: []
+      selectedFilterTab:1,
+
 
       searchName: '',
       filterTags: [],
-      openList: false,
-      selectedSortDate: ''
+      isListTags: false,
+
+
+      dateStart: this.$store.state.eventModule.listFilterParams.date_start,
+      dateEnd: this.$store.state.eventModule.listFilterParams.date_end,
     }
   },
   computed:{
@@ -197,29 +225,36 @@ export default {
     tagList(){
       return this.$store.getters.getTagsList;
     },
-    sortDate:{
+    filterDateStart:{
       set(newValue){
-        this.selectedSortDate = newValue;
+        this.dateStart = newValue;
+        this.$store.commit('setEventsFilterProperty', {prop:'date_start', value:newValue});
+        this.refreshEvents();
       },
       get(){
-        return this.selectedSortDate;
+        return this.dateStart;
+      }
+    },
+    filterDateEnd:{
+      set(newValue){
+        this.dateEnd = newValue;
+        this.$store.commit('setEventsFilterProperty', {prop:'date_end', value:newValue});
+        this.refreshEvents();
+      },
+      get(){
+        return this.dateEnd;
       }
     }
 
   },
   methods: {
-    test(){
-      alert('ss');
-    },
+
     getImageUrl(url){
       if(url != ""){
         return this.$store.state.imagesUrl + url;
       } else {
         return require('../../assets/images/logo_alt.jpg');
       }
-    },
-    loadEvents(){
-      this.$store.dispatch('refreshEventsList');
     },
     onScroll(event){
       var scrollTop =window.pageYOffset || document.documentElement.scrollTop;
@@ -255,14 +290,62 @@ export default {
     showEvent(id){
       this.$router.push(`/Event/${id}`);
     },
+
     openSortAside(){
       document.querySelector('#adaptiveAside').classList.add('adaptiveAside-active');
     },
     closeSortAside(){
       document.querySelector('#adaptiveAside').classList.remove('adaptiveAside-active');
+    },
+
+    loadEvents(){
+      this.$store.dispatch('refreshEventsList');
+    },
+    refreshEvents(){
+      this.$store.commit('clearEventList');
+      this.$store.commit('setEventsUrlProperties');
+      this.$store.dispatch('refreshEventsList');
+    },
+    filterByAll(){
+      this.selectedFilterTab = 1;
+      this.$store.commit('setEventsFilterProperty', {prop:'author', value:''});
+      this.refreshEvents();
+    },
+    filterByUserEvents(){
+      this.selectedFilterTab = 2;
+      this.$store.commit('setEventsFilterProperty', {prop:'author', value:this.$store.getters.getCurrentUser});
+      this.refreshEvents();
+    },
+    filterBNearestEvents(){
+      this.selectedFilterTab = 3;
+    },
+    closeFilterTagList(){
+      this.isListTags = false;
+      let tagsString = this.filterTags.join(',');
+      tagsString = tagsString.replace('#','%23');
+      console.log(tagsString);
+      this.$store.commit('setEventsFilterProperty', {prop:'tags', value:tagsString});
+      this.refreshEvents();
+    },
+    clearFilterTags(){
+      this.filterTags = [];
+      this.$store.commit('setEventsFilterProperty', {prop:'tags', value:''});
+      this.refreshEvents();
+    },
+    resetAll(){
+      let currentDate = new Date();
+  		let dateString = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + currentDate.getDate()).slice(-2);
+
+
+      this.clearFilterTags();
+      this.filterDateEnd = '';
+      this.filterDateStart = dateString;
+      this.filterByAll();
+      this.refreshEvents();
     }
   },
   created(){
+    this.$store.commit('setEventsUrlProperties');
     this.loadEvents();
     this.$store.dispatch('getTagsListAPI');
     this.$store.commit('setEventLoader', true);
@@ -272,7 +355,7 @@ export default {
   destroyed(){
     document.removeEventListener('scroll',this.onScroll);
     this.$store.commit('clearEventList');
-    this.$store.commit('updateEventsUrl', 'https://comeandmeet.herokuapp.com/events/get_not_expired/?limit=3&offset=0');
+    this.$store.commit('setEventsUrlProperties');
   },
 }
 </script>
@@ -281,7 +364,7 @@ export default {
 @import '../../assets/css/colors.scss';
 
 .eventPageContainer{
-
+  min-height: 101vh;
 }
 .title{
   margin: 0 auto;
@@ -389,10 +472,26 @@ export default {
   padding-left: 30px;
   margin-bottom: 10px;
 
+  .vdpComponent.vdpWithInput > input {
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,.2);
 
+    width: 100%;
+    display: block;
+    height: 25px;
+    padding: 5px 5px;
+  }
+  .vdpComponent.vdpWithInput{
+    width: 100%;
+    margin-bottom: 20px;
+  }
   &__title{
     margin-left: 15px;
     padding: 5px 0;
+  }
+  .vdpClearInput:before{
+    color: rgba($primary-color, 1);
+    border: 1px solid  rgba($primary-color, 1);;
   }
 }
 
@@ -414,6 +513,7 @@ export default {
   order: 2;
   position: relative;
   margin-bottom: 50px;
+
   &__title{
     margin-left: 15px;
   }

@@ -31,7 +31,11 @@ new Vue({
 	el: '#app',
 	store,
 	router,
-
+	data:{
+		globalSearchResult: [],
+		globalSearchQuery: '',
+		globalSearchLoader: false
+	},
 	computed: {
 		isUserAuthorized(){
 			return this.$store.getters.getIsAuthorized;
@@ -63,6 +67,29 @@ new Vue({
 			let navigation = document.querySelector('#navigation');
 			if(event.target.nodeName == 'A'){
 				navigation.classList.remove('navigation-toggle');
+			}
+		},
+		globalSearch(){
+			this.globalSearchResult = [];
+			if(this.globalSearchQuery.indexOf('@') == 0){
+				console.log(this.globalSearchQuery.slice(1));
+				if(this.globalSearchQuery.length > 1){
+					console.log("user");
+					let params = {
+						'limit': 5,
+						'offset': 0,
+						'search': this.globalSearchQuery.slice(1),
+					}
+					this.$axios.get(`${this.$store.state.API_USERS_URL}`, {params}).then(response=>{
+						console.log(response);
+						this.globalSearchResult = response.data.results;
+					}, error => {
+						//error
+					});
+				}
+
+			} else {
+				console.log("not user");
 			}
 		}
 	},
@@ -97,6 +124,11 @@ new Vue({
 		//
 		// })
 
+	},
+	created(){
+		let currentDate = new Date();
+		let dateString = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + currentDate.getDate()).slice(-2);
+		this.$store.commit('setEventsFilterProperty', {prop:'date_start', value:dateString});
 	}
 
 });

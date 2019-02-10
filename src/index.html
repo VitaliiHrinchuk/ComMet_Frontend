@@ -37,11 +37,27 @@
               <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>Main</router-link></li>
               <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
               <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Event/Create">Create Event</router-link></li>
-              <li  v-if="!isUserAuthorized" class="navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
-              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
+              <li  v-if="!isUserAuthorized" class=" navigation__item navigation__item-login navigation__item-mobile"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
+              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login navigation__item-mobile" @click="logOutUser">LogOut</li>
             </ul>
           </div>
+          <div class="nav__search" v-if="isUserAuthorized">
+            <input class="input input-roundBorder input-center" type="text" name="search" v-model="globalSearchQuery" v-on:input="globalSearch">
+            <i class="fas fa-search input__icon "></i>
+            <div class="searchDrop searchDrop-rounded" v-if="1">
+              <ul id="dropList" class="searchDrop__list" v-if="globalSearchResult.length > 0">
+                <!-- <li class="searchDrop__item searchDrop__item-w100" v-if="searchCityResult.length == 0 && !searchLoader">No results</li> -->
+                <li class="searchDrop__item searchDrop__item-w100" v-for="result in globalSearchResult">{{result.username}}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="nav__list nav__list-right ">
+            <ul id='navigation' class="navigation navigation-right" @click='closeMenu'>
+              <li  v-if="!isUserAuthorized" class=" navigation__item navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
+              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
+            </ul>
 
+          </div>
           <span class="nav__toggler" @click='openMenu()'><i class="fas fa-ellipsis-v"></i></span>
         </nav>
       </div>

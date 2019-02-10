@@ -7,7 +7,27 @@ const API_EVENTS_URL = `https://comeandmeet.herokuapp.com/events/`;
 
 const state = {
   eventsList: [],
-  loadEventsUrl: `${API_EVENTS_URL}get_not_expired/?limit=3&offset=0`,
+  API_EVENTS_URL: API_EVENTS_URL,
+
+  loadEventsUrl: `${API_EVENTS_URL}?limit=3&offset=0`,
+
+  listFilterParams: {
+
+
+    author:'',
+    city: '',
+    country: '',
+    date_end: '',
+    date_start: '',
+    limit: 3,
+    name:'',
+    offset: 0,
+    tags:'',
+
+
+
+  },
+
   eventListLoader: false,
   eventData: {},
   eventMembers: [],
@@ -56,6 +76,24 @@ const mutations = {
   },
   setEventListLoader(state, value){
     state['eventListLoader'] = value;
+  },
+
+  setEventsFilterProperty(state, payload){
+    console.log(payload);
+    let property = payload.prop;
+    let value = payload.value;
+    state['listFilterParams'][property] = value;
+  },
+  setEventsUrlProperties(state){
+    let newURL = state.API_EVENTS_URL+"?";
+
+    for (let key in state['listFilterParams']) {
+      newURL+=key+"="+state['listFilterParams'][key]+"&";
+    }
+
+    state['loadEventsUrl'] = newURL;
+    console.log("newUrl");
+    console.log(state['loadEventsUrl']);
   }
 }
 
@@ -66,28 +104,30 @@ const actions = {
     commit('setEventListLoader', true);
     if(state.loadEventsUrl){
 
-
+      // let params = state.listFilterParams;
+      console.log("Query url");
+      console.log(state.loadEventsUrl);
       axios.get(state.loadEventsUrl).then((response)=>{
         console.log('refreshEventsList');
         console.log(response);
 
         let list = response.data.results;
-
-        let resultList = list.map((item)=>{
-          let resultItem = {};
-          resultItem.id = item.id;
-          resultItem.name = item.name;
-          resultItem.membersCount = item.members_count;
-          resultItem.tags = item.tags;
-          resultItem.date = item.date_expire;
-          resultItem.city = item.city;
-          resultItem.avatar = item.avatar;
-          return resultItem;
-        });
+        //
+        // let resultList = list.map((item)=>{
+        //   let resultItem = {};
+        //   resultItem.id = item.id;
+        //   resultItem.name = item.name;
+        //   resultItem.membersCount = item.members_count;
+        //   resultItem.tags = item.tags;
+        //   resultItem.date = item.date_expire;
+        //   resultItem.city = item.city;
+        //   resultItem.avatar = item.avatar;
+        //   return resultItem;
+        // });
 
         commit('setEventLoader', false);
         commit('setEventListLoader', false);
-        commit('pushEventList', resultList);
+        commit('pushEventList', response.data.results);
         commit('updateEventsUrl', response.data.next);
       }, (error)=>{
 

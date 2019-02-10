@@ -17,11 +17,16 @@
       <div id="sticky" class="sticky" >
         <h1 class="sticky__title">{{eventData.name}}</h1>
         <button class="bigButton bigButton-header shadow" type="button" name="button"
-          v-if="eventData.author.username != currentUser"
+          v-if="eventData.author.username != currentUser && !eventData.is_current_member && !isEventOver"
           @click="joinEvent()"
           :disabled="joiningLoader">
           Join Event
           <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span></button>
+          <button type="button"
+            class="bigButton bigButton-leaveEvent"
+            @click="leaveEvent"
+            v-if="eventData.is_current_member && !isEventOver"
+            >Leave <i class="fas fa-sign-out-alt"></i></button>
         <span class="sticky__date">{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</span>
       </div>
       <div class="eventHeader" id="eventHeader" ref="eventHeader" >
@@ -32,13 +37,17 @@
           </div>
         </div>
         <button class="eventHeader__btn bigButton shadow" type="button" name="button"
-          v-if="eventData.author.username != currentUser && eventData.author.username"
+          v-if="eventData.author.username != currentUser && !eventData.is_current_member && !isEventOver"
           @click="joinEvent()"
           :disabled="joiningLoader">
           Join Event
           <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span>
         </button>
-
+        <button type="button"
+          class="bigButton bigButton-leaveEvent"
+          @click="leaveEvent"
+          v-if="eventData.is_current_member && !isEventOver"
+          >Leave <i class="fas fa-sign-out-alt"></i></button>
       </div>
       <div class="container eventContainer" v-if="!isScreenLoader">
         <div class="eventBox eventBox-place">
@@ -67,10 +76,12 @@
         </div>
 
         <div class="eventBox eventBox-date">
-            <h2 class="eventBox__title">Date</h2>
+            <h2 class="eventBox__title"> Date</h2>
+            <span class="note note-event" v-if="isEventOver"><i class="fas fa-ban"></i> this event has already ended</span>
             <div class="eventBox__content eventBox__content-date">
               <p>{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</p>
             </div>
+
         </div>
 
         <div class="eventBox eventBox-author">
@@ -212,6 +223,12 @@ export default {
       let lat = coords[0];
       let lon = coords[1];
       return L.latLng(lat, lon)
+    },
+    isEventOver(){
+      let currentDate = Date.now();
+      let eventDate = new Date(this.eventData.date_expire);
+      eventDate.setHours(eventDate.getHours() + 24);
+      return currentDate > eventDate;
     }
   },
   methods:{
@@ -271,6 +288,9 @@ export default {
         //error
         this.joiningLoader = false;
       });
+    },
+    leaveEvent(){
+
     },
     getAvatarImage(url){
       return this.$store.state.imagesUrl + url;
@@ -381,6 +401,7 @@ export default {
       //
 
     }
+
   }
   .helpContainer{
     width: 55%;

@@ -253,6 +253,14 @@ export default {
     },
     skipConfigure(){
       this.$router.push(`/Events`);
+    },
+
+    hideSearchDrop(e){
+      let target = e.target;
+      if(target !== document.getElementById('placeInput') &&
+         target !== document.getElementById('searchDrop')){
+           this.isSearchDrop = false;
+         }
     }
   },
 
@@ -260,13 +268,10 @@ export default {
     this.$store.dispatch('getTagsListAPI');
   },
   mounted(){
-    document.addEventListener('click', (e)=>{
-      let target = e.target;
-      if(target !== document.getElementById('placeInput') &&
-         target !== document.getElementById('searchDrop')){
-           this.isSearchDrop = false;
-         }
-    });
+    document.addEventListener('click', this.hideSearchDrop);
+  },
+  destroyed(){
+    document.removeEventListener('click', this.hideSearchDrop);
   }
 }
 </script>

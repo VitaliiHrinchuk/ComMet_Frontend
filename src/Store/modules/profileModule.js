@@ -41,7 +41,7 @@ const actions = {
     commit('setProfileLoader', true);
     axios.get(userDataUrl).then((response)=>{
 
-      axios.get(`${userDataUrl}/is_follower/`, {params: {'follower_username': rootState.currentUser}}).then(response=>{
+      axios.get(`${userDataUrl}is_follower/`, {params: {'follower_username': rootState.currentUser}}).then(response=>{
         console.log('isFollower');
         console.log(response);
 
