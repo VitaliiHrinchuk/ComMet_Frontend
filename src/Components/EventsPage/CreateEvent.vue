@@ -14,7 +14,14 @@
       <i class="creationSection__icon creationSection__icon-red fas fa-map-marked-alt"></i>
       <h4 class="creationSection__desc">Where your event will be?</h4>
       <div class="creationData">
-        <div class="creationData__data">{{place}}</div>
+        <div class="creationData__data creationData__data-place">{{isPlaceLoading ? '' : place}}
+          <div class="dotLoader dotLoader-center" v-if="isPlaceLoading">
+            <div class="dot dot1"></div>
+            <div class="dot dot2"></div>
+            <div class="dot dot3"></div>
+            <div class="dot dot4"></div>
+          </div>
+        </div>
         <!-- <span class="input__title">Search city</span> -->
 
         <button class="bigButton bigButton-small" type="button" name="button" @click='isMapOpen = true'>Change</button>
@@ -27,7 +34,8 @@
                   <!-- <input class="input" type="text" placeholder="Search..." v-model='place' @change="searchCity()"> -->
                   <div class="eventSearch__input shadow radius-5px bg-white">
                     <input class="input input-map" type="text" name="" placeholder="Search..." v-model='searchPlace' @click.stop='' @keyup.13='searchCity()'>
-                    <i class="fas fa-search input__icon input__icon-map" @click.stop="searchCity()"></i>
+                    <span class="loader loader-search" v-if="isSearchLoading"></span>
+                    <i class="fas fa-search input__icon input__icon-map" @click.stop="searchCity()" v-if="!isSearchLoading"></i>
                     <div class="searchDrop" v-if='searcResults.length > 0' @click.stop=''>
                       <ul class="searchDrop__list">
                         <li class="searchDrop__item" v-for='(result, index) in searcResults' :key='index' @click='toPlace(index)'>{{result.name}} , {{result.country}}</li>
@@ -175,7 +183,7 @@
           <h2 class="doneMessage__text">Awesome!</h2>
           <h3 class="doneMessage__text">You just created an event</h3>
           <router-link class="bigButton bigButton-small bigButton-normaltxt bigButton-green"
-            :to="{ name: 'eventPage', params: {id: createdId}}"  
+            :to="{ name: 'eventPage', params: {id: createdId}}"
             replace
             >Event page</router-link>
         </div>
@@ -219,6 +227,8 @@ export default {
 
 
       isDataUploading: false,
+      isPlaceLoading: false,
+      isSearchLoading: false,
       isModalError: false,
       errorCode: 500,
       isEventCreated: false,
@@ -327,9 +337,10 @@ export default {
 
       let tempToken = this.$axios.defaults.headers.common['Authorization'];
       delete this.$axios.defaults.headers.common['Authorization'];
-
+      this.isSearchLoading = true;
       this.$axios.get('https://api.locationiq.com/v1/autocomplete.php?', {params}).then((response)=>{
         console.log(response);
+        this.isSearchLoading = false;
         response.data.forEach((item)=>{
           if(item.osm_type == 'relation'){
             this.searcResults.push({
@@ -341,7 +352,7 @@ export default {
           }
         });
       }, (error)=>{
-
+        this.isSearchLoading = false;
       });
 
       this.$axios.defaults.headers.common['Authorization'] = tempToken;
@@ -360,7 +371,8 @@ export default {
     changeMarker(e){
       this.marker.lat = e.latlng.lat;
       this.marker.lon = e.latlng.lng;
-
+      this.isPlaceLoading = true;
+      this.searcResults = [];
       let params = {
         key: '1e4a846d952064',
         lat: this.marker.lat,
@@ -373,6 +385,7 @@ export default {
       delete this.$axios.defaults.headers.common['Authorization'];
 
       this.$axios.get('https://eu1.locationiq.com/v1/reverse.php?', {params}).then((response)=>{
+        this.isPlaceLoading = false;
         let address = response.data.address;
         console.log(address);
         this.place = (address.road ? address.road + " " + (address.house_number || '') + ", " :'') + (address.city || address.village || address.state) + ', ' + address.country;
@@ -382,6 +395,7 @@ export default {
 
       }, (error)=>{
         console.log(error);
+        this.isPlaceLoading = false;
       });
       this.$axios.defaults.headers.common['Authorization'] = tempToken;
     },
@@ -702,6 +716,9 @@ export default {
     font-size: 1.1em;
     margin-bottom: 20px;
     font-family: "Roboto";
+    &-place{
+      position: relative;
+    }
   }
 
   &__text{

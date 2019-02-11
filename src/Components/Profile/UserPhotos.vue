@@ -49,7 +49,7 @@
                   ref="avatarDemo" >
                   <i class="roundImage__icon far fa-trash-alt" @click="removeUploadedPhoto(photo.index)"></i>
               </div>
-              <div class="blockLoader" v-if="photosLoaderLength != 0 && loadedPhotos != photosLoaderLength && loadedPhotos != 0">
+              <div class="blockLoader" v-if="uploadPercent < 100">
                 <div class="screenLoader">
                   <div class="screenLoader screenLoader-inner">
                   </div>
@@ -119,6 +119,7 @@ export default {
       isFullScreenImage: false,
       isAddWindow: false,
       isModalError: false,
+      isUploadingPhoto: false,
       modalImageLoader: false,
       errorCode: null,
 

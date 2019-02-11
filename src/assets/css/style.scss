@@ -1021,6 +1021,11 @@ main {
 	display: block;
 	animation: 1s infinite smallSpin;
 	z-index: 4;
+	&-place{
+		top: 0;
+		margin-top: 0;
+		right: 20%;
+	}
 	&-input{
 		right: 10px;
 		top: 26px;
@@ -1057,6 +1062,67 @@ main {
 		margin: 0;
 	}
 }
+
+
+.dotLoader {
+  font-size: 10px;
+  position: relative;
+  width: 4em;
+  height: 1em;
+	&-center{
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-50%);
+	}
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 0.5em;
+  background: #333;
+  position: absolute;
+	background: $primary-color;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+
+
+}
+
+.dot1, .dot2 {
+  left: 0;
+}
+
+.dot3 { left: 1.5em; }
+
+.dot4 { left: 3em; }
+
+@keyframes reveal {
+  from { transform: scale(0.001); }
+  to { transform: scale(1); }
+}
+
+@keyframes dotSlide {
+  to { transform: translateX(1.5em) }
+}
+
+
+.dot1 {
+  animation-name: reveal;
+}
+
+.dot2, .dot3 {
+  animation-name: dotSlide;
+}
+
+.dot4 {
+  animation-name: reveal;
+  animation-direction: reverse;
+}
+
+
+
 
 .verificationBtn{
 	margin-top: 40px;
