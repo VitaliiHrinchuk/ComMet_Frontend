@@ -397,10 +397,17 @@ main {
 		cursor: pointer;
 		list-style: none;
 		width: 100%;
+		box-sizing: border-box;
 		&-usersLink{
 			text-decoration: none;
-			width: 100%;
 			display: flex;
+			align-items: center;
+
+		}
+		&-eventsLink{
+			text-decoration: none;
+			display: flex;
+			justify-content: space-between;
 			align-items: center;
 		}
 		&-w100{
@@ -1023,6 +1030,12 @@ main {
 		top: 2px;
     right: 10px;
 	}
+	&-glsearch{
+		top: 2px;
+    right: 10px;
+		margin-top: 0;
+		z-index: 2;
+	}
 	&-list{
 		top: 100%;
 		left: 50%;
@@ -1180,7 +1193,8 @@ main {
 			padding: 5px 0;
 		}
 		&__item{
-
+		height: 25px;
+		line-height: 25px;
 			&-login{
 				margin-left: 0;
 			}

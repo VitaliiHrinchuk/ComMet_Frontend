@@ -153,28 +153,33 @@ const actions = {
     });
     let username =  payload.username;
     commit('setLoader', {key: 'signInLoader', value: true});
-    axios.post(signInLink,params,axiosConfig).then((response)=>{
-      console.log('userSignIn');
-      console.log(response);
-      let data = response.data;
-      commit('setLoader', {key: 'signInLoader', value: false});
-      if(data.error == 'user not found'){
-        commit('setSignState', {type: 'isWrongUserData', item: true})
-      } else {
-        localStorage.setItem('token', data.token);
-        commit('setGlobalState', {type:'isAuthorized', item: true});
-        axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
-        commit('setGlobalState', {type:'currentUser', item: username});
-        router.replace('/');
-      }
+    return new Promise((resolve,reject)=>{
+      axios.post(signInLink,params,axiosConfig).then((response)=>{
+        console.log('userSignIn');
+        console.log(response);
+        let data = response.data;
+        commit('setLoader', {key: 'signInLoader', value: false});
+        if(data.error == 'user not found'){
+          commit('setSignState', {type: 'isWrongUserData', item: true})
+          resolve(false);
+        } else {
+          localStorage.setItem('token', data.token);
+          commit('setGlobalState', {type:'isAuthorized', item: true});
+          axios.defaults.headers.common['Authorization'] = 'Token '+localStorage.getItem('token');
+          commit('setGlobalState', {type:'currentUser', item: username});
+          resolve(true);
+        }
 
-      // router.addRoutes([{ name:'user', path: '/Profile/:username', component: Profile, props: true}]);
+        // router.addRoutes([{ name:'user', path: '/Profile/:username', component: Profile, props: true}]);
 
-    },
-    (error)=>{
-      //error
-      commit('setLoader', {key: 'signInLoader', value: false});
+      },
+      (error)=>{
+        //error
+        reject(error);
+        commit('setLoader', {key: 'signInLoader', value: false});
+      });
     });
+
   },
 
 }

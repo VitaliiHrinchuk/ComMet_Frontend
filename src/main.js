@@ -36,7 +36,7 @@ new Vue({
 		glSearchEventsResult: [],
 
 		globalSearchQuery: '',
-		globalSearchLoader: false,
+		glSearchLoader: false,
 		isGlobalSearch: false
 	},
 	computed: {
@@ -75,10 +75,12 @@ new Vue({
 		globalSearch(){
 			this.glSearchUsersResult = [];
 			this.glSearchEventsResult = [];
+
 			this.isGlobalSearch = false;
 			if(this.globalSearchQuery.indexOf('@') == 0){
 				console.log(this.globalSearchQuery.slice(1));
 				if(this.globalSearchQuery.length > 1){
+					this.glSearchLoader = true;
 					let params = {
 						'limit': 5,
 						'offset': 0,
@@ -87,15 +89,18 @@ new Vue({
 					this.$axios.get(`${this.$store.state.API_USERS_URL}`, {params}).then(response=>{
 						console.log(response);
 						this.isGlobalSearch = true;
+						this.glSearchLoader = false;
 						this.glSearchUsersResult = response.data.results;
 					}, error => {
 						//error
+						this.glSearchLoader = false;
 					});
 				}
 
 			} else {
 				console.log("not user");
 				if(this.globalSearchQuery.length > 1){
+					this.glSearchLoader = true;
 					let params = {
 						'limit': 5,
 						'offset': 0,
@@ -105,9 +110,11 @@ new Vue({
 					this.$axios.get(`${this.$store.state.API_EVENT_URL}`, {params}).then(response=>{
 						console.log(response);
 						this.isGlobalSearch = true;
+						this.glSearchLoader = false;
 						this.glSearchEventsResult = response.data.results;
 					}, error => {
 						//error
+						this.glSearchLoader = false;
 					});
 				}
 			}
@@ -154,7 +161,17 @@ new Vue({
 		});
 
 		document.addEventListener('click', this.hideSearchDrop);
-
+		document.addEventListener('click', (e)=>{
+			let navigation = document.querySelector('#navigation');
+			if(event.target.id == 'navigation' ||
+				 event.target.id == 'toggler'    ||
+			 	 event.target.id == 'menuIcon'   ){
+				return;
+			}
+			navigation.classList.remove('navigation-toggle');
+			// if(event.target.nodeName != ''){
+			//
+		});
 		// this.$store.dispatch('checkUserCurrentLocation');
 		// this.$axios.get('https://master.apis.dev.openstreetmap.org/#map=16/48.5370/31.1680').then((response)=>{
 		// 	console.log(response);

@@ -120,20 +120,26 @@
           <input type="text"
                  class="input"
                  v-model="userVerificationCode"
-                 v-bind:class="{errorInput : isErrors[0].verifErr}">
+                 v-bind:class="{errorInput : isErrors[0].verifErr}"
+                 v-on:keyup.enter="checkVerifCode()">
           <span class="errorMsg" v-if="isErrors[0].verifErr"><i class="fas fa-exclamation-circle"></i> You entered wrong verification code</span>
           <button  class="bigButton verification__btn" v-on:click="checkVerifCode()">Continue</button>
         </div>
+        <div class="blockLoader" v-if="isUploadingData">
+          <div class="screenLoader">
+            <div class="screenLoader screenLoader-inner"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="signUp" v-if="userConfirmed">
+      <!-- <div class="signUp" v-if="userConfirmed">
         <div class="signUp__thx">
           <h1>You were registered </h1>
           <router-link to='/'></router-link>
           <i class="fas fa-check"></i>
           <button class="signUp__submit signUp__submit-login" type="button" name="button" v-on:click="toSignIn">Login</button>
         </div>
-      </div>
+      </div> -->
 
     </div>
 
@@ -181,7 +187,7 @@ export default {
 
 
       userConfirmed: false,
-
+      isUploadingData: false,
 
 
     }
@@ -318,6 +324,7 @@ export default {
 		},
 
     postUser: function(){
+      this.isUploadingData = true;
 			let param = JSON.stringify({
 				"email": this.userMail,
 				"username": this.userLogin,
@@ -332,9 +339,14 @@ export default {
   			      'Content-Type': 'application/json',
   			  }
   		};
-
 			this.$axios.post(`https://comeandmeet.herokuapp.com/accounts/register/`,param,axiosConfig).then((response)=>{
-        this.userConfirmed = true;
+
+        this.$store.dispatch('userSignIn', {username: this.userLogin, password: this.userPassword}).then(response=>{
+          this.isUploadingData = false;
+          this.$router.replace({name: 'ConfigHelper'});
+        },error=>{
+
+        });
 			},
 			(error)=>{
 				//error

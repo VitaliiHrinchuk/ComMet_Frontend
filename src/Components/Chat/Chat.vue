@@ -30,9 +30,10 @@
                     placeholder="Type a message"
                     v-model='currentMessage'
                     @keyup.enter.exact='sendMessage()'
+                    @focus="toBottomOfChat"
                     ></textarea>
           <button class="chatInput__send" type="button"
-                  v-if=" currentMessage !='' "
+                  v-if=" currentMessage.length > 0"
                   @click='sendMessage()'
                   ><i class="far fa-paper-plane"></i></button>
         </div>
@@ -64,12 +65,13 @@ export default {
   },
   methods:{
     sendMessage(){
-      console.log(this.currentUser);
-      this.chatSocket.send(JSON.stringify({
-            'text': this.currentMessage,
-            "user": this.currentUser
-        }));
-      this.currentMessage = '';
+      if(this.currentMessage.trim() != '' ){
+        this.chatSocket.send(JSON.stringify({
+              'text': this.currentMessage,
+              "user": this.currentUser
+          }));
+        this.currentMessage = '';
+      }
     },
     toBottomOfChat(){
       setTimeout(function(){
@@ -113,12 +115,12 @@ export default {
          console.log(data);
       };
       this.chatSocket.onerror= (e)=>{
-          console.log('socket error');
+          console.error('socket error');
           console.log(e);
           this.isChatLoading = true;
       };
       this.chatSocket.onclose = (e)=> {
-          console.log("closed");
+          console.error("closed");
           console.log(e);
           console.log("try to recconect");
           this.isChatLoading = true;
@@ -344,7 +346,7 @@ export default {
   }
   .chatWindow{
     font-size: .7em;
-    padding: 10px 0;
+    padding: 40px 0;
   }
 }
 

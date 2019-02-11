@@ -41,10 +41,16 @@
           <!-- <h3 class="text-gray eventList__title">Events list</h3> -->
           <span class="note" v-if='!isEventListLoader && eventsList.length === 0'>no events by your queries</span>
           <div class="shortEvent shadow radius-5px" v-for="event in eventsList" >
+
             <div class="shortEvent__avatar" :style="{ 'backgroundImage': 'url(\'' + getImageUrl(event.avatar) + '\')' }">
+                <router-link class="shortEvent__link" :to="{ name: 'eventPage', params: { id: event.id } }"></router-link>
             </div>
             <div class="eventData">
-              <h3 class="eventData__title">{{event.name}}</h3>
+              <h3 class="eventData__title">
+                <router-link :to="{ name: 'eventPage', params: { id: event.id } }">
+                  {{event.name}}
+                </router-link>
+              </h3>
               <div class="eventData__date">
                 <span><i class="eventData__icon far fa-calendar-alt"></i> {{dateToString(event.date_expire)}}</span>
               </div>
@@ -123,11 +129,13 @@
               <datepick
                   v-model="filterDateStart"
                   :hasInputElement="true"
+                  :inputAttributes="{readonly: true}"
               ></datepick>
               <span>To:</span>
               <datepick
                   v-model="filterDateEnd"
                   :hasInputElement="true"
+                  :inputAttributes="{readonly: true}"
               ></datepick>
             </div>
 
@@ -528,6 +536,12 @@ export default {
   display:flex;
   flex-wrap: wrap;
   overflow: hidden;
+
+  &__link{
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
   &__avatar{
     width: 30%;
     display: block;
@@ -567,6 +581,11 @@ export default {
   &__title{
     font-weight: normal;
     z-index: 3;
+
+    a{
+      text-decoration: none;
+      color: #000;
+    }
   }
 
   &__tags{

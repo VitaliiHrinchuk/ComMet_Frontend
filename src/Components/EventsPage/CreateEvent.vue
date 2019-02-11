@@ -174,7 +174,10 @@
           <i class="doneMessage__icon far fa-check-circle"></i>
           <h2 class="doneMessage__text">Awesome!</h2>
           <h3 class="doneMessage__text">You just created an event</h3>
-          <router-link class="bigButton bigButton-small bigButton-normaltxt bigButton-green" :to="{ name: 'Events'}" replace>Events page</router-link>
+          <router-link class="bigButton bigButton-small bigButton-normaltxt bigButton-green"
+            :to="{ name: 'eventPage', params: {id: createdId}}"  
+            replace
+            >Event page</router-link>
         </div>
         <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
       </div>
@@ -218,8 +221,10 @@ export default {
       isDataUploading: false,
       isModalError: false,
       errorCode: 500,
-      isEventCreated: false
+      isEventCreated: false,
 
+
+      createdId: null,
 
     }
   },
@@ -510,10 +515,11 @@ export default {
        formData.append('city', this.placeCity);
        formData.append('country', this.placeCountry);
        formData.append('geo', this.geo.lat + ' ' + this.geo.lon);
-       console.log(tagsArray);
+
       this.$axios.post('https://comeandmeet.herokuapp.com/events/create/', formData).then(response=>{
         this.isDataUploading = false;
         this.isEventCreated = true;
+        this.createdId = response.data.id;
         console.log(response);
       }, error=>{
         //error

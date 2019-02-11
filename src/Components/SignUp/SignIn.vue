@@ -62,7 +62,13 @@ export default {
           username: this.userName,
           password: this.userPass
         }
-        this.$store.dispatch('userSignIn', payload);
+        this.$store.dispatch('userSignIn', payload).then(response=>{
+          if(response == true){
+          this.$router.replace('/Events');
+          }
+        }, error=>{
+
+        });
       }
     },
 
