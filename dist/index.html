@@ -42,11 +42,13 @@
             </ul>
           </div>
           <div class="nav__search" v-if="isUserAuthorized">
+
             <input id="glSearchInput" class="input input-roundBorder input-center" type="text" name="search"
                v-model="globalSearchQuery"
                v-on:input="globalSearch"
                v-on:focus="isGlobalSearch = true">
-            <i class="fas fa-search input__icon "></i>
+            <span class="loader loader-glsearch" v-if="glSearchLoader"></span>
+            <i class="fas fa-search input__icon" v-else></i>
             <div id="glSearchDropList" class="searchDrop searchDrop-rounded" v-if="isGlobalSearch">
               <ul  class="searchDrop__list" v-if="glSearchUsersResult.length > 0">
                 <!-- <li class="searchDrop__item searchDrop__item-w100" v-if="searchCityResult.length == 0 && !searchLoader">No results</li> -->
@@ -68,15 +70,15 @@
               <ul  class="searchDrop__list" v-if="glSearchEventsResult.length > 0">
                 <!-- <li class="searchDrop__item searchDrop__item-w100" v-if="searchCityResult.length == 0 && !searchLoader">No results</li> -->
                 <!-- <li class="searchDrop__item searchDrop__item-w100" v-for="result in ">{{result.username}}</li> -->
-                <router-link class="searchDrop__item searchDrop__item-usersLink searchDrop__item-w100"
-                v-for="result in glSearchEventsResult"
-                :to="{ name: 'eventPage', params: { id:result.id } }"
-                v-on:click.native="clearSearch"
-                >
-                <h3 class="fullName fullName-search">{{result.name}}</h3>
-                <span class="username username-search"> <i class="far fa-calendar-alt"></i> {{result.date_expire}}</span>
+                <router-link class="searchDrop__item searchDrop__item-eventsLink searchDrop__item-w100"
+                  v-for="result in glSearchEventsResult"
+                  :to="{ name: 'eventPage', params: { id:result.id } }"
+                  v-on:click.native="clearSearch"
+                  >
 
-              </router-link>
+                  <h3 class="fullName fullName-search">{{result.name}}</h3>
+                  <span class="username username-search"> <i class="far fa-calendar-alt"></i> {{result.date_expire}}</span>
+                </router-link>
               </ul>
             </div>
           </div>
@@ -87,7 +89,7 @@
             </ul>
 
           </div>
-          <span class="nav__toggler" @click='openMenu()'><i class="fas fa-ellipsis-v"></i></span>
+          <span id="toggler" class="nav__toggler" @click='openMenu()'><i id="menuIcon" class="fas fa-ellipsis-v"></i></span>
         </nav>
       </div>
     </header>
