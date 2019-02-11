@@ -42,12 +42,41 @@
             </ul>
           </div>
           <div class="nav__search" v-if="isUserAuthorized">
-            <input class="input input-roundBorder input-center" type="text" name="search" v-model="globalSearchQuery" v-on:input="globalSearch">
+            <input id="glSearchInput" class="input input-roundBorder input-center" type="text" name="search"
+               v-model="globalSearchQuery"
+               v-on:input="globalSearch"
+               v-on:focus="isGlobalSearch = true">
             <i class="fas fa-search input__icon "></i>
-            <div class="searchDrop searchDrop-rounded" v-if="1">
-              <ul id="dropList" class="searchDrop__list" v-if="globalSearchResult.length > 0">
+            <div id="glSearchDropList" class="searchDrop searchDrop-rounded" v-if="isGlobalSearch">
+              <ul  class="searchDrop__list" v-if="glSearchUsersResult.length > 0">
                 <!-- <li class="searchDrop__item searchDrop__item-w100" v-if="searchCityResult.length == 0 && !searchLoader">No results</li> -->
-                <li class="searchDrop__item searchDrop__item-w100" v-for="result in globalSearchResult">{{result.username}}</li>
+                <!-- <li class="searchDrop__item searchDrop__item-w100" v-for="result in glSearchUsersResult">{{result.username}}</li> -->
+                <router-link class="searchDrop__item searchDrop__item-usersLink searchDrop__item-w100"
+                v-for="result in glSearchUsersResult"
+                :to="{ name: 'user', params: { username:result.username } }"
+                v-on:click.native="clearSearch"
+                >
+                <div
+                  class="roundImage roundImage-members"
+                  :style="{ 'backgroundImage': 'url(\'' + getAvatarImage(result.avatar) + '\')' }">
+                </div>
+                <h3 class="fullName fullName-search">{{result.first_name}} {{result.last_name}} </h3>
+                <span class="username username-search">@{{result.username}}</span>
+
+              </router-link>
+              </ul>
+              <ul  class="searchDrop__list" v-if="glSearchEventsResult.length > 0">
+                <!-- <li class="searchDrop__item searchDrop__item-w100" v-if="searchCityResult.length == 0 && !searchLoader">No results</li> -->
+                <!-- <li class="searchDrop__item searchDrop__item-w100" v-for="result in ">{{result.username}}</li> -->
+                <router-link class="searchDrop__item searchDrop__item-usersLink searchDrop__item-w100"
+                v-for="result in glSearchEventsResult"
+                :to="{ name: 'eventPage', params: { id:result.id } }"
+                v-on:click.native="clearSearch"
+                >
+                <h3 class="fullName fullName-search">{{result.name}}</h3>
+                <span class="username username-search"> <i class="far fa-calendar-alt"></i> {{result.date_expire}}</span>
+
+              </router-link>
               </ul>
             </div>
           </div>

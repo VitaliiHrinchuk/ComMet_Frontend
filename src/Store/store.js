@@ -24,6 +24,7 @@ const store = new Vuex.Store({
   },
   state: {
       API_USERS_URL: "https://comeandmeet.herokuapp.com/accounts/users/",
+      API_EVENT_URL: API_EVENTS_URL,
       isAuthorized: false,
       currentUser: '',
       appLoading: true,

@@ -386,8 +386,6 @@ main {
 		box-shadow: 5px 5px 10px rgba(0,0,0,.1);
 	}
 	&__list{
-		list-style: none;
-		width: 100%;
 
 	}
 
@@ -397,7 +395,14 @@ main {
 		max-width: 188px;
 		overflow: hidden;
 		cursor: pointer;
-
+		list-style: none;
+		width: 100%;
+		&-usersLink{
+			text-decoration: none;
+			width: 100%;
+			display: flex;
+			align-items: center;
+		}
 		&-w100{
 			max-width: 100%;
 		}
@@ -457,12 +462,19 @@ main {
 	&-author{
 		font-size: 1.2em;
 	}
+	&-search{
+		max-width: 60%;
+	}
 }
 .username{
 	color: gray;
 	display: block;
 	width: 80%;
 	font-size: .8em;
+	&-search{
+		width: auto;
+		margin-left: 5px;
+	}
 }
 .modalWindow{
 	position: fixed;
@@ -812,7 +824,7 @@ main {
 	width: 100%;
 	height: 100%;
 	background: #fff;
-	z-index: 3;
+	z-index: 20;
 	-webkit-transition: opacity .5s;
 	-o-transition: opacity .5s;
 	transition: opacity .5s;
@@ -1182,7 +1194,9 @@ main {
 		&__toggler{
 			display: block;
 		}
-
+		&__search{
+			min-width: 0;
+		}
 	}
 }
 @media screen and (max-width: 560px){

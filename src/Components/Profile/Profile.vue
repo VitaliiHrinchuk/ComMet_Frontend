@@ -379,6 +379,7 @@ export default {
     border: 1px solid rgba(0,0,0,.2);
     &__content{
       padding: 15px 35px;
+      overflow: hidden;
     }
   }
   .tabs{

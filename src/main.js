@@ -32,9 +32,12 @@ new Vue({
 	store,
 	router,
 	data:{
-		globalSearchResult: [],
+		glSearchUsersResult: [],
+		glSearchEventsResult: [],
+
 		globalSearchQuery: '',
-		globalSearchLoader: false
+		globalSearchLoader: false,
+		isGlobalSearch: false
 	},
 	computed: {
 		isUserAuthorized(){
@@ -70,11 +73,12 @@ new Vue({
 			}
 		},
 		globalSearch(){
-			this.globalSearchResult = [];
+			this.glSearchUsersResult = [];
+			this.glSearchEventsResult = [];
+			this.isGlobalSearch = false;
 			if(this.globalSearchQuery.indexOf('@') == 0){
 				console.log(this.globalSearchQuery.slice(1));
 				if(this.globalSearchQuery.length > 1){
-					console.log("user");
 					let params = {
 						'limit': 5,
 						'offset': 0,
@@ -82,7 +86,8 @@ new Vue({
 					}
 					this.$axios.get(`${this.$store.state.API_USERS_URL}`, {params}).then(response=>{
 						console.log(response);
-						this.globalSearchResult = response.data.results;
+						this.isGlobalSearch = true;
+						this.glSearchUsersResult = response.data.results;
 					}, error => {
 						//error
 					});
@@ -90,15 +95,46 @@ new Vue({
 
 			} else {
 				console.log("not user");
+				if(this.globalSearchQuery.length > 1){
+					let params = {
+						'limit': 5,
+						'offset': 0,
+						'search': this.globalSearchQuery,
+					}
+					console.log(this.$store.state.API_EVENT_URL);
+					this.$axios.get(`${this.$store.state.API_EVENT_URL}`, {params}).then(response=>{
+						console.log(response);
+						this.isGlobalSearch = true;
+						this.glSearchEventsResult = response.data.results;
+					}, error => {
+						//error
+					});
+				}
 			}
-		}
+		},
+		clearSearch(){
+			this.glSearchUsersResult = [];
+			this.glSearchEventsResult = [];
+			console.log(this.globalSearchQuery);
+			this.globalSearchQuery = '';
+			console.log(this.globalSearchQuery);
+
+		},
+		getAvatarImage(url){
+			return this.$store.state.imagesUrl + url;
+		},
+		hideSearchDrop(e){
+      let target = e.target;
+      if(target !== document.getElementById('glSearchDropList') &&
+				 target !== document.getElementById('glSearchInput')){
+           this.isGlobalSearch = false;
+         }
+    }
 	},
 
 	mounted(){
 		this.$store.dispatch('checkIsAuthorized');
 		// this.$store.dispatch('getTagsListAPI');
-		console.log(this.$router.options.routes);
-
 		router.beforeEach((to, from, next) => {
 			// document.title = "ComMet" + to.meta.title;
 		  if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -115,7 +151,9 @@ new Vue({
 		  } else {
 		    next() // всегда так или иначе нужно вызвать next()!
 		  }
-		})
+		});
+
+		document.addEventListener('click', this.hideSearchDrop);
 
 		// this.$store.dispatch('checkUserCurrentLocation');
 		// this.$axios.get('https://master.apis.dev.openstreetmap.org/#map=16/48.5370/31.1680').then((response)=>{
