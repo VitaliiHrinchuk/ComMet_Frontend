@@ -29,7 +29,7 @@
 
         <nav class="nav" >
           <div class="nav__brand">
-            <img id="logo" class="logo" alt="logo" src="./logo.png?1164af8cea5b996ff6fbea145ad66337">
+            <router-link exact-active-class="disablelink" active-class="disablelink" to="/"><img id="logo" class="logo" alt="logo" src="./logo.png?1f7f468f0444913262f96fcfdd7072ac"></router-link>
           </div>
           <div class="nav__list">
             <ul id='navigation' class="navigation" @click='closeMenu'>
@@ -43,7 +43,7 @@
           </div>
           <div class="nav__search" v-if="isUserAuthorized">
 
-            <input id="glSearchInput" class="input input-roundBorder input-center" type="text" name="search"
+            <input id="glSearchInput" class="input input-roundBorder input-center" type="text" name="ComMetSearch"
                v-model="globalSearchQuery"
                v-on:input="globalSearch"
                v-on:focus="isGlobalSearch = true">
