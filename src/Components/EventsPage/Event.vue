@@ -21,12 +21,15 @@
           @click="joinEvent()"
           :disabled="joiningLoader">
           Join Event
-          <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span></button>
+          <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span></button>
           <button type="button"
             class="bigButton bigButton-leaveEvent"
             @click="leaveEvent"
-            v-if="eventData.is_current_member && !isEventOver"
-            >Leave <i class="fas fa-sign-out-alt"></i></button>
+            v-if="(eventData.is_current_member && !isEventOver)"
+            >Leave
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span></button>
+          </button>
         <span class="sticky__date">{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</span>
       </div>
       <div class="eventHeader" id="eventHeader" ref="eventHeader" >
@@ -41,13 +44,16 @@
           @click="joinEvent()"
           :disabled="joiningLoader">
           Join Event
-          <span class="loader loader-buttonOutLeft" v-if="joiningLoader"></span>
+          <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span>
         </button>
         <button type="button"
-          class="bigButton bigButton-leaveEvent"
+          class="eventHeader__btn bigButton bigButton-leaveEvent"
           @click="leaveEvent"
-          v-if="eventData.is_current_member && !isEventOver"
-          >Leave <i class="fas fa-sign-out-alt"></i></button>
+          v-if="(eventData.is_current_member && !isEventOver)"
+          >Leave
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span></button>
+        </button>
       </div>
       <div class="container eventContainer" v-if="!isScreenLoader">
         <div class="eventBox eventBox-place">
@@ -152,7 +158,7 @@
 
             </div>
             <div class="eventBox__members">
-              <span>{{eventData.members_count}} {{eventData.members_count == 1 ? 'Member' : 'Members'}} of {{eventData.max_members}}</span>
+              <span>{{eventMembers.length}} {{eventData.members_count == 1 ? 'Member' : 'Members'}} of {{eventData.max_members}}</span>
               <button class="textButton" type="button" name="button" @click='openUsersList()'>More</button>
             </div>
             <router-link class="bigButton bigButton-members shadow" :to="{ name: 'chatRoom', params: {id: id} }">chat</router-link>
@@ -197,7 +203,8 @@ export default {
       attribution:'',
       isMapOpen: false,
 
-      joiningLoader: false
+      joiningLoader: false,
+      isAlreadyJoined: false
     }
   },
   computed:{
@@ -274,6 +281,16 @@ export default {
     openMap(){
       this.isMapOpen = true;
     },
+    refreshEventMebmers(id){
+      this.$store.dispatch('getEventMembers', id).then(response=>{
+        console.log("edge hello");
+        this.eventmembersLoader = false;
+        this.eventMembers = response;
+
+      }, error=>{
+        //error
+      });
+    },
     joinEvent(){
       console.log('joined');
       let url = `${this.$store.state.eventsUrl}${this.id}/add_follower/`;
@@ -283,14 +300,29 @@ export default {
       this.joiningLoader = true;
       this.$axios.patch(url,params).then(response=>{
         this.joiningLoader = false;
+        this.eventData.is_current_member = true;
         console.log(response);
+        this.refreshEventMebmers(this.id);
       }, error => {
         //error
         this.joiningLoader = false;
       });
     },
     leaveEvent(){
-
+      let url = `${this.$store.state.eventsUrl}${this.id}/remove_follower/`;
+      let params = {
+        username: this.$store.getters.getCurrentUser
+      }
+      this.joiningLoader = true;
+      this.$axios.patch(url,params).then(response=>{
+        this.joiningLoader = false;
+        this.eventData.is_current_member = false;
+        console.log(response);
+        this.refreshEventMebmers(this.id);
+      }, error => {
+        //error
+        this.joiningLoader = false;
+      });
     },
     getAvatarImage(url){
       return this.$store.state.imagesUrl + url;
@@ -311,23 +343,18 @@ export default {
   created(){
     this.$store.dispatch('getEventDataAPI',this.id);
     this.eventmembersLoader = true;
-    this.$store.dispatch('getEventMembers', this.id).then(response=>{
-      console.log("edge hello");
-      this.eventmembersLoader = false;
-      this.eventMembers = response;
-    }, error=>{
-      //error
-    });
+    this.refreshEventMebmers(this.id);
   },
   beforeRouteUpdate (to, from, next) {
     this.$store.dispatch('getEventDataAPI',to.params.id);
     this.eventmembersLoader = true;
-    this.$store.dispatch('getEventMembers', to.params.id).then(response=>{
-      this.eventmembersLoader = false;
-      this.eventMembers = response;
-    }, error=>{
-      //error
-    });
+    this.refreshEventMebmers(to.params.id);
+    // this.$store.dispatch('getEventMembers', to.params.id).then(response=>{
+    //   this.eventmembersLoader = false;
+    //   this.eventMembers = response;
+    // }, error=>{
+    //   //error
+    // });
     next();
   }
 }
