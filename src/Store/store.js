@@ -155,7 +155,9 @@ const store = new Vuex.Store({
             console.log(error);
           });
         // }
-      }
+      },
+
+      
 
 
 

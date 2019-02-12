@@ -179,6 +179,25 @@ const actions = {
       });
     });
 
+  },
+  searchEvent({state,commit, rootState}, query){
+    console.log('store');
+    let params = {
+      'limit': 5,
+      'offset': 0,
+      'search': query,
+    }
+
+    return new Promise((resolve,reject)=>{
+      console.log();
+      axios.get(`${rootState.API_EVENT_URL}`, {params}).then(response=>{
+        console.log(response);
+        resolve(response);
+      }, error => {
+        //error
+        reject(error);
+      });
+    });
   }
 }
 

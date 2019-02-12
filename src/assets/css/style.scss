@@ -94,7 +94,9 @@ main {
 		}
 	}
 }
-
+.disablelink{
+	border: none;
+}
 .errorInput{
 	border-color: red;
 	animation-name: shake;

@@ -99,15 +99,10 @@ new Vue({
 
 			} else {
 				console.log("not user");
-				if(this.globalSearchQuery.length > 1){
+				if(this.globalSearchQuery.trim().length > 1){
 					this.glSearchLoader = true;
-					let params = {
-						'limit': 5,
-						'offset': 0,
-						'search': this.globalSearchQuery,
-					}
-					console.log(this.$store.state.API_EVENT_URL);
-					this.$axios.get(`${this.$store.state.API_EVENT_URL}`, {params}).then(response=>{
+
+					this.$store.dispatch('searchEvent', this.globalSearchQuery).then(response=>{
 						console.log(response);
 						this.isGlobalSearch = true;
 						this.glSearchLoader = false;
@@ -116,6 +111,9 @@ new Vue({
 						//error
 						this.glSearchLoader = false;
 					});
+				} else {
+					this.glSearchLoader = false;
+					this.glSearchEventsResult = [];
 				}
 			}
 		},

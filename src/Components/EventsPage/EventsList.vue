@@ -15,8 +15,27 @@
         <div class="eventSearch container">
           <!-- <h3 class="eventSearch__title text-gray">Search</h3> -->
           <div class="eventSearch__input shadow radius-5px bg-white">
-            <input class="input input-eventSearch" type="text" name="" placeholder="Search" v-model='searchName'>
-            <i class="fas fa-search input__icon"></i>
+            <input class="input input-eventSearch" type="text" name="" placeholder="Search"
+            v-model='searchQuery'
+            @input="searchEvent"
+            ref="searchInput"
+            >
+            <i class="fas fa-search input__icon" v-if="!searchLoader"></i>
+            <span class="loader loader-search" v-if="searchLoader"></span>
+            <div class="searchDrop" ref="searchDrop" v-show="isSearchDrop">
+              <ul id="dropList" class="searchDrop__list">
+                <router-link class="searchDrop__item searchDrop__item-eventsLink searchDrop__item-w100"
+                  v-for="result in searchResult"
+                  :to="{ name: 'eventPage', params: { id:result.id } }"
+                  v-on:click.native="clearSearch"
+                  >
+
+                  <h3 class="fullName fullName-search">{{result.name}}</h3>
+                  <span class="username username-search"> <i class="far fa-calendar-alt"></i> {{result.date_expire}}</span>
+                </router-link>
+
+              </ul>
+            </div>
           </div>
 
         </div>
@@ -184,6 +203,11 @@ export default {
 
       dateStart: this.$store.state.eventModule.listFilterParams.date_start,
       dateEnd: this.$store.state.eventModule.listFilterParams.date_end,
+
+      searchQuery: '',
+      searchLoader:false,
+      searchResult: [],
+      isSearchDrop: false
     }
   },
   computed:{
@@ -350,6 +374,37 @@ export default {
       this.filterDateStart = dateString;
       this.filterByAll();
       this.refreshEvents();
+    },
+
+
+    searchEvent(){
+      this.searchLoader = true;
+      this.isSearchDrop = true;
+      if(this.searchQuery.trim().length > 1){
+        this.searchResult = [];
+        this.$store.dispatch('searchEvent', this.searchQuery).then(response=>{
+          console.log(response);
+          // this.isGlobalSearch = true;
+          this.searchLoader = false;
+          this.searchResult = response.data.results;
+        }, error => {
+          //error
+          this.searchLoader = false;
+        });
+      } else {
+        this.searchLoader = false;
+        this.searchResult = [];
+      }
+
+    },
+
+    hideSearchDrop(e){
+      let target = e.target;
+      if(target == this.$refs.searchDrop ||
+				 target == this.$refs.searchInput){
+           return;
+         }
+      this.isSearchDrop = false;
     }
   },
   created(){
@@ -360,8 +415,12 @@ export default {
     document.addEventListener('scroll', this.onScroll);
 
   },
+  mounted(){
+    document.addEventListener('click', this.hideSearchDrop);
+  },
   destroyed(){
     document.removeEventListener('scroll',this.onScroll);
+    document.removeEventListener('click', this.hideSearchDrop);
     this.$store.commit('clearEventList');
     this.$store.commit('setEventsUrlProperties');
   },
