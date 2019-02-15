@@ -55,6 +55,7 @@
                 <!-- <li class="searchDrop__item searchDrop__item-w100" v-for="result in glSearchUsersResult">{{result.username}}</li> -->
                 <router-link class="searchDrop__item searchDrop__item-usersLink searchDrop__item-w100"
                 v-for="result in glSearchUsersResult"
+                :key="result.id"
                 :to="{ name: 'user', params: { username:result.username } }"
                 v-on:click.native="clearSearch"
                 >
@@ -72,6 +73,7 @@
                 <!-- <li class="searchDrop__item searchDrop__item-w100" v-for="result in ">{{result.username}}</li> -->
                 <router-link class="searchDrop__item searchDrop__item-eventsLink searchDrop__item-w100"
                   v-for="result in glSearchEventsResult"
+                  :key="result.id"
                   :to="{ name: 'eventPage', params: { id:result.id } }"
                   v-on:click.native="clearSearch"
                   >
