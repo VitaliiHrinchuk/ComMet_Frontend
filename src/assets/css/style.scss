@@ -96,6 +96,8 @@ main {
 }
 .disablelink{
 	border: none;
+	text-decoration: none;
+	color: #000;
 }
 .errorInput{
 	border-color: red;
@@ -313,7 +315,17 @@ main {
 	}
 
 }
+.fadedNote{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 1.5em;
+	color: $accept-color;
+	font-weight: bold;
+	text-transform: capitalize;
 
+}
 .modalImage{
 	position: fixed;
 	width: 100%;
@@ -975,6 +987,17 @@ main {
 	font-size: 1.7em;
 	align-self: center;
 }
+.fade-enter-active, .fade-leave-active {
+  	transition: opacity 1s;
+}
+
+.fade-enter  {
+ 	opacity: 0;
+}
+.fade-leave-to{
+ 	opacity: 0;
+}
+
 
 .slide-fade-enter-active, .slide-fade-leave-active {
   	transition: all .35s;
@@ -1287,6 +1310,9 @@ main {
 			width: calc(30% - 8px)
 		}
 	}
+	.fadedNote{
+		font-size: 1.2em;
+	}
 }
 
 
@@ -1295,5 +1321,8 @@ main {
 		&-userphotos{
 			width: calc(50% - 8px)
 		}
+	}
+	.fadedNote{
+		font-size: 1.1em;
 	}
 }

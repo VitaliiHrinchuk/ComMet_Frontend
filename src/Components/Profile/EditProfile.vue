@@ -70,6 +70,12 @@
           Add Tag
         </div>
       </div>
+      <transition name="fade">
+        <div class="fadedNote" v-show="isSuccessUpdate">
+          successfully updated
+        </div>
+      </transition>
+
       <button class="bigButton profileEdit__btn-big" type="button" name="button" @click='updateUserData()'>Save</button>
     </div>
   </div>
@@ -100,6 +106,7 @@ export default {
       isUpdateEnd: false,
       isUpdateTagsEnd: false,
       isOpenTagList: false,
+      isSuccessUpdate: false
     }
   },
   computed:{
@@ -124,6 +131,12 @@ export default {
         return item !== tag;
       })
     },
+    showSuccessMsg(){
+      this.isSuccessUpdate = true;
+      setTimeout(()=>{
+        this.isSuccessUpdate = false
+      },3000);
+    },
     updateUserData(){
 
       this.isUpdateEnd     = true;
@@ -146,26 +159,28 @@ export default {
       formData.append('date_of_birth', this.newUserBirthday);
       formData.append('city', this.newUserCity);
       formData.append('country', this.newUserCountry);
-      formData.append("avatar", this.newUserAvatar);
-
-
+      if(this.newUserAvatar){
+        formData.append("avatar", this.newUserAvatar);
+      }
       let userDataURL = `https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/`;
 
-      this.$axios.patch (userDataURL, formData).then(response=>{
+      this.$axios.patch(userDataURL, formData).then(response=>{
         console.log(response);
         this.isUpdateEnd = false;
+
+        let newTagsArray = JSON.parse(JSON.stringify(this.newUserTags));
+        this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
+          console.log(response);
+          this.isUpdateTagsEnd = false;
+          this.showSuccessMsg();
+        }, error=>{
+          //error
+        })
       }, error=>{
         //error
       });
 
-      let newTagsArray = JSON.parse(JSON.stringify(this.newUserTags));
-      this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.userInfo.username}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
-        console.log(response);
-        this.isUpdateTagsEnd = false;
 
-      }, error=>{
-        //error
-      })
     },
     openTagList(){
       this.$store.dispatch('getTagsListAPI');

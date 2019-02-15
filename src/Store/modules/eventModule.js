@@ -111,7 +111,7 @@ const actions = {
         console.log('refreshEventsList');
         console.log(response);
 
-        let list = response.data.results;
+        // let list = response.data.results;
         //
         // let resultList = list.map((item)=>{
         //   let resultItem = {};

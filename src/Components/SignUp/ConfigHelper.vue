@@ -208,18 +208,23 @@ export default {
         //   'country': this.selectedCity.contry,
         //
         // };
-
+        const USERS_URL = this.$store.state.API_USERS_URL;
         let newTagsArray = JSON.parse(JSON.stringify(this.selectedTags));
         let formData = new FormData();
         formData.append("city", this.selectedCity.name);
         formData.append("country", this.selectedCity.country);
-        formData.append("tags", newTagsArray);
+        // formData.append("tags", newTagsArray);
         formData.append("avatar", this.newAvatar);
+        // console.log(newTagsArray);
+        this.$axios.patch(`${USERS_URL}${this.currentUser}/`, formData).then(response=>{
 
-        this.$axios.patch(`https://comeandmeet.herokuapp.com/accounts/users/${this.currentUser}/`, formData).then(response=>{
-          this.isDataSending = false;
-           this.currentSlide = 4;
           console.log(response);
+          this.$axios.patch(`${USERS_URL}${this.currentUser}/update_tags/`, { 'tags': newTagsArray }).then(response=>{
+             this.isDataSending = false;
+             this.currentSlide = 4;
+           }, error=>{
+                 //tags error
+           });
         }, error=>{
           //error
         });

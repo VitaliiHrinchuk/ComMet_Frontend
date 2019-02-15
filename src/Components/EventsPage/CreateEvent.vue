@@ -738,6 +738,16 @@ export default {
       margin-left: auto;
       padding: 5px 5px;
     }
+
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield;
+    }
   }
 }
 .creationSection__checkTag input[type=checkbox] {

@@ -27,7 +27,7 @@ export default {
       currentSlide: 1,
       sliderTitles: [
         'Travel and meet new friends with ComMet',
-        'Create or search Events and enjoy them with others people',
+        'Create or search Events and enjoy them with other people',
         'Use ComMet to meet people in real life instead of Socials Networks'
       ],
       imageList: [

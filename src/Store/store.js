@@ -12,6 +12,7 @@ Vue.use(Vuex);
 Vue.use(axios);
 
 const API_ACCOUNTS_URL = `https://comeandmeet.herokuapp.com/accounts/`;
+const API_USERS_URL = "https://comeandmeet.herokuapp.com/accounts/users/";
 const API_EVENTS_URL = `https://comeandmeet.herokuapp.com/events/`;
 const MAP_API_TOKEN = '1e4a846d952064';
 const IMAGE_CLOUD_URL = 'https://res.cloudinary.com/son313/';
@@ -23,7 +24,7 @@ const store = new Vuex.Store({
     profileModule
   },
   state: {
-      API_USERS_URL: "https://comeandmeet.herokuapp.com/accounts/users/",
+      API_USERS_URL: API_USERS_URL,
       API_EVENT_URL: API_EVENTS_URL,
       isAuthorized: false,
       currentUser: '',
@@ -157,7 +158,7 @@ const store = new Vuex.Store({
         // }
       },
 
-      
+
 
 
 

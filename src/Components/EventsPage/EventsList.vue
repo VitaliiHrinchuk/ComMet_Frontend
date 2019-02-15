@@ -26,6 +26,7 @@
               <ul id="dropList" class="searchDrop__list">
                 <router-link class="searchDrop__item searchDrop__item-eventsLink searchDrop__item-w100"
                   v-for="result in searchResult"
+                  :key="result.id"
                   :to="{ name: 'eventPage', params: { id:result.id } }"
                   v-on:click.native="clearSearch"
                   >
@@ -56,7 +57,7 @@
             <!-- <div class="screenLoader screenLoader-list" v-if="!isEventListLoader">
               <div class="screenLoader screenLoader-inner"></div>
             </div> -->
-          <span class="loader loader-list" v-if="isEventListLoader"></span>
+          <span class="loader loader-list" v-show="isEventListLoader"></span>
           <!-- <h3 class="text-gray eventList__title">Events list</h3> -->
           <span class="note" v-if='!isEventListLoader && eventsList.length === 0'>no events by your queries</span>
           <div class="shortEvent shadow radius-5px" v-for="event in eventsList" >
@@ -88,7 +89,27 @@
                 <i class="eventData__icon fas fa-map-marker-alt"></i> {{event.city}}
               </div>
               <div class="eventData__members">
-                <i class="eventData__icon far fa-user"></i> {{event.members_count}} will come
+                <i class="eventData__icon far fa-user"></i>
+
+                <span v-if="event.current_user_follows_members">
+                  <router-link
+                   v-if="event.current_user_follows_members"
+                   class="disablelink"
+                   v-for="(member,index) in followsMembers(event.current_user_follows_members)"
+                   :to="{ name: 'user', params: {username: member.username} }"
+                   :key="member.id"
+                  >{{ index+1 < followsMembers(event.current_user_follows_members).length ?
+                      member.username + ", " :
+                      member.username}}
+                    </router-link>
+
+                   {{event.current_user_follows_members.length < event.members_count ?
+                    " and " + (event.members_count - followsMembers(event.current_user_follows_members).length) + " have joined" :
+                    " have joined" }}
+                </span>
+
+                <span v-else>{{event.members_count}} have joined</span>
+
               </div>
               <router-link class="textButton eventData__btn " :to="{ name: 'eventPage', params: {id:event.id} }">Event Page</router-link>
             </div>
@@ -405,6 +426,14 @@ export default {
            return;
          }
       this.isSearchDrop = false;
+    },
+
+    followsMembers(follows){
+      if(follows.length > 3){
+        return follows.slice(0,3);
+      } else {
+        return follows;
+      }
     }
   },
   created(){
@@ -412,11 +441,12 @@ export default {
     this.loadEvents();
     this.$store.dispatch('getTagsListAPI');
     this.$store.commit('setEventLoader', true);
-    document.addEventListener('scroll', this.onScroll);
+
 
   },
   mounted(){
     document.addEventListener('click', this.hideSearchDrop);
+    document.addEventListener('scroll', this.onScroll);
   },
   destroyed(){
     document.removeEventListener('scroll',this.onScroll);
