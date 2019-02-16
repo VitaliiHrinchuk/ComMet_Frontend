@@ -23,7 +23,7 @@
           v-model="searchCityPlace"
           @keyup.13="searchCity"
         >
-          <i class="fas fa-search input__icon input__icon-map" @click="searchCity()" v-if="!searchLoader"></i>
+          <i id="searchIcon" class="fas fa-search input__icon input__icon-map" @click="searchCity" v-if="!searchLoader"></i>
           <div class="searchDrop" v-if="isSearchDrop">
             <ul id="dropList" class="searchDrop__list">
               <li class="searchDrop__item searchDrop__item-w100" v-if="searchCityResult.length == 0 && !searchLoader">No results</li>
@@ -263,7 +263,8 @@ export default {
     hideSearchDrop(e){
       let target = e.target;
       if(target !== document.getElementById('placeInput') &&
-         target !== document.getElementById('searchDrop')){
+         target !== document.getElementById('searchDrop') &&
+         target !== document.getElementById('searchIcon')){
            this.isSearchDrop = false;
          }
     }
