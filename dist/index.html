@@ -13,7 +13,8 @@
   <link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css">
 
 
-  <link href="https://fonts.googleapis.com/css?family=Signika:300,400,600,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700&amp;subset=cyrillic" rel="stylesheet">
+
 <link href="./assets/css/style.css" rel="stylesheet"></head>
 <body>
 
@@ -33,12 +34,18 @@
           </div>
           <div class="nav__list">
             <ul id='navigation' class="navigation" @click='closeMenu'>
-              <li  v-if="isUserAuthorized"><router-link class="navigation__item"  :to="{path: '/Profile/'+currentUser}">My Profile </router-link></li>
-              <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>Main</router-link></li>
-              <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Events">Events</router-link></li>
-              <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Event/Create">Create Event</router-link></li>
-              <li  v-if="!isUserAuthorized" class=" navigation__item navigation__item-login navigation__item-mobile"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
-              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login navigation__item-mobile" @click="logOutUser">LogOut</li>
+              <li  v-if="isUserAuthorized"><router-link class="navigation__item"  :to="{path: '/Profile/'+currentUser}">{{$lang.navigation.my_profile}}</router-link></li>
+              <li  v-if="!isUserAuthorized"><router-link class="navigation__item" to="/" exact>{{$lang.navigation.main}}</router-link></li>
+              <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Events">{{$lang.navigation.events}}</router-link></li>
+              <li  v-if="isUserAuthorized"><router-link class="navigation__item" to="/Event/Create">{{$lang.navigation.create_event}}</router-link></li>
+              <li  v-if="!isUserAuthorized" class=" navigation__item navigation__item-login navigation__item-mobile"><router-link class="navigation__item" to="/login/signIn">{{$lang.navigation.login}}</router-link></li>
+              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login navigation__item-mobile" @click="logOutUser">{{$lang.navigation.logout}}</li>
+              <li  id="langDropDown" class="navDropdown" @click="toggleLangDropDown">{{$lang.global.lang}} <i class="fas fa-caret-down"></i>
+                <ul id="langDropDownList" class="navDropdown__list" v-show="isLangDropDown">
+                  <li class="navDropdown__item" @click="changeLang('en')">English</li>
+                  <li class="navDropdown__item" @click="changeLang('ua')">Українська</li>
+                </ul>
+              </li>
             </ul>
           </div>
           <div class="nav__search" v-if="isUserAuthorized">
@@ -86,8 +93,8 @@
           </div>
           <div class="nav__list nav__list-right ">
             <ul id='navigation' class="navigation navigation-right" @click='closeMenu'>
-              <li  v-if="!isUserAuthorized" class=" navigation__item navigation__item-login"><router-link class="navigation__item" to="/login/signIn">SignUp/Login</router-link></li>
-              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">LogOut</li>
+              <li  v-if="!isUserAuthorized" class=" navigation__item navigation__item-login"><router-link class="navigation__item" to="/login/signIn">{{$lang.navigation.login}}</router-link></li>
+              <li  v-if="isUserAuthorized" class="navigation__item navigation__item-login" @click="logOutUser">{{$lang.navigation.logout}}</li>
             </ul>
 
           </div>
