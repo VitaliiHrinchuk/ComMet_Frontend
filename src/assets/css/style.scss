@@ -802,6 +802,7 @@ main {
 		left: 0;
 		top: 30px;
 		display: block;
+		z-index: 20;
 		&-active{
 			display: block;
 		}
