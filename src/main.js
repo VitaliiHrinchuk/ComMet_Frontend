@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from 'vue/dist/vue.common.js';
 import axios from 'axios';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';

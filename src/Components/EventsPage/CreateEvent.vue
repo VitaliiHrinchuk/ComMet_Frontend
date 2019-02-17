@@ -198,6 +198,16 @@
 import DatePick from 'vue-date-pick';
 import { L, LMap, LTileLayer, LMarker, LControl } from 'vue2-leaflet';
 
+  import icon from 'leaflet/dist/images/marker-icon.png';
+  import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+  let DefaultIcon = L.icon({
+      iconUrl: icon,
+      shadowUrl: iconShadow
+  });
+
+  L.Marker.prototype.options.icon = DefaultIcon;
+  
 export default {
   data(){
     return {
