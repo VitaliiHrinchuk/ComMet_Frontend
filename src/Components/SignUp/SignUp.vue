@@ -11,7 +11,7 @@
         </div>
       </div> -->
 
-      <h1 class="signUp__title">SignUp</h1>
+      <h1 class="signUp__title">{{$lang.login.signUp}}</h1>
       <!-- <div class="socialSignBtn socailSignBtn-google">
         <i class="fab fa-google socailSignBtn__icon"></i>
         <h2 class="socailSignBtn__title">Continue with Google</h2>
@@ -22,18 +22,18 @@
       </div> -->
 
       <div class="userData userData-name">
-        <h2 class="userData__title">Your First Name</h2>
+        <h2 class="userData__title">{{$lang.login.user_firstname}}</h2>
         <input class="input" type="text" name="userFirstName" v-model="userFirstName">
       </div>
 
       <div class="userData userData-surname">
-        <h2 class="userData__title">Your Last Name</h2>
+        <h2 class="userData__title">{{$lang.login.user_lastname}}</h2>
         <input class="input"  type="text" name="userLastName" v-model='userLastName'>
       </div>
 
       <div class="userData userData-login">
-        <h2 class="userData__title">Create Username</h2>
-        <aboutinput  title="Unique Username" content="Username helps to identify you from other users">?</aboutinput>
+        <h2 class="userData__title">{{$lang.login.user_username}}</h2>
+        <aboutinput  :title="$lang.login.popup_username" :content="$lang.login.popup_username_content">?</aboutinput>
         <input id="userLogin"
                class="input"
                type="text" name="userLogin"
@@ -44,14 +44,14 @@
                v-bind:class="{errorInput :!loginIsUniq, 'goodInput' :isGoodLogin}">
 
         <span class="loader loader-input" v-if="loginIsLoader"></span>
-        <span class="errorMsg" v-if="!loginIsUniq"><i class="fas fa-exclamation-circle"></i> This login already exists</span>
+        <span class="errorMsg" v-if="!loginIsUniq"><i class="fas fa-exclamation-circle"></i> {{$lang.login.user_username_error}}</span>
         <span class="doneIcon" v-show="isGoodLogin"><i class="far fa-check-circle"></i></span>
 
 
       </div>
 
       <div class="userData userData-email">
-        <h2 class="userData__title">Your E-Mail Address</h2>
+        <h2 class="userData__title">{{$lang.login.user_email}}</h2>
         <input class="input"
                type="text"
                name="userEmail"
@@ -60,13 +60,13 @@
                v-bind:class="{errorInput : isErrors[0].validateMail || !mailIsUniq, goodInput: isGoodMail}"
                v-model="userMail" v-on:change="validateMail()" >
         <span class="loader loader-input" v-if="mailIsLoader"></span>
-        <span class="errorMsg" v-if="isErrors[0].validateMail"><i class="fas fa-exclamation-circle"></i> incorrect E-mail address</span>
-        <span class="errorMsg" v-if="!mailIsUniq && !isErrors[0].validateMail"><i class="fas fa-exclamation-circle"></i> This E-mail is alredy exists</span>
+        <span class="errorMsg" v-if="isErrors[0].validateMail"><i class="fas fa-exclamation-circle"></i> {{$lang.login.user_incorrect_email}}</span>
+        <span class="errorMsg" v-if="!mailIsUniq && !isErrors[0].validateMail"><i class="fas fa-exclamation-circle"></i> {{$lang.login.user_exist_email}}</span>
         <span class="doneIcon" v-show="isGoodMail"><i class="far fa-check-circle"></i></span>
       </div>
 
       <div class="userData userData-password">
-        <h2 class="userData__title">Create Password</h2>
+        <h2 class="userData__title">{{$lang.login.user_password}}</h2>
         <input class="input"
                type="password"
                name="userPassword"
@@ -74,14 +74,14 @@
                @focus="isFocus.password = true"
                v-bind:class="{errorInput : isErrors[0].password, goodInput: isGoodPass}"
                v-model="userPassword" v-on:change="checkPass()">
-        <span class="errorMsg" v-if="isErrors[0].password"><i class="fas fa-exclamation-circle"></i> Password can`t be less then 6 symbols</span>
+        <span class="errorMsg" v-if="isErrors[0].password"><i class="fas fa-exclamation-circle"></i> {{$lang.login.user_pass_error}}</span>
         <span class="doneIcon" v-show="isGoodPass"><i class="far fa-check-circle"></i></span>
 
       </div>
 
       <div class="userData userData-bday">
 
-        <h2 class="userData__title userData__title-BDay">Date of Birth</h2>
+        <h2 class="userData__title userData__title-BDay">{{$lang.login.user_bday}}</h2>
         <select class="userData__BDay userData__day" v-model="selectedDay">
           <option  v-for="day in days" v-bind:value="day">{{ day }}</option>
         </select>
@@ -101,8 +101,8 @@
               v-bind:disabled="disableSubmitCheck"
               v-on:click="getVerificationCode()">
 
-              Continue</button>
-      <span class="errorMsg" v-if="isErrors[0].signUpErr"><i class="fas fa-exclamation-circle"></i> Getting some trouble. Please, try singUp again</span>
+              {{$lang.login.continue_btn}}</button>
+      <span class="errorMsg" v-if="isErrors[0].signUpErr"><i class="fas fa-exclamation-circle"></i>{{$lang.login.conn_error}}</span>
 
       <div class="blockLoader" v-if="signUpIsLoader">
         <div class="screenLoader">
@@ -114,15 +114,15 @@
     </div>
 
       <div class="signUp verification" v-if="signUpEnd && !userConfirmed">
-        <h1>Verification</h1>
-        <p class="verification__msg">We sent a verification code to your Email address ({{userMail}}). Please, enter the code to continue </p>
+        <h1>{{$lang.login.verification}}</h1>
+        <p class="verification__msg">{{$lang.login.verification_msg}} </p>
         <div class="userData">
           <input type="text"
                  class="input"
                  v-model="userVerificationCode"
                  v-bind:class="{errorInput : isErrors[0].verifErr}"
                  v-on:keyup.enter="checkVerifCode()">
-          <span class="errorMsg" v-if="isErrors[0].verifErr"><i class="fas fa-exclamation-circle"></i> You entered wrong verification code</span>
+          <span class="errorMsg" v-if="isErrors[0].verifErr"><i class="fas fa-exclamation-circle"></i> {{$lang.login.verification_error}}</span>
           <button  class="bigButton verification__btn" v-on:click="checkVerifCode()">Continue</button>
         </div>
         <div class="blockLoader" v-if="isUploadingData">

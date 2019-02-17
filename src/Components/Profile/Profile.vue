@@ -41,11 +41,11 @@
             @click='subscribe()'
             :disabled='isSubscribeLoader'
             :class="{'disabledBtn':isSubscribeLoader}"
-            >Follow</button>
+            >{{$lang.profile.follow_btn}}</button>
         <div
             class="mainInfo__subscribedUser"
             v-if='isCurrentUserFollower'
-            >subscribed
+            >{{$lang.profile.subscribed_btn}}
           <button
             @click='isModalQuestion = true'
             class="mainInfo__unsubscribeBtn"
@@ -56,19 +56,19 @@
         <div class="mainInfo__follows">
           <div class="follows follows-left" @click="getUserFollowers()">
             <h4 class="follows__count">{{userData.followers}}</h4>
-            <p class="follows__text">Followers</p>
+            <p class="follows__text">{{$lang.profile.followers}}</p>
           </div>
 
           <div class="follows follows-right" @click="getUserFollowing()">
             <h4 class="follows__count">{{userData.following}}</h4>
-            <p class="follows__text">Following</p>
+            <p class="follows__text">{{$lang.profile.following}}</p>
           </div>
         </div>
 
         <div class="userRate">
-          <h3 class="userRate__header userRate__header-profile">Rating</h3>
+          <h3 class="userRate__header userRate__header-profile">{{$lang.profile.rating}}</h3>
           <i v-for='rate in Math.floor(userData.user_rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
-          <span class="note" v-if='Math.floor(userData.user_rate)*1 == 0'>Unrated yet </span>
+          <span class="note" v-if='Math.floor(userData.user_rate)*1 == 0'>{{$lang.profile.rating_note}} </span>
         </div>
       </div>
       <div class="detailInfo shadow radius-5px">
@@ -76,13 +76,13 @@
         <ul class="tabs">
           <li class="tabs__item"
               v-on:click='selectTab(1)'
-              v-bind:class="{'tabs__item-active' : selectedTab == 1}">Information</li>
+              v-bind:class="{'tabs__item-active' : selectedTab == 1}">{{$lang.profile.info_tab}}</li>
           <li class="tabs__item"
               v-on:click='selectTab(2)'
-              v-bind:class="{'tabs__item-active' : selectedTab == 2}">Events</li>
+              v-bind:class="{'tabs__item-active' : selectedTab == 2}">{{$lang.profile.events_tab}}</li>
           <li class="tabs__item"
               v-on:click='selectTab(3)'
-              v-bind:class="{'tabs__item-active' : selectedTab == 3}">Photos</li>
+              v-bind:class="{'tabs__item-active' : selectedTab == 3}">{{$lang.profile.photos_tab}}</li>
         </ul>
 
         <div class="detailInfo__content">
@@ -169,7 +169,7 @@ export default {
       }
     },
     modalQuestion(){
-      return `You sure that you want unsubcribe ${this.userData.username}?`;
+      return `${this.$lang.profile.unsubscribe_msg} ${this.userData.username}?`;
     },
 
 
@@ -181,12 +181,12 @@ export default {
     openUsersList(type){
       if(type === 'followers'){
         this.usersListActive = true;
-        this.usersListTitle = 'Followers';
-        this.usersListNote = 'User has not followers yet';
+        this.usersListTitle = this.$lang.profile.followers;
+        this.usersListNote = this.$lang.profile.followers_note;
       } else if(type === 'following') {
         this.usersListActive = true;
-        this.usersListTitle = 'Following';
-        this.usersListNote = 'User is not following anyone';
+        this.usersListTitle = this.$lang.profile.following;
+        this.usersListNote = this.$lang.profile.followers_note;
       }
     },
     closingEditing(){
@@ -309,11 +309,11 @@ export default {
     }
     &__subscribeBtn{
       position: relative;
-      background: #00ffa9;
+      background: $green-color;
       border: none;
       color: #fff;
       font-weight: bold;
-      text-transform: uppercase;
+      text-transform: capitalize;
       border-radius: 15px;
       width: 100%;
       height: 23px;
@@ -326,7 +326,7 @@ export default {
       border-radius: 15px;
       border: 1px solid $primary-color;
       text-align: center;
-      text-transform: uppercase;
+      text-transform: capitalize;
       color: $primary-color;
       font-size: .8em;
       padding: 2px 10px;

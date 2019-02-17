@@ -9,13 +9,13 @@
           class="modalQuestion__btn modalQuestion__btn-accept shadow"
           type="button"
           name="button"
-          >Yes</button>
+          >{{$lang.global.yes}}</button>
         <button
           @click="$emit('decline')"
           class="modalQuestion__btn modalQuestion__btn-decline shadow"
           type="button"
           name="button"
-          >No</button>
+          >{{$lang.global.no}}</button>
       </div>
 
       <span class="modalWindow__close" @click="$emit('close-list')"><i class="fas fa-times"></i></span>

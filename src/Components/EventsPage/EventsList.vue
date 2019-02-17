@@ -10,12 +10,12 @@
 
       <div class="eventListHeader ">
         <div class="title text-gray" >
-          <h1>Look For Events</h1>
+          <h1>{{$lang.events.events_list_title}}</h1>
         </div>
         <div class="eventSearch container">
           <!-- <h3 class="eventSearch__title text-gray">Search</h3> -->
           <div class="eventSearch__input shadow radius-5px bg-white">
-            <input class="input input-eventSearch" type="text" name="" placeholder="Search"
+            <input class="input input-eventSearch" type="text" name="" :placeholder="$lang.global.search"
             v-model='searchQuery'
             @input="searchEvent"
             ref="searchInput"
@@ -59,7 +59,7 @@
             </div> -->
           <span class="loader loader-list" v-show="isEventListLoader"></span>
           <!-- <h3 class="text-gray eventList__title">Events list</h3> -->
-          <span class="note" v-if='!isEventListLoader && eventsList.length === 0'>no events by your queries</span>
+          <span class="note" v-if='!isEventListLoader && eventsList.length === 0'>{{$lang.events.events_list_no_results}}</span>
           <div class="shortEvent shadow radius-5px" v-for="event in eventsList" >
 
             <div class="shortEvent__avatar" :style="{ 'backgroundImage': 'url(\'' + getImageUrl(event.avatar) + '\')' }">
@@ -104,20 +104,20 @@
                     </router-link>
 
                    {{event.current_user_follows_members.length < event.members_count ?
-                    " and " + (event.members_count - followsMembers(event.current_user_follows_members).length) + " have joined" :
-                    " have joined" }}
+                    ` ${$lang.global.and} ` + (event.members_count - followsMembers(event.current_user_follows_members).length) + ` ${$lang.events.events_list_joined}` :
+                    ` ${$lang.events.events_list_joined}` }}
                 </span>
 
-                <span v-else>{{event.members_count}} have joined</span>
+                <span v-else>{{event.members_count}} {{$lang.events.events_list_joined}}</span>
 
               </div>
-              <router-link class="textButton eventData__btn " :to="{ name: 'eventPage', params: {id:event.id} }">Event Page</router-link>
+              <router-link class="textButton eventData__btn " :to="{ name: 'eventPage', params: {id:event.id} }">{{$lang.events.events_list_link}}</router-link>
             </div>
 
           </div>
 
         </div>
-        <button id="asideToggler" class="bigButton bigButton-normaltxt asideToggler" type="button"  @click='openSortAside'><i class="fas fa-filter"></i> Filter</button>
+        <button id="asideToggler" class="bigButton bigButton-normaltxt asideToggler" type="button"  @click='openSortAside'><i class="fas fa-filter"></i> {{$lang.events.events_filter}}</button>
         <div id="adaptiveAside" class="adaptiveAside">
           <aside class="aside flexbox">
             <!-- <h3 class="text-gray aside__title">Sort</h3> -->
@@ -125,20 +125,20 @@
               <ul class="sortList text-gray">
                 <li class="sortList__item"
                   :class="{'sortList__item-active' :(selectedFilterTab == 1)}"
-                  @click="filterByAll">All events</li>
+                  @click="filterByAll">{{$lang.events.events_sort_all}}</li>
                 <li class="sortList__item"
                   :class="{'sortList__item-active' : (selectedFilterTab == 2)}"
-                  @click="filterByUserEvents">My events</li>
+                  @click="filterByUserEvents">{{$lang.events.events_sort_my}}</li>
                 <!-- <li class="sortList__item"
                   :class="{'sortList__item-active' :selectedFilterTab == 3}">Recommended events</li> -->
                 <li class="sortList__item"
                   :class="{'sortList__item-active' :(selectedFilterTab == 3)}"
-                  @click="filterBNearestEvents">Nearest events</li>
+                  @click="filterBNearestEvents">{{$lang.events.events_sort_nearest}}</li>
               </ul>
             </div>
 
             <div class="eventSort-tags shadow radius-5px bg-white">
-              <h4 class="eventSort__title text-gray"><i class="fas fa-tag"></i> Included tags</h4>
+              <h4 class="eventSort__title text-gray"><i class="fas fa-tag"></i> {{$lang.events.events_filter_tags}}</h4>
               <div class="tag tag-search" v-for='tag in filterTags'>
                   {{tag}}
               </div>
@@ -149,12 +149,12 @@
                 class="semicircleBtn semicircleBtn-border semicircleBtn-small semicircleBtn-right"
                 v-if="filterTags.length > 0"
                 @click="clearFilterTags"
-              >Clear</button>
+              >{{$lang.global.clear}}</button>
             </div>
             <div class="modalWindow" v-if='isListTags'>
               <div class="modalWindow__content">
                 <span class="modalWindow__close" @click='closeFilterTagList'><i class="fas fa-times"></i></span>
-                <h2 class="modalWindow__title">Tags</h2>
+                <h2 class="modalWindow__title">{{$lang.global.tags}}</h2>
                   <div class="creationSection__checkTag" v-for='tag in tagList'>
                     <input class="" type="checkbox" name="" :id='tag.name' :value="tag.name" v-model='filterTags'>
                     <label :for="tag.name">{{tag.name}}</label>
@@ -164,14 +164,14 @@
             </div>
 
             <div class="eventSort-tags shadow radius-5px bg-white">
-              <h4 class="eventSort__title text-gray"><i class="far fa-calendar-alt"></i> Date</h4>
-              <span class="">From:</span>
+              <h4 class="eventSort__title text-gray"><i class="far fa-calendar-alt"></i> {{$lang.events.events_date}}</h4>
+              <span class="">{{$lang.events.events_filter_from}}:</span>
               <datepick
                   v-model="filterDateStart"
                   :hasInputElement="true"
                   :inputAttributes="{readonly: true}"
               ></datepick>
-              <span>To:</span>
+              <span>{{$lang.events.events_filter_to}}:</span>
               <datepick
                   v-model="filterDateEnd"
                   :hasInputElement="true"
@@ -186,8 +186,8 @@
               type="button"
               name="button"
               @click='closeSortAside'
-              >Close</button>
-            <button class="semicircleBtn" type="button" @click="resetAll">Reset</button>
+              >{{$lang.global.Close}}</button>
+            <button class="semicircleBtn" type="button" @click="resetAll">{{$lang.global.reset}}</button>
           </div>
 
         </div>

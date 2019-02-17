@@ -6,13 +6,13 @@
       </div>
     </div>
     <div class="creationHeader">
-      <h1 class="creationHeader__title">Create New Event</h1>
-      <h2 class="creationHeader__title creationHeader__title-small">Do it in few steps</h2>
+      <h1 class="creationHeader__title">{{$lang.events.create_title}}</h1>
+      <h2 class="creationHeader__title creationHeader__title-small">{{$lang.events.create_title_2}}</h2>
     </div>
     <div id="1step" class="creationSection" v-if='currentStep >= 1'>
-      <h3 class="creationSection__title">Step 1 of 5</h3>
+      <h3 class="creationSection__title">{{$lang.events.create_step}} 1 {{$lang.global.of}} 5</h3>
       <i class="creationSection__icon creationSection__icon-red fas fa-map-marked-alt"></i>
-      <h4 class="creationSection__desc">Where your event will be?</h4>
+      <h4 class="creationSection__desc">{{$lang.events.create_subtitle_place}}</h4>
       <div class="creationData">
         <div class="creationData__data creationData__data-place">{{isPlaceLoading ? '' : place}}
           <div class="dotLoader dotLoader-center" v-if="isPlaceLoading">
@@ -33,7 +33,7 @@
                 <l-control position="topleft" >
                   <!-- <input class="input" type="text" placeholder="Search..." v-model='place' @change="searchCity()"> -->
                   <div class="eventSearch__input shadow radius-5px bg-white">
-                    <input class="input input-map" type="text" name="" placeholder="Search..." v-model='searchPlace' @click.stop='' @keyup.13='searchCity()'>
+                    <input class="input input-map" type="text" name="" :placeholder="$lang.global.search" v-model='searchPlace' @click.stop='' @keyup.13='searchCity()'>
                     <span class="loader loader-search" v-if="isSearchLoading"></span>
                     <i class="fas fa-search input__icon input__icon-map" @click.stop="searchCity()" v-if="!isSearchLoading"></i>
                     <div class="searchDrop" v-if='searcResults.length > 0' @click.stop=''>
@@ -59,13 +59,13 @@
           name="button"
           @click='nextStep(2)'
           v-if='currentStep == 1'
-          >Next</button>
+          >{{$lang.global.next}}</button>
     </div>
 
     <div id="2step" class="creationSection" v-show='currentStep >= 2'>
-      <h3 class="creationSection__title">Step 2 of 5</h3>
+      <h3 class="creationSection__title">{{$lang.events.create_step}} 2 {{$lang.global.of}} 5</h3>
       <i class="creationSection__icon creationSection__icon-orange far fa-calendar-alt"></i>
-      <h4 class="creationSection__desc">When it will be?</h4>
+      <h4 class="creationSection__desc">{{$lang.events.create_subtitle_date}}</h4>
       <div class="creationData creationData-date">
         <div class="creationData__data">{{dateToString}}</div>
         <datepick
@@ -76,20 +76,20 @@
         ></datepick>
       </div>
 
-      <span v-if='wrongDate' class="errorMsg">You cannot pick a date earlier than today</span>
+      <span v-if='wrongDate' class="errorMsg">{{$lang.events.create_date_error}}</span>
       <button
           class="creationSection__nextBtn textButton"
           type="button"
           name="button"
           @click='nextStep(3)'
           v-if='currentStep == 2'
-          >Next</button>
+          >{{$lang.global.next}}</button>
     </div>
 
     <div id="3step" class="creationSection" v-show='currentStep >= 3'>
-      <h3 class="creationSection__title">Step 3 of 5</h3>
+      <h3 class="creationSection__title">{{$lang.events.create_step}} 3 {{$lang.global.of}} 5</h3>
       <i class="creationSection__icon creationSection__icon-yellow fas fa-tags"></i>
-      <h4 class="creationSection__desc">What will your event be about?</h4>
+      <h4 class="creationSection__desc">{{$lang.events.create_subtitle_tags}}</h4>
 
       <div class="creationSection__container">
 
@@ -106,21 +106,21 @@
           name="button"
           @click='nextStep(4)'
           v-if='currentStep == 3'
-          >Next</button>
+          >{{$lang.global.next}}</button>
     </div>
 
     <div id="4step" class="creationSection" v-show='currentStep >= 4'>
-      <h3 class="creationSection__title">Step 4 of 5</h3>
+      <h3 class="creationSection__title">{{$lang.events.create_step}} 4 {{$lang.global.of}} 5</h3>
       <i class="creationSection__icon creationSection__icon-green far fa-comments"></i>
-      <h4 class="creationSection__desc">Name your event and describe it</h4>
+      <h4 class="creationSection__desc">{{$lang.events.create_subtitle_name}}</h4>
 
       <div class="creationData">
-        <span class="input__title">Event Name</span>
+        <span class="input__title">{{$lang.events.create_event_name}}</span>
         <input class="input creationData__text" type="text" placeholder="Name"
           v-model='eventName'>
-        <span class="input__title">Event Description</span>
+        <span class="input__title">{{$lang.events.create_event_desc}}</span>
         <textarea class="input creationData__text creationData__text-area" v-model='eventDesc'></textarea>
-        <span class="input__title">Members limit (0 if unlimited)</span>
+        <span class="input__title">{{$lang.events.create_members_limit}}</span>
         <input class="input creationData__text" type="number" value="20" min="0" v-model="eventMembersLimit">
           <!-- <input id="image-file" type="file" name="" value=""> -->
       </div>
@@ -130,15 +130,15 @@
           name="button"
           @click='nextStep(5)'
           v-if='currentStep == 4'
-          >Next</button>
+          >{{$lang.global.next}}</button>
     </div>
     <div id="5step" class="creationSection" v-show='currentStep >= 5'>
-      <h3 class="creationSection__title">Step 5 of 5</h3>
+      <h3 class="creationSection__title">{{$lang.events.create_step}} 5 {{$lang.global.of}} 5</h3>
       <i class="creationSection__icon creationSection__icon-blue far fa-image"></i>
-      <h4 class="creationSection__desc">Image of your event (skip to use standart)</h4>
+      <h4 class="creationSection__desc">{{$lang.events.create_subtitle_avatar}}</h4>
 
       <input class="profileEdit__fileInput" type="file" accept="image/*" ref="imageInput" name="avatarInput" id="avatarInput" @change="uploadImage" >
-      <label class="profileEdit__fileLabel profileEdit__fileLabel-event" for="avatarInput"><i class="fas fa-camera"></i> Change</label>
+      <label class="profileEdit__fileLabel profileEdit__fileLabel-event" for="avatarInput"><i class="fas fa-camera"></i> {{$lang.global.change}}</label>
       <div
           class="roundImage roundImage-creationpage"
           :style="{ 'backgroundImage': 'url(\'' + (eventAvatar || require('../../assets/images/logo_alt.jpg')) + '\')' }"
@@ -147,11 +147,11 @@
 
 
 
-      <button class="bigButton bigButton-center creationSection__finishBtn " type="button"
+      <button class="bigButton bigButton-center bigButton-capitalize creationSection__finishBtn " type="button"
         :disabled="!allDataIsOk || isDataUploading"
         v-if="!isEventCreated"
         @click='postEventData()'>
-        Finish
+        {{$lang.accountSetting.finish_btn}}
       </button>
 
     </div>
@@ -159,13 +159,13 @@
       <div class="modalWindow__content ">
         <div class="errorMessage">
           <i class="errorMessage__icon far fa-times-circle"></i>
-          <h2 class="errorMessage__text">Something went wrong, please try again</h2>
-          <span class="errorMessage__code" v-if="errorCode"> Error Code  {{errorCode}}</span>
+          <h2 class="errorMessage__text">{{$lang.global.error}}</h2>
+          <span class="errorMessage__code" v-if="errorCode"> {{$lang.profile.photo_error_code}}  {{errorCode}}</span>
           <div class="errorMessage__buttons">
             <button class="bigButton bigButton-normaltxt bigButton-small creationSection__finishBtn " type="button"
               :disabled="!allDataIsOk || isDataUploading"
               @click='postEventData()'>
-              Try again
+              {{$lang.global.try_again}}
             </button>
 
           </div>
@@ -173,19 +173,19 @@
         </div>
 
         <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
-        <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">Close</button>
+        <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">{{$lang.global.close}}</button>
       </div>
     </div>
     <div class="modalWindow modalWindow-light" v-if="isEventCreated">
       <div class="modalWindow__content modalWindow__content-question">
         <div class="doneMessage">
           <i class="doneMessage__icon far fa-check-circle"></i>
-          <h2 class="doneMessage__text">Awesome!</h2>
-          <h3 class="doneMessage__text">You just created an event</h3>
+          <h2 class="doneMessage__text">{{$lang.events.create_done_title}}</h2>
+          <h3 class="doneMessage__text">{{$lang.events.create_done_subtitle}}</h3>
           <router-link class="bigButton bigButton-small bigButton-normaltxt bigButton-green"
             :to="{ name: 'eventPage', params: {id: createdId}}"
             replace
-            >Event page</router-link>
+            >{{$lang.events.events_list_link}}</router-link>
         </div>
         <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
       </div>
@@ -212,7 +212,7 @@ export default {
       eventAvatar: null,
 
       //location data Data
-      place: 'Not selected',
+      place: this.$lang.events.create_not_selected,
       placeCountry: '',
       placeCity:'',
       zoom:8,

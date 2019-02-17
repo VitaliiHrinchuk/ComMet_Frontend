@@ -9,24 +9,24 @@
       <users-list
       v-if='usersListActive'
       :usersData='eventMembers'
-      title='Event Members'
-      note='This event has no members yet'
+      :title='$lang.events.event_members_title'
+      :note='$lang.events.event_members_note'
       @close-list= 'usersListActive = false'
 
       ></users-list>
       <div id="sticky" class="sticky" >
         <h1 class="sticky__title">{{eventData.name}}</h1>
-        <button class="bigButton bigButton-header shadow" type="button" name="button"
+        <button class="bigButton bigButton-header bigButton-capitalize shadow" type="button" name="button"
           v-if="eventData.author.username != currentUser && !eventData.is_current_member && !isEventOver"
           @click="joinEvent()"
           :disabled="joiningLoader">
-          Join Event
+          {{$lang.events.event_join_btn}}
           <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span></button>
           <button type="button"
             class="bigButton bigButton-leaveEvent"
             @click="leaveEvent"
             v-if="(eventData.is_current_member && !isEventOver)"
-            >Leave
+            >{{$lang.events.event_leave_btn}}
             <i class="fas fa-sign-out-alt"></i>
             <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span></button>
           </button>
@@ -39,25 +39,25 @@
             {{tag}}
           </div>
         </div>
-        <button class="eventHeader__btn bigButton shadow" type="button" name="button"
+        <button class="eventHeader__btn bigButton bigButton-capitalize shadow" type="button" name="button"
           v-if="eventData.author.username != currentUser && !eventData.is_current_member && !isEventOver"
           @click="joinEvent()"
           :disabled="joiningLoader">
-          Join Event
+          {{$lang.events.event_join_btn}}
           <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span>
         </button>
         <button type="button"
           class="eventHeader__btn bigButton bigButton-leaveEvent"
           @click="leaveEvent"
           v-if="(eventData.is_current_member && !isEventOver)"
-          >Leave
+          >{{$lang.events.event_leave_btn}}
           <i class="fas fa-sign-out-alt"></i>
           <span class="loader loader-buttonOutLeft" v-show="joiningLoader"></span></button>
         </button>
       </div>
       <div class="container eventContainer" v-if="!isScreenLoader">
         <div class="eventBox eventBox-place">
-            <h2 class="eventBox__title">Place</h2>
+            <h2 class="eventBox__title">{{$lang.events.event_place}}</h2>
             <div class="eventBox__content">
               <p>{{eventData.city}}, {{eventData.country}}</p>
             </div>
@@ -66,7 +66,7 @@
               type="button"
               name="button"
               @click='openMap'
-              >Open map</button>
+              >{{$lang.events.event_place_map}}</button>
         </div>
 
         <div class="modalWindow" v-if='isMapOpen'>
@@ -82,8 +82,8 @@
         </div>
 
         <div class="eventBox eventBox-date">
-            <h2 class="eventBox__title"> Date</h2>
-            <span class="note note-event" v-if="isEventOver"><i class="fas fa-ban"></i> this event has already ended</span>
+            <h2 class="eventBox__title"> {{$lang.events.events_date}}</h2>
+            <span class="note note-event" v-if="isEventOver"><i class="fas fa-ban"></i> {{$lang.events.event_date_note}}</span>
             <div class="eventBox__content eventBox__content-date">
               <p>{{dateToString(eventData.date_expire)}}, {{eventData.time_begins}}</p>
             </div>
@@ -91,7 +91,7 @@
         </div>
 
         <div class="eventBox eventBox-author">
-            <h2 class="eventBox__title">Author</h2>
+            <h2 class="eventBox__title">{{$lang.events.event_author}}</h2>
             <div class="eventBox__content">
               <div class="user">
                 <div
@@ -101,7 +101,7 @@
                 <div class="userRate">
                   <h3 class="fullName fullName-author" @click='showUserProfile(eventData.author.username)'>{{eventData.author.first_name}} {{eventData.author.last_name}}</h3>
                   <i v-for='rate in Math.floor(eventData.author.user_rate)*1' class="far fa-star userRate__star userRate__star-fill"></i>
-                  <span class="note" v-if='Math.floor(eventData.author.user_rate)*1 == 0'>Unrated yet </span>
+                  <span class="note" v-if='Math.floor(eventData.author.user_rate)*1 == 0'>{{$lang.profile.rating_note}} </span>
                 </div>
               </div>
             </div>
@@ -109,10 +109,10 @@
         </div>
         <div class="helpContainer">
           <div class="eventBox eventBox-desc">
-              <h2 class="eventBox__title">Description</h2>
+              <h2 class="eventBox__title">{{$lang.events.event_description}}</h2>
               <div class="eventBox__content">
                 <p>{{eventData.description}}</p>
-                <span class="note" v-if='eventData.description == ""'> This event has not description</span>
+                <span class="note" v-if='eventData.description == ""'> {{$lang.events.event_description_note}}</span>
               </div>
               <!-- <button class="textButton" type="button" name="button">More</button> -->
           </div>
@@ -146,7 +146,7 @@
 
 
         <div class="eventBox eventBox-members" v-if="1">
-            <h2 class="eventBox__title">Members</h2>
+            <h2 class="eventBox__title">{{$lang.events.event_members}}</h2>
             <div class="eventBox__content">
               <div class="user user-list" v-for='member in randomMembers'>
                 <div
@@ -158,10 +158,10 @@
 
             </div>
             <div class="eventBox__members">
-              <span>{{eventMembers.length}} {{eventData.members_count == 1 ? 'Member' : 'Members'}} of {{eventData.max_members}}</span>
-              <button class="textButton" type="button" name="button" @click='openUsersList()'>More</button>
+              <span>{{eventMembers.length}} {{eventData.members_count == 1 ? $lang.events.event_member : $lang.events.event_members}} {{$lang.global.of}} {{eventData.max_members}}</span>
+              <button class="textButton" type="button" name="button" @click='openUsersList()'>{{$lang.global.more}}</button>
             </div>
-            <router-link class="bigButton bigButton-members shadow" :to="{ name: 'chatRoom', params: {id: id} }">chat</router-link>
+            <router-link class="bigButton bigButton-members bigButton-capitalize bigButton-capitalize-small shadow" :to="{ name: 'chatRoom', params: {id: id} }">{{$lang.events.event_chat}}</router-link>
         </div>
 
 

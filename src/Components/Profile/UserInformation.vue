@@ -1,36 +1,36 @@
 <template lang="html">
   <div class="about">
 
-    <h1 class="about__title">About</h1>
-    <button class="about__btn shadow" type="button" name="button" v-if="userInfo.isCurrent"  @click="$emit('edit-profile')"><i class="far fa-edit"></i> Edit</button>
+    <h1 class="about__title">{{$lang.profile.info_title}}</h1>
+    <button class="about__btn shadow" type="button" name="button" v-if="userInfo.isCurrent"  @click="$emit('edit-profile')"><i class="far fa-edit"></i> {{$lang.global.edit}}</button>
 
     <table class="about__table userTable">
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">First Name: </td>
+        <td class="userTable__col userTable__col-title">{{$lang.profile.info_firstname}}: </td>
         <td class="userTable__col">{{userInfo.first_name}}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Last Name: </td>
+        <td class="userTable__col userTable__col-title">{{$lang.profile.info_lastname}}: </td>
         <td class="userTable__col">{{userInfo.last_name}}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Username: </td>
+        <td class="userTable__col userTable__col-title">{{$lang.profile.info_username}}: </td>
         <td class="userTable__col userTable__col-username">@{{userInfo.username}}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Birthday: </td>
+        <td class="userTable__col userTable__col-title">{{$lang.profile.info_bday}}: </td>
         <td class="userTable__col">{{userInfo.date_of_birth}}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Email: </td>
+        <td class="userTable__col userTable__col-title">{{$lang.profile.info_email}}: </td>
         <td class="userTable__col">{{userInfo.email }}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">City: </td>
+        <td class="userTable__col userTable__col-title">{{$lang.profile.info_city}}: </td>
         <td class="userTable__col">{{userInfo.city}}</td>
       </tr>
       <tr class="userTable__row">
-        <td class="userTable__col userTable__col-title">Country: </td>
+        <td class="userTable__col userTable__col-title">{{$lang.profile.info_country}}: </td>
         <td class="userTable__col">{{userInfo.country}}</td>
       </tr>
     </table>
@@ -51,8 +51,8 @@
 
     </table>
 
-    <h1 class="about__title about__title-lined">Favourite Tags</h1>
-    <span class="note" v-if='userInfo.tags.length == 0'>user has no favourite tags yet</span>
+    <h1 class="about__title about__title-lined">{{$lang.profile.info_tags}}</h1>
+    <span class="note" v-if='userInfo.tags.length == 0'>{{$lang.profile.info_tags_note}}</span>
     <div class="about__tags" >
       <div class="tag" v-for="tag in userInfo.tags">
         {{tag.name}}
@@ -110,7 +110,7 @@ export default {
       border-radius: 15px;
       // border: 1px solid gray;
       cursor: pointer;
-      text-transform: uppercase;
+      text-transform: capitalize;
       font-weight: bold;
     }
 

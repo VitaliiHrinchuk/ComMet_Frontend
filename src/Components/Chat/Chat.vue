@@ -7,7 +7,7 @@
       </div>
       <div class="chatHeader">
         <span class="chatHeader__back" @click="backToEvent()"><i class="fas fa-chevron-left"></i></span>
-        <h1 class="chatHeader__title">Chat</h1>
+        <h1 class="chatHeader__title">{{$lang.chat.title}}</h1>
       </div>
       <div class="container container-chat">
         <div id="chatWindow" class="chatWindow">
@@ -27,7 +27,7 @@
         <div class="chatInput">
           <textarea id="msgArea"
                     class="chatInput__area"
-                    placeholder="Type a message"
+                    :placeholder="$lang.chat.placeholder"
                     v-model='currentMessage'
                     @keyup.enter.exact='sendMessage()'
                     @focus="toBottomOfChat"

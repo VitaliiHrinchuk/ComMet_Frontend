@@ -3,23 +3,23 @@
     <h2 class="userEvents__title"
         @click='changeType(0)'
         :class='{"userEvents__title-unactive": selectedType == 1}'
-        >Visited</h2>
+        >{{$lang.profile.events_visited}}</h2>
     <h2
         class="userEvents__title"
         @click='changeType(1)'
         :class='{ "userEvents__title-unactive": selectedType == 0}'
-    >Created</h2>
+    >{{$lang.profile.events_created}}</h2>
     <span
         class="note"
         v-if='userEvents.visited.length == 0 && selectedType == 0'
-        >User has not visited any event</span>
+        >{{$lang.profile.events_visited_note}}</span>
     <div class="" v-for="event in userEvents.visited" v-if="selectedType == 0">
 
       <div class="profileEvent">
         <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + getEventsPhotos(event.avatar) + '\')' }"></div>
         <h3 class="profileEvent__title">{{event.name}}</h3>
         <h4 class="profileEvent__date">{{event.date_expire}}</h4>
-        <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
+        <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">{{$lang.profile.events_show_btn}}</button>
       </div>
     </div>
 
@@ -27,14 +27,14 @@
     <span
         class="note"
         v-if='userEvents.created.length == 0  && selectedType == 1'
-        >User has not created events</span>
+        >{{$lang.profile.events_created_note}}</span>
     <div class="" v-for='event in userEvents.created' v-if='selectedType == 1'>
 
       <div class="profileEvent">
         <div class="profileEvent__img" :style="{ 'backgroundImage': 'url(\'' + getEventsPhotos(event.avatar) + '\')' }"></div>
         <h3 class="profileEvent__title">{{event.name}}</h3>
         <h4 class="profileEvent__date">{{event.date_expire}}</h4>
-        <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">show</button>
+        <button class="profileEvent__btn" type="button" name="button" @click="showEvent(event.id)">{{$lang.profile.events_show_btn}}</button>
       </div>
     </div>
 
@@ -130,7 +130,7 @@ export default {
         font-weight: bold;
         border-radius: 5px;
         padding: 3px 7px;
-        text-transform: uppercase;
+        // text-transform: uppercase;
 
       }
       &__img{

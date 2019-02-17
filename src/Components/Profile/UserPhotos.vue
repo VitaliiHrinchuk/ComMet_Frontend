@@ -8,11 +8,11 @@
         </div>
         <span class="blockLoader__progress blockLoader__progress-bottom">{{downloadPercent}}%</span>
       </div>
-      <h2 class="userPhotos__title">Photos</h2>
+      <h2 class="userPhotos__title">{{$lang.profile.photos_title}}</h2>
       <span
           class="note"
           v-if='userPhotos.length == 0 && !isCurrentUser'
-          >User has no photos</span>
+          >{{$lang.profile.photos_note}}</span>
       <div class="modalImage" v-show="isFullScreenImage">
         <i class="modalImage__close fas fa-times" @click="closeFullScreenImage()"></i>
         <img class="modalImage__img" ref="modalImage" alt="full screen">
@@ -39,7 +39,7 @@
                 @change="showPreview"
                 multiple>
               <label class="textButton textButton-smalltext textButton-avatarchange " for="avatarInput"><i class="fas fa-plus"></i> add</label>
-              <button class="bigButton bigButton-small bigButton-green" type="button" v-if="previewPhotos.length > 0" @click="uploadPhotos"><i class="fas fa-upload"></i> Upload</button>
+              <button class="bigButton bigButton-small bigButton-green bigButton-capitalize" type="button" v-if="previewPhotos.length > 0" @click="uploadPhotos"><i class="fas fa-upload"></i> {{$lang.profile.photos_upload_btn}}</button>
             </div>
             <div class="addPhotosBlock__container">
               <div
@@ -65,12 +65,12 @@
         <div class="modalWindow__content ">
           <div class="errorMessage">
             <i class="errorMessage__icon far fa-times-circle"></i>
-            <h2 class="errorMessage__text">Something went wrong, please try again</h2>
-            <span class="errorMessage__code" v-if="errorCode"> Error Code  {{errorCode}}</span>
+            <h2 class="errorMessage__text">{{$lang.profile.photos_error}}</h2>
+            <span class="errorMessage__code" v-if="errorCode"> {{$lang.profile.photos_error_code}}  {{errorCode}}</span>
             <div class="errorMessage__buttons">
               <button class="bigButton bigButton-normaltxt bigButton-small creationSection__finishBtn " type="button"
                 @click='uploadPhotos()'>
-                Try again
+                {{$lang.global.try_again}}
               </button>
 
             </div>
@@ -78,7 +78,7 @@
           </div>
 
           <!-- <span class="modalWindow__close modalWindow__close-maxzindex"><i class="fas fa-times"></i></span> -->
-          <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">Close</button>
+          <button class="textButton modalWindow__close modalWindow__close-button" type="button" @click="isModalError = false">{{$lang.global.close}}</button>
         </div>
       </div>
         <div
@@ -93,7 +93,7 @@
     <button type="button"
       class="textButton textButton-smalltext textButton-center"
       @click="loadPreviewPhotos"
-      v-if="previewPhotoCount < userPhotos.length">More</button>
+      v-if="previewPhotoCount < userPhotos.length">{{$lang.global.more}}</button>
   </div>
 
 </template>

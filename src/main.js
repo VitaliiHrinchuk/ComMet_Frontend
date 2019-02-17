@@ -2,9 +2,14 @@ import Vue from 'vue';
 import axios from 'axios';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
+
+
 import  smoothscroll  from 'smoothscroll-polyfill';
 smoothscroll.polyfill();
 
+
+import Lang from 'vuejs-localization';
+Lang.requireAll(require.context('./lang', true, /\.js$/));
 // import 'leaflet/dist/leaflet.css'
 
 
@@ -24,7 +29,7 @@ import router from './routes.js';
 Vue.prototype.$axios = axios;
 Vue.use(Vuex);
 Vue.use(VueRouter);
-
+Vue.use(Lang);
 
 
 new Vue({
@@ -37,7 +42,8 @@ new Vue({
 
 		globalSearchQuery: '',
 		glSearchLoader: false,
-		isGlobalSearch: false
+		isGlobalSearch: false,
+		isLangDropDown: false
 	},
 	computed: {
 		isUserAuthorized(){
@@ -59,6 +65,12 @@ new Vue({
 		// },
 		logOutUser(){
 			this.$store.dispatch('logOutUser');
+		},
+		toggleLangDropDown(e){
+			this.isLangDropDown = !this.isLangDropDown;
+		},
+		changeLang(lang){
+			this.$lang.setLang(lang);
 		},
 		openMenu(){
 			let navigation = document.querySelector('#navigation');
@@ -138,6 +150,7 @@ new Vue({
 	},
 
 	mounted(){
+
 		this.$store.dispatch('checkIsAuthorized');
 		// this.$store.dispatch('getTagsListAPI');
 		router.beforeEach((to, from, next) => {
@@ -161,12 +174,17 @@ new Vue({
 		document.addEventListener('click', this.hideSearchDrop);
 		document.addEventListener('click', (e)=>{
 			let navigation = document.querySelector('#navigation');
-			if(event.target.id == 'navigation' ||
-				 event.target.id == 'toggler'    ||
-			 	 event.target.id == 'menuIcon'   ){
+
+			if(event.target.id == 'navigation'  ||
+				 event.target.id == 'toggler'     ||
+			 	 event.target.id == 'menuIcon'    ||
+			 	 event.target.id == "langDropDown"||
+			 	 event.target.id == "langDropDownList" ||
+			 	 event.target.parentNode.id == "langDropDown"){
 				return;
 			}
 			navigation.classList.remove('navigation-toggle');
+			this.isLangDropDown = false;
 			// if(event.target.nodeName != ''){
 			//
 		});

@@ -1,0 +1,48 @@
+module.exports = {
+  events_list_title: "Look For Events",
+  events_list_no_results: "no events by your querie",
+  events_list_link: "Event Page",
+  events_list_joined: "have joined",
+  events_filter: "Filter",
+  events_sort_all: "All events",
+  events_sort_my: "My events",
+  events_sort_nearest: "Nearest events",
+  events_filter_tags: "Included tags",
+  events_date: "Date",
+  events_filter_from: "From",
+  events_filter_to: "To",
+
+
+  event_join_btn: "Join Event",
+  event_leave_btn: "Leave",
+  event_place: "Place",
+  event_place_map: "Open Map",
+  event_date_note: "this event has already ended",
+  event_author: "Author",
+  event_description: "Description",
+  event_description_note: "This event has not description",
+  event_members: "Members",
+  event_member: "Member",
+  event_chat: "Chat",
+  event_members_title: "Event Members",
+  event_members_note: "This event has no members yet",
+
+  create_title: "Create New Event",
+  create_title_2: "Do It in few steps",
+  create_step: "Step",
+  create_subtitle_place: "Where your event will be?",
+  create_not_selected: "Not Selected",
+  create_subtitle_date: "When it will be?",
+  create_subtitle_tags: "What will your event be about?",
+  create_subtitle_name: "Name your event and describe it",
+  create_subtitle_avatar: "Image of your event (skip to use standart)",
+  create_date_error: "You cannot pick a date earlier than today",
+  create_event_name: "Event Name",
+  create_event_desc: "Event Description",
+  create_members_limit: "Members limit (0 if unlimited)",
+
+  create_done_title: "Awesome!",
+  create_done_subtitle: "You just created an event",
+
+
+}

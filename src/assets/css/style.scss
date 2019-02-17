@@ -15,7 +15,7 @@ body {
 	// background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 	font-size: 18px;
 	letter-spacing: 0.025em;
-	font-family: 'Signika';
+	font-family:'Roboto', sans-serif;
 }
 ul,li{
 	padding: 0;
@@ -216,7 +216,7 @@ main {
 		text-transform: capitalize;
 	}
 	&-members{
-		width: 60%;
+		// width: 60%;
 		margin-right: auto;
 		margin-top: 30px;
 		margin-bottom: 10px;
@@ -236,6 +236,9 @@ main {
 	}
 	&-normaltxt{
 		text-transform: none;
+	}
+	&-capitalize{
+		text-transform: capitalize;
 	}
 	&-green{
 		background: $accept-color;
@@ -778,6 +781,42 @@ main {
 		position: relative;
 	}
 }
+.navDropdown{
+	position: relative;
+	cursor: pointer;
+	color: #66757F;
+	font-weight: bold;
+
+	&:hover &__list{
+		display: block;
+	}
+	&__list{
+		line-height: normal;
+		font-weight: 500;
+		position: absolute;
+		background: #fff;
+		width: auto;
+		padding: 10px 10px;
+		border: 1px solid rgba(0,0,0,0.15);
+		border-radius: 5px;
+		left: 0;
+		top: 30px;
+		display: block;
+		&-active{
+			display: block;
+		}
+		&:hover {
+			display: block;
+		}
+	}
+	&__item{
+		font-size: .9em;
+		padding: 5px 0;
+		&:hover{
+			color: $primary-color;
+		}
+	}
+}
 .navigation {
   display: flex;
 
@@ -787,6 +826,7 @@ main {
   margin: 0;
 	background: #fff;
 	letter-spacing: .07em;
+
 	&-right{
 		margin-left: auto;
 	}
@@ -798,6 +838,7 @@ main {
 	&-toggle{
 		display: flex;
 	}
+
 	&__item{
 		text-decoration: none;
 	  font-weight: bold;
@@ -1235,6 +1276,14 @@ main {
 	}
 	.errorMessage{
 		font-size: .7em;
+	}
+	.navDropdown{
+		min-height: 50px;
+		line-height: 50px;
+		&__list{
+			position: static;
+			border: none;
+		}
 	}
 }
 

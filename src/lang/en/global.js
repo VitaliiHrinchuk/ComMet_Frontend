@@ -1,0 +1,20 @@
+module.exports = {
+  events_link:"Events",
+  profile_link: "Profile",
+  yes: "Yes",
+  no: "No",
+  change: "Change",
+  edit: "Edit",
+  try_again: "Try again",
+  close: "Close",
+  more: "More",
+  and: "and",
+  clear: "Clear",
+  reset: "Reset",
+  tags: "Tags",
+  search: "Search",
+  of: "of",
+  next: "Next",
+  error: "Something went wrong, please try again",
+  lang: "Language"
+}

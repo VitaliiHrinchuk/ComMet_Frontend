@@ -2,19 +2,19 @@
   <div class="container">
     <div class="signUpBlock">
       <div class="signUp singIn" v-bind:class="{'errorInput-signIn': isError || isWrongUserData}">
-        <h1 class="signUp__title">Login</h1>
-        <span class="errorMsg errorMsg-signIn" v-if="isError">Fields must not be empty!</span>
-        <span class="errorMsg errorMsg-signIn" v-if="isWrongUserData">Wrong Username or Password</span>
+        <h1 class="signUp__title">{{$lang.login.LoginTitle}}</h1>
+        <span class="errorMsg errorMsg-signIn" v-if="isError">{{$lang.login.empty_error}}</span>
+        <span class="errorMsg errorMsg-signIn" v-if="isWrongUserData">{{$lang.login.wrong_data}}</span>
         <div class="userData userData-login">
-          <h2 class="userData__title">Username</h2>
+          <h2 class="userData__title">{{$lang.login.username_field}}</h2>
           <input class="input"  type="text" name="login"  v-model="userName" v-on:keyup.enter="signInUser">
         </div>
         <div class="userData userData-password">
-          <h2 class="userData__title">Password</h2>
+          <h2 class="userData__title">{{$lang.login.password_field}}</h2>
           <input class="input"  type="password" name="password"  v-model="userPass" v-on:keyup.enter="signInUser">
         </div>
 
-        <button class="signUp__submit signIn-btn" type="button" v-on:click="signInUser">Login</button>
+        <button class="signUp__submit signIn-btn" type="button" v-on:click="signInUser">{{$lang.login.login_btn}}</button>
 
         <div class="blockLoader" v-if="isSingInLoader">
           <div class="screenLoader">
