@@ -186,7 +186,7 @@
               type="button"
               name="button"
               @click='closeSortAside'
-              >{{$lang.global.Close}}</button>
+              >{{$lang.global.close}}</button>
             <button class="semicircleBtn" type="button" @click="resetAll">{{$lang.global.reset}}</button>
           </div>
 

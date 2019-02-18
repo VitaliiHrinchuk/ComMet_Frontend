@@ -1,5 +1,5 @@
 module.exports = {
-  signUp: "Реєестрація",
+  signUp: "Реєстрація",
   signIn: "Авторизація",
   LoginTitle: "Авторизація",
   username_field: "Логін",
