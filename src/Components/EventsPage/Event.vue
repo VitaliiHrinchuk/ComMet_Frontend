@@ -411,23 +411,7 @@ export default {
         margin-bottom: 10px;
       }
     }
-    &__button{
 
-      // margin-left: auto;
-      // height: 45px;
-      // width: 150px;
-      // background: $primary-color;
-      // border: none;
-      // border-radius: 5px;
-      // text-transform: uppercase;
-      // color: #fff;
-      // font-weight: bold;
-      // font-size: 1.1em;
-      // align-self: center;
-      // cursor: pointer;
-      //
-
-    }
 
   }
   .helpContainer{
@@ -664,11 +648,6 @@ export default {
       &-on{
         display: none;
       }
-    }
-    .bigButton{
-      // width: 100%;
-      // height: 35px;
-      // margin-top: 30px;
     }
     .eventBox{
 

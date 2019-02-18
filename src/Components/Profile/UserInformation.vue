@@ -120,10 +120,6 @@ export default {
     margin-right: 50px;
     margin-bottom: 10px;
     font-size: .8em;
-    &__row{
-
-    }
-
     &__col{
       padding-bottom: 20px;
       &-title{
