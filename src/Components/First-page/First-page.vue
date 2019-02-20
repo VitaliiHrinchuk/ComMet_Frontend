@@ -243,7 +243,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  height: 80vh;
+  height: 70vh;
   
   &__title{
     margin-top: 10%;
