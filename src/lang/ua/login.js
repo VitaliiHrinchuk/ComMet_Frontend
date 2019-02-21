@@ -9,7 +9,7 @@ module.exports = {
   wrong_data: "Неправильний логін або пароль",
 
   user_firstname: "Ваше ім’я",
-  user_lastname: "Ваша Фамілія",
+  user_lastname: "Ваше Прізвище",
   user_username: "Створіть логін",
   user_username_error: "Такий логін уже існує",
   user_email: "Ваша електронна пошта",
