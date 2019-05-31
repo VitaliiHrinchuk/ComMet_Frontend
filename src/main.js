@@ -70,6 +70,7 @@ new Vue({
 			this.isLangDropDown = !this.isLangDropDown;
 		},
 		changeLang(lang){
+			localStorage.setItem('lang', lang);
 			this.$lang.setLang(lang);
 		},
 		openMenu(){
@@ -167,7 +168,7 @@ new Vue({
 		      next()
 		    }
 		  } else {
-		    next() // всегда так или иначе нужно вызвать next()!
+		    next() 
 		  }
 		});
 
@@ -185,15 +186,15 @@ new Vue({
 			}
 			navigation.classList.remove('navigation-toggle');
 			this.isLangDropDown = false;
-			// if(event.target.nodeName != ''){
-			//
+
 		});
-		// this.$store.dispatch('checkUserCurrentLocation');
-		// this.$axios.get('https://master.apis.dev.openstreetmap.org/#map=16/48.5370/31.1680').then((response)=>{
-		// 	console.log(response);
-		// }, (error)=>{
-		//
-		// })
+
+		let lang = localStorage.getItem('lang');
+		console.log("lang "+lang);
+		
+		if(lang){
+			this.changeLang(lang);
+		}
 
 	},
 	created(){

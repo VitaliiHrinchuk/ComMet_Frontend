@@ -16,7 +16,7 @@
   <div class="homepage">
     <div class="homeHeader">
       <!-- <h1 class="homeHeader__title">ComMet is <span class="homeHeader__slidertext">to meet people in real life</span></h1> -->
-      <h1 class="homeHeader__title">Through ComMet To Real Meetings</span></h1>
+      <h1 class="homeHeader__title"><span>Through ComMet To Real Meetings</span></h1>
       <h2 class="homeHeader__subtitle">Social Network for Events</h2>
       <router-link class="  bigButton bigButton-small bigButton-capitalize homeHeader__link" :to="{ path: '/login/signUp'}">SignUp</router-link>
     </div>
