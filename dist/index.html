@@ -53,7 +53,8 @@
             <input id="glSearchInput" class="input input-roundBorder input-center" type="text" name="ComMetSearch"
                v-model="globalSearchQuery"
                v-on:input="globalSearch"
-               v-on:focus="isGlobalSearch = true">
+               v-on:focus="isGlobalSearch = true"
+               autocomplete="off">
             <span class="loader loader-glsearch" v-if="glSearchLoader"></span>
             <i class="fas fa-search input__icon" v-else></i>
             <div id="glSearchDropList" class="searchDrop searchDrop-rounded" v-if="isGlobalSearch">

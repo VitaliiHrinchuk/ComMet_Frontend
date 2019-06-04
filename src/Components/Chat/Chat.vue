@@ -103,7 +103,7 @@ export default {
       this.chatSocket = new WebSocket('wss://comeandmeet.herokuapp.com/ws/chat/' + id + '/');
       this.chatSocket.onopen = (e)=>{
           // this.isChatLoading = true;
-          this.chatSocket.send(JSON.stringify({"token":token}));
+ 
       };
       this.chatSocket.onmessage = (e)=> {
          var data = JSON.parse(e.data);

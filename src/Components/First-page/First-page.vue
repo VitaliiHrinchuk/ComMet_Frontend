@@ -16,48 +16,48 @@
   <div class="homepage">
     <div class="homeHeader">
       <!-- <h1 class="homeHeader__title">ComMet is <span class="homeHeader__slidertext">to meet people in real life</span></h1> -->
-      <h1 class="homeHeader__title"><span>Through ComMet To Real Meetings</span></h1>
-      <h2 class="homeHeader__subtitle">Social Network for Events</h2>
-      <router-link class="  bigButton bigButton-small bigButton-capitalize homeHeader__link" :to="{ path: '/login/signUp'}">SignUp</router-link>
+      <h1 class="homeHeader__title"><span>{{$lang.welcome_page.MAIN_TITLE}}</span></h1>
+      <h2 class="homeHeader__subtitle">{{$lang.welcome_page.SECOND_TITLE}}</h2>
+      <router-link class="  bigButton bigButton-small bigButton-capitalize homeHeader__link" :to="{ path: '/login/signUp'}">{{$lang.welcome_page.SIGNUP}}</router-link>
     </div>
     <section class="homeSection">
-      <h1 class="homeSection__title">Do what you like</h1>
-      <h2 class="homeSection__subtitle">with other people</h2>
+      <h1 class="homeSection__title">{{$lang.welcome_page.TAG_SECTION_TITLE}}</h1>
+      <h2 class="homeSection__subtitle">{{$lang.welcome_page.TAG_SECTION_SUBTITLE}}</h2>
       <div class="homeTags">
         <div class="homeTags__item">
           <i class="fas fa-music"></i>
-          <span>Music</span>
+          <span>{{$lang.welcome_page.TAG_MUSIC}}</span>
         </div>
         <div class="homeTags__item">
           <i class="fas fa-plane"></i>
-          <span>Travel</span>
+          <span>{{$lang.welcome_page.TAG_TRAVEL}}</span>
         </div>
         <div class="homeTags__item">
           <i class="fas fa-business-time"></i>
-          <span>Business</span>
+          <span>{{$lang.welcome_page.TAG_BUSINESS}}</span>
         </div>
         <div class="homeTags__item">
           <i class="fas fa-flask"></i>
-          <span>Science</span>
+          <span>{{$lang.welcome_page.TAG_SCIENCE}}</span>
         </div>
         <div class="homeTags__item">
           <i class="fas fa-volleyball-ball"></i>
-          <span>Sport</span>
+          <span>{{$lang.welcome_page.TAG_SPORT}}</span>
         </div>
         <div class="homeTags__item">
           <i class="far fa-comments"></i>
-          <span>Just Chat</span>
+          <span>{{$lang.welcome_page.TAG_CHAT}}</span>
         </div>
         <div class="homeTags__item">
           <i class="fas fa-tags"></i>
-          <span>And more</span>
+          <span>{{$lang.welcome_page.TAG_MORE}}</span>
         </div>
       </div>
     </section>
     <section class="homeSection">
-      <h1 class="homeSection__title">How it works</h1>
+      <h1 class="homeSection__title">{{$lang.welcome_page.STEP_SECTION_TITLE}}</h1>
       <div class="homeStepContainer">
-        <span class="homeStep__step">Step 1</span>
+        <span class="homeStep__step">{{$lang.welcome_page.STEP_TITLE}} 1</span>
         <div class="homeStep">
           <img class="homeStep__img" src="../../assets/images/home-login.png" alt="">
           <!-- <div class="homeStepDesc">
@@ -68,12 +68,12 @@
             <span class="homeStepDesc__line"></span>
           </div> -->
           <div class="homeStep__txt">
-            <h3>SignUp</h3>
-            <span>For Free</span>
+            <h3>{{$lang.welcome_page.STEP_TEXT_1}}</h3>
+            <span>{{$lang.welcome_page.STEP_SUBTEXT_1}}</span>
           </div>
         </div>
         <i class="homeStep__arrow fas fa-long-arrow-alt-down"></i>
-        <span class="homeStep__step">Step 2</span>
+        <span class="homeStep__step">{{$lang.welcome_page.STEP_TITLE}} 2</span>
         <div class="homeStep">
           <img class="homeStep__img" src="../../assets/images/home-search.png" alt="">
           <!-- <div class="homeStepDesc">
@@ -84,11 +84,11 @@
               <span class="homeStepDesc__line"></span>
             </div> -->
             <div class="homeStep__txt">
-              <h3>Find</h3>
-            <span>What you like</span>
+              <h3>{{$lang.welcome_page.STEP_TEXT_2}}</h3>
+            <span>{{$lang.welcome_page.STEP_SUBTEXT_2}}</span>
           </div>
           </div>
-          <span class="homeStepContainer__or">OR</span>
+          <span class="homeStepContainer__or">{{$lang.welcome_page.OR}}</span>
           <div class="homeStep">
             <img class="homeStep__img" src="../../assets/images/home-add.png" alt="">
             <!-- <div class="homeStepDesc homeStepDesc-right">
@@ -99,12 +99,12 @@
               </div>
             </div> -->
             <div class="homeStep__txt">
-              <h3>Create</h3>
-            <span>Your Own</span>
+              <h3>{{$lang.welcome_page.STEP_TEXT_3}}</h3>
+            <span>{{$lang.welcome_page.STEP_SUBTEXT_3}}</span>
           </div>
           </div>
            <i class="homeStep__arrow fas fa-long-arrow-alt-down"></i>
-          <span class="homeStep__step">Step 3</span>
+          <span class="homeStep__step">{{$lang.welcome_page.STEP_TITLE}} 3</span>
           <div class="homeStep">
             <img class="homeStep__img" src="../../assets/images/home-meet.png" alt="">
             <!-- <div class="homeStepDesc">
@@ -114,7 +114,7 @@
               <span class="homeStepDesc__line"></span>
             </div> -->
             <div class="homeStep__txt">
-             <h3>Meet</h3>
+             <h3>{{$lang.welcome_page.STEP_TEXT_4}}</h3>
           </div>
           </div>
       </div>
