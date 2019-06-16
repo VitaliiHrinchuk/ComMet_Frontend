@@ -85,7 +85,7 @@ export default {
     },
     getChatMessage(id){
       this.isChatLoading = true;
-      let chatMessagesURL = "http://comeandmeet.herokuapp.com/chat/message/get_by_event/";
+      let chatMessagesURL = "https://comeandmeet.herokuapp.com/chat/message/get_by_event/";
       let params = {
         "event": id
       }
@@ -100,7 +100,7 @@ export default {
     },
     connectToSocket(id){
       let token = this.$axios.defaults.headers.common['Authorization'].split(' ')[1];
-      this.chatSocket = new WebSocket('ws://comeandmeet.herokuapp.com/ws/chat/' + id + '/');
+      this.chatSocket = new WebSocket('wss://comeandmeet.herokuapp.com/ws/chat/' + id + '/');
       this.chatSocket.onopen = (e)=>{
           // this.isChatLoading = true;
  
