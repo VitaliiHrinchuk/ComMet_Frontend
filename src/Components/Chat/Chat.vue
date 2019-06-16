@@ -85,7 +85,7 @@ export default {
     },
     getChatMessage(id){
       this.isChatLoading = true;
-      let chatMessagesURL = "https://comeandmeet.herokuapp.com/chat/message/get_by_event/";
+      let chatMessagesURL = "http://comeandmeet.herokuapp.com/chat/message/get_by_event/";
       let params = {
         "event": id
       }
